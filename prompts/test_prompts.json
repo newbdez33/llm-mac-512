@@ -1,0 +1,27 @@
+{
+  "short": {
+    "name": "短文本生成",
+    "prompt": "请用一句话解释量子计算",
+    "max_tokens": 100
+  },
+  "medium": {
+    "name": "代码生成",
+    "prompt": "写一个Python快速排序算法，包含完整注释",
+    "max_tokens": 500
+  },
+  "long": {
+    "name": "长文本生成",
+    "prompt": "详细解释深度学习的反向传播算法，包括数学推导过程",
+    "max_tokens": 2000
+  },
+  "reasoning": {
+    "name": "推理能力",
+    "prompt": "有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。",
+    "max_tokens": 500
+  },
+  "instruction": {
+    "name": "指令跟随",
+    "prompt": "请完成以下任务：\n1. 列出3种常见的排序算法\n2. 为每种算法写出时间复杂度\n3. 用一句话总结它们的适用场景",
+    "max_tokens": 400
+  }
+}
