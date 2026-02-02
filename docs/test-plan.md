@@ -28,9 +28,9 @@ Comprehensive performance testing of MiniMax M2.1 variants on Mac (512GB unified
 | Version | Est. Size | Priority | Status |
 |---------|-----------|----------|--------|
 | MiniMax-M2.1-4bit | ~120GB | 1 | ✅ Complete |
-| MiniMax-M2.1-6bit | ~180GB | 2 | ⏳ Pending |
-| MiniMax-M2.1-8bit | ~240GB | 3 | ⏳ Pending |
-| MiniMax-M2.1-bf16 | ~460GB | 4 | ⏳ Pending |
+| MiniMax-M2.1-6bit | ~180GB | 2 | ✅ Complete |
+| MiniMax-M2.1-8bit | ~240GB | 3 | ✅ Complete |
+| MiniMax-M2.1-bf16 | ~460GB | 4 | ❌ Not available |
 
 #### GGUF Versions (unsloth/MiniMax-M2.1-GGUF)
 

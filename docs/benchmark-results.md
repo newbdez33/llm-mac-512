@@ -26,39 +26,95 @@
 | Metric | Value |
 |--------|-------|
 | **Model Size** | ~120 GB |
-| **Load Time** | 6.08 sec |
-| **Peak Memory** | 172.35 GB |
-| **Average TPS** | 44.21 tokens/sec |
-| **Max TPS** | 48.93 tokens/sec |
-| **Min TPS** | 27.61 tokens/sec |
-| **Average TTFT** | 0.072 sec |
+| **Load Time** | 21.25 sec |
+| **Peak Memory** | 134.81 GB |
+| **Average TPS** | 45.73 tokens/sec |
+| **Max TPS** | 49.24 tokens/sec |
+| **Min TPS** | 34.85 tokens/sec |
+| **Average TTFT** | 0.067 sec |
 
 #### Individual Test Results
 
 | Test | Description | Tokens | TPS | TTFT | Gen Time |
 |------|-------------|--------|-----|------|----------|
-| short | Short text generation | 100 | 27.61 | 0.112s | 3.62s |
-| medium | Code generation | 500 | 48.93 | 0.062s | 10.22s |
-| long | Long text generation | 2000 | 47.99 | 0.063s | 41.67s |
-| reasoning | Logical reasoning | 500 | 48.32 | 0.062s | 10.35s |
-| instruction | Instruction following | 400 | 48.19 | 0.063s | 8.30s |
+| short | Short text generation | 100 | 34.85 | 0.089s | 2.87s |
+| medium | Code generation | 500 | 49.24 | 0.061s | 10.15s |
+| long | Long text generation | 2000 | 48.16 | 0.062s | 41.53s |
+| reasoning | Logical reasoning | 500 | 48.64 | 0.062s | 10.28s |
+| instruction | Instruction following | 400 | 47.77 | 0.063s | 8.37s |
 
 **Notes:**
 - First test (short) shows lower TPS due to initial warm-up
-- After warm-up, consistent ~48 TPS across all test types
-- Very low TTFT (~62-72ms) indicates fast prompt processing
+- After warm-up, consistent ~48-49 TPS across all test types
+- Very low TTFT (~61-89ms) indicates fast prompt processing
+
+---
+
+### MiniMax-M2.1-6bit
+
+**Test Date:** 2026-02-02
+
+| Metric | Value |
+|--------|-------|
+| **Model Size** | ~180 GB |
+| **Load Time** | 29.85 sec (cached) |
+| **Peak Memory** | 191.88 GB |
+| **Average TPS** | 41.83 tokens/sec |
+| **Max TPS** | 47.19 tokens/sec |
+| **Min TPS** | 29.37 tokens/sec |
+| **Average TTFT** | 0.075 sec |
+
+#### Individual Test Results
+
+| Test | Description | Tokens | TPS | TTFT | Gen Time |
+|------|-------------|--------|-----|------|----------|
+| short | Short text generation | 110 | 29.37 | 0.105s | 3.75s |
+| medium | Code generation | 583 | 47.19 | 0.064s | 12.35s |
+| long | Long text generation | 2232 | 44.58 | 0.067s | 50.07s |
+| reasoning | Logical reasoning | 561 | 44.90 | 0.067s | 12.49s |
+| instruction | Instruction following | 433 | 43.11 | 0.070s | 10.04s |
+
+**Notes:**
+- 6-bit provides modest quality improvement over 4-bit
+- ~9% slower than 4-bit due to larger model size
+- Memory usage increased by ~57GB over 4-bit
 
 ---
 
 ### MiniMax-M2.1-8bit
 
-**Status:** Not yet tested
+**Test Date:** 2026-02-02
+
+| Metric | Value |
+|--------|-------|
+| **Model Size** | ~240 GB |
+| **Load Time** | 28.07 sec (cached) |
+| **Peak Memory** | 252.19 GB |
+| **Average TPS** | 33.04 tokens/sec |
+| **Max TPS** | 35.98 tokens/sec |
+| **Min TPS** | 22.52 tokens/sec |
+| **Average TTFT** | 0.095 sec |
+
+#### Individual Test Results
+
+| Test | Description | Tokens | TPS | TTFT | Gen Time |
+|------|-------------|--------|-----|------|----------|
+| short | Short text generation | 100 | 22.52 | 0.137s | 4.44s |
+| medium | Code generation | 500 | 35.98 | 0.084s | 13.90s |
+| long | Long text generation | 2000 | 35.59 | 0.084s | 56.19s |
+| reasoning | Logical reasoning | 500 | 35.76 | 0.084s | 13.98s |
+| instruction | Instruction following | 400 | 35.34 | 0.086s | 11.32s |
+
+**Notes:**
+- 8-bit provides better quality at cost of speed
+- ~28% slower than 4-bit
+- Uses about 2x memory compared to 4-bit
 
 ---
 
 ### MiniMax-M2.1-bf16
 
-**Status:** Not yet tested
+**Status:** Not yet tested (~460GB, close to 512GB limit)
 
 ---
 
@@ -80,22 +136,32 @@
 
 | Version | Framework | Load Time | Memory | Avg TPS | TTFT |
 |---------|-----------|-----------|--------|---------|------|
-| 4-bit | MLX | 6.08s | 172 GB | 44.21 | 72ms |
-| 8-bit | MLX | - | - | - | - |
-| bf16 | MLX | - | - | - | - |
+| 4-bit | MLX | 21.25s | 135 GB | 45.73 | 67ms |
+| 6-bit | MLX | 29.85s | 192 GB | 41.83 | 75ms |
+| 8-bit | MLX | 28.07s | 252 GB | 33.04 | 95ms |
+| bf16 | MLX | - | ~460 GB | - | - |
 | Q4_K_M | llama.cpp | - | - | - | - |
 | Q8_0 | llama.cpp | - | - | - | - |
 
 ## Observations
 
-### MiniMax M2.1 4-bit on M3 Ultra (512GB)
+### MiniMax M2.1 on M3 Ultra (512GB)
 
-1. **Memory Efficiency**: The 4-bit quantized model uses only ~172GB of the 512GB available, leaving plenty of headroom for larger context sizes or concurrent workloads.
+1. **Memory Scaling**: Memory usage scales roughly linearly with quantization:
+   - 4-bit: ~135 GB
+   - 6-bit: ~192 GB (+42%)
+   - 8-bit: ~252 GB (+87%)
 
-2. **Generation Speed**: At ~48 tokens/sec after warm-up, the model provides a responsive interactive experience. This is excellent for a 230B parameter model.
+2. **Speed vs Quality Trade-off**:
+   - 4-bit: 45.73 TPS - Best speed, acceptable quality
+   - 6-bit: 41.83 TPS - 9% slower, modest quality improvement
+   - 8-bit: 33.04 TPS - 28% slower, better quality
 
-3. **Low Latency**: TTFT of ~62-72ms means users get near-instant feedback when starting generation.
+3. **Low Latency**: All versions maintain excellent TTFT:
+   - 4-bit: 67ms
+   - 6-bit: 75ms
+   - 8-bit: 95ms
 
-4. **Load Time**: 6 seconds to load a 120GB model is very fast, thanks to MLX's efficient memory mapping.
+4. **Recommendation**: For interactive use, 4-bit offers the best balance of speed and quality. For tasks requiring higher accuracy, 6-bit is a good middle ground.
 
-5. **Quality**: The model produces coherent, well-structured responses in both Chinese and English, with good code generation capabilities.
+5. **512GB Headroom**: Even 8-bit (252GB) leaves room for concurrent workloads. bf16 (~460GB) should fit but with limited headroom.
