@@ -2,6 +2,7 @@
 venv/
 .venv/
 env/
+.env
 
 # Python
 __pycache__/
@@ -12,17 +13,33 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+*.egg
+.eggs/
+pip-log.txt
+pip-delete-this-directory.txt
 
 # IDE
 .idea/
 .vscode/
 *.swp
 *.swo
+*~
+.project
+.pydevproject
+.settings/
 
 # macOS
 .DS_Store
 .AppleDouble
 .LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
 
 # Test outputs (keep structure, ignore generated files)
 docs/test-results/*.json
@@ -32,7 +49,27 @@ docs/test-results/*.md
 *.gguf
 *.safetensors
 *.bin
+*.pt
+*.pth
+*.onnx
 models/
+*.mlpackage/
+
+# HuggingFace cache
+.cache/
 
 # Logs
 *.log
+logs/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy
+.mypy_cache/
