@@ -134,12 +134,16 @@ def run_generation_test(
     # Run generation
     memory_monitor.sample()
 
+    # Create sampler with temperature
+    from mlx_lm.sample_utils import make_sampler
+    sampler = make_sampler(temp=temperature)
+
     output = generate(
         model,
         tokenizer,
         prompt=formatted_prompt,
         max_tokens=max_tokens,
-        temp=temperature,
+        sampler=sampler,
     )
 
     end_time = time.perf_counter()
