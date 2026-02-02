@@ -120,6 +120,25 @@
 
 ## llama.cpp Results
 
+### BF16 (Full Precision)
+
+**Test Date:** 2026-02-03
+
+| Metric | Value |
+|--------|-------|
+| **Model Size** | ~457 GB (10 shards) |
+| **Memory Usage** | 426 GB (83% of 512GB) |
+| **Status** | FAILED - Process killed after ~6 hours |
+| **TPS** | <0.3 tokens/sec (estimated) |
+
+**Notes:**
+- BF16 is NOT practical on 512GB Mac with llama.cpp
+- Process ran for 6+ hours without completing first test (100 tokens)
+- Killed by system (exit code 137 - likely OOM)
+- Memory usage at limit, causing severe performance degradation
+
+---
+
 ### Q4_K_M
 
 **Status:** Not yet tested
@@ -139,7 +158,8 @@
 | 4-bit | MLX | 21.25s | 135 GB | 45.73 | 67ms |
 | 6-bit | MLX | 29.85s | 192 GB | 41.83 | 75ms |
 | 8-bit | MLX | 28.07s | 252 GB | 33.04 | 95ms |
-| bf16 | MLX | - | ~460 GB | - | - |
+| bf16 | MLX | - | ~460 GB | N/A | N/A |
+| BF16 | llama.cpp | - | 426 GB | <0.3 | FAILED |
 | Q4_K_M | llama.cpp | - | - | - | - |
 | Q8_0 | llama.cpp | - | - | - | - |
 
@@ -164,4 +184,10 @@
 
 4. **Recommendation**: For interactive use, 4-bit offers the best balance of speed and quality. For tasks requiring higher accuracy, 6-bit is a good middle ground.
 
-5. **512GB Headroom**: Even 8-bit (252GB) leaves room for concurrent workloads. bf16 (~460GB) should fit but with limited headroom.
+5. **512GB Headroom**: Even 8-bit (252GB) leaves room for concurrent workloads.
+
+6. **BF16 Not Practical**: BF16 (457GB) consumes 83% of memory and is extremely slow:
+   - llama.cpp BF16 failed after 6 hours without completing even 100 tokens
+   - Memory pressure causes severe performance degradation
+   - Estimated TPS <0.3 (vs 45+ for 4-bit MLX)
+   - **Recommendation**: Use 8-bit or lower for any interactive use
