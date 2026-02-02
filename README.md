@@ -7,6 +7,16 @@ Comprehensive performance benchmarking of MiniMax M2.1 model variants on Mac (51
 - **MiniMax M2.1**: 230B parameter MoE model (10B active parameters)
 - **Optimized for**: Code generation, tool use, instruction following, and long-horizon planning
 
+## Test Machine Configuration
+
+| Spec | Details |
+|------|---------|
+| **Model** | Mac Studio (Mac15,14) |
+| **Chip** | Apple M3 Ultra |
+| **CPU Cores** | 32 (24 performance + 8 efficiency) |
+| **Unified Memory** | 512 GB |
+| **macOS** | 26.2 (Build 25C56) |
+
 ## Quick Start
 
 ### 1. Environment Setup
