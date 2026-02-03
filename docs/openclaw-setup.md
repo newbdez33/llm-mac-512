@@ -466,12 +466,40 @@ llm:
 
 ---
 
+## 故障排除
+
+如果切换到本地 LM Studio 后出现回答质量问题（如包含英文思考、`<think>` 标签等），请参考：
+
+**📖 [LM Studio + OpenClaw 故障排除指南](./lmstudio-openclaw-troubleshooting.md)**
+
+**常见问题快速修复：**
+
+```bash
+# 1. 修改 API 类型为 openai-responses
+python3 << 'EOF'
+import json
+with open('/Users/jacky/.openclaw/openclaw.json', 'r') as f:
+    config = json.load(f)
+config['models']['providers']['lmstudio']['api'] = 'openai-responses'
+with open('/Users/jacky/.openclaw/openclaw.json', 'w') as f:
+    json.dump(config, f, indent=2)
+print("✓ 已修复")
+EOF
+
+# 2. 重启 gateway
+pkill openclaw-gateway && openclaw gateway start
+```
+
+---
+
 ## 相关资源
 
-- **LM Studio 完整设置**: [docs/lm-studio-setup.md](./lm-studio-setup.md)
-- **MLX 完整设置**: [docs/mlx-local-setup.md](./mlx-local-setup.md)
+- **故障排除指南**: [lmstudio-openclaw-troubleshooting.md](./lmstudio-openclaw-troubleshooting.md) ⭐
+- **LM Studio 完整设置**: [lm-studio-setup.md](./lm-studio-setup.md)
+- **MLX 完整设置**: [mlx-local-setup.md](./mlx-local-setup.md)
 - **快速开始指南**: [QUICKSTART-LMSTUDIO.md](../QUICKSTART-LMSTUDIO.md)
-- **性能测试结果**: [docs/benchmark-results.md](./benchmark-results.md)
+- **性能测试结果**: [benchmark-results.md](./benchmark-results.md)
+- **OpenClaw 官方文档**: https://docs.openclaw.ai/gateway/local-models
 
 ---
 
