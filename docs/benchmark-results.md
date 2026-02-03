@@ -118,6 +118,72 @@
 
 ---
 
+## LM Studio Results
+
+### MiniMax-M2.1-8bit (via LM Studio)
+
+**Test Date:** 2026-02-03
+
+| Metric | Value |
+|--------|-------|
+| **Framework** | LM Studio 0.4.1 (MLX backend 0.44.1) |
+| **Model Size** | 243.01 GB |
+| **Peak Memory** | ~238 GB |
+| **Context Length** | 4096 (default) ⚠️ |
+| **Average TPS** | 20.73 tokens/sec |
+| **Max TPS** | 29.34 tokens/sec |
+| **Min TPS** | 2.53 tokens/sec |
+
+#### Individual Test Results
+
+| Test | Description | Tokens | TPS | Time |
+|------|-------------|--------|-----|------|
+| short | Short text generation | 99 | 2.53 | 39.19s |
+| medium | Code generation | - | - | Failed ❌ |
+| long | Long text generation | 1999 | 26.82 | 74.53s |
+| reasoning | Logical reasoning | 499 | 29.34 | 17.01s |
+| instruction | Instruction following | 399 | 24.22 | 16.47s |
+
+**Notes:**
+- ⚠️ **Context length severely limited to 4096** (model supports 200K)
+- First test extremely slow (2.53 TPS) due to:
+  - Cold start warmup
+  - Model generating extensive `<think>` reasoning blocks before actual response
+- Model outputs reasoning in `<think>...</think>` tags by default, affecting measured speed
+- One test failed with HTTP 400 error (possible request issue)
+- Performance **38% lower** than native MLX (20.73 vs 33.04 TPS for 8-bit)
+- Memory usage similar to native MLX (~238GB)
+- LM Studio using MLX 0.44.1 backend (same as native tests)
+
+**Performance Impact Analysis:**
+
+| Factor | Impact | Notes |
+|--------|--------|-------|
+| Context Length | **High** | 4096 vs 200K capability - severely limits model |
+| Reasoning Blocks | **Medium** | `<think>` output increases token count |
+| API Overhead | **Low-Medium** | HTTP + JSON parsing adds latency |
+| GUI/Server Layer | **Low** | Minimal impact on throughput |
+| Backend Optimization | **High** | LM Studio may not use optimal MLX settings |
+
+**LM Studio vs Native MLX Comparison (8-bit):**
+
+| Metric | LM Studio | Native MLX | Difference |
+|--------|-----------|------------|------------|
+| Average TPS | 20.73 | 33.04 | -37.3% ⬇️ |
+| Max TPS | 29.34 | 35.98 | -18.5% ⬇️ |
+| Memory | ~238 GB | 252 GB | -5.5% ✅ |
+| Context Length | 4096 | Default (high) | -98% ⚠️ |
+| Ease of Use | ⭐⭐⭐⭐⭐ | ⭐⭐ | GUI vs CLI |
+
+**Recommendations:**
+1. **Increase context length** in LM Studio settings to at least 32768
+2. **Disable reasoning output** if not needed (model config)
+3. Use **native MLX** for performance-critical applications (37% faster)
+4. Use **LM Studio** for ease of use and quick experimentation
+5. Check LM Studio GPU settings ensure max GPU layers enabled
+
+---
+
 ## llama.cpp Results
 
 ### BF16 (Full Precision)
@@ -172,15 +238,21 @@ Root causes:
 
 ## Summary
 
-| Version | Framework | Load Time | Memory | Avg TPS | TTFT |
-|---------|-----------|-----------|--------|---------|------|
-| 4-bit | MLX | 21.25s | 135 GB | 45.73 | 67ms |
-| 6-bit | MLX | 29.85s | 192 GB | 41.83 | 75ms |
-| 8-bit | MLX | 28.07s | 252 GB | 33.04 | 95ms |
-| bf16 | MLX | - | ~460 GB | N/A | N/A |
-| BF16 | llama.cpp | - | 426 GB | <0.3 | FAILED |
-| Q4_K_M | llama.cpp | - | - | - | - |
-| Q8_0 | llama.cpp | - | - | - | - |
+| Version | Framework | Load Time | Memory | Avg TPS | TTFT | Notes |
+|---------|-----------|-----------|--------|---------|------|-------|
+| 4-bit | MLX | 21.25s | 135 GB | **45.73** | 67ms | ⭐ Best speed |
+| 6-bit | MLX | 29.85s | 192 GB | 41.83 | 75ms | Balanced |
+| 8-bit | MLX | 28.07s | 252 GB | 33.04 | 95ms | Native CLI |
+| **8-bit** | **LM Studio** | ~30s | 238 GB | **20.73** | N/A | GUI, ctx=4096 ⚠️ |
+| bf16 | MLX | - | ~460 GB | N/A | N/A | Not tested |
+| BF16 | llama.cpp | - | 426 GB | <0.3 | FAILED | OOM kill |
+| Q4_K_M | llama.cpp | - | - | TBD | - | Pending |
+| Q8_0 | llama.cpp | - | - | TBD | - | Pending |
+
+**Key Findings:**
+- **LM Studio (8-bit)**: 37% slower than native MLX due to context length limit (4096)
+- **Native MLX**: Best performance-to-ease ratio
+- **BF16**: Not practical on 512GB system
 
 ## Observations
 

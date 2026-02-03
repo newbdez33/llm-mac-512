@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-02-03T21:53:06.482223",
+  "api_base": "http://localhost:1234/v1",
+  "model": "minimax-m2.1",
+  "summary": {
+    "avg_tps": 20.726937001122977,
+    "max_tps": 29.340200770654945,
+    "min_tps": 2.526428412119399,
+    "total_tokens": 2996,
+    "total_time": 147.19787406921387
+  },
+  "results": [
+    {
+      "test_name": "short",
+      "name": "短文本生成",
+      "prompt": "请用一句话解释量子计算",
+      "max_tokens": 100,
+      "prompt_tokens": 44,
+      "completion_tokens": 99,
+      "total_time": 39.18575310707092,
+      "tps": 2.526428412119399,
+      "content": "The user asks in Chinese: \"请用一句话解释量子计算\". That means \"Please explain quantum computing in one sentence.\" So we need to give a concise explanation of quantum computing in Chinese, within one sentence. The user wants the answer in Chinese presumably.\n\nWe need to comply with policy: no disallowed content. It's a straightforward request about explaining a concept. There's no issue.\n\nWe should respond with one sentence in Chinese, summarizing quantum computing: \"量子计算利用量子比特（qubit）的",
+      "success": true
+    },
+    {
+      "test_name": "medium",
+      "name": "代码生成",
+      "error": "400 Client Error: Bad Request for url: http://localhost:1234/v1/chat/completions",
+      "success": false
+    },
+    {
+      "test_name": "long",
+      "name": "长文本生成",
+      "prompt": "详细解释深度学习的反向传播算法，包括数学推导过程",
+      "max_tokens": 2000,
+      "prompt_tokens": 49,
+      "completion_tokens": 1999,
+      "total_time": 74.53072786331177,
+      "tps": 26.821152259053957,
+      "content": "用户要求我详细解释深度学习中的反向传播算法，包括数学推导过程。这是一个技术教育类文章，需要：\n\n1. **写作类型**：技术教程/教育性文章\n2. **风格**：学术性但易于理解，公式推导要清晰\n3. **受众**：学习深度学习的学生或研究人员，需要有一定的数学基础\n4. **结构**：\n   - 引言：什么是反向传播，为什么重要\n   - 基本概念和背景\n   - 链式法则（数学基础）\n   - 前向传播过程回顾\n   - 反向传播的详细推导（核心部分）\n   - 不同层类型的梯度计算\n   - 算法流程和实现细节\n   - 常见问题和优化\n\n我需要包含：\n- 清晰的数学公式推导\n- 具体例子帮助理解\n- 代码示例（可选，但有助于理解）\n- 完整的逻辑链条\n\n让我开始撰写这篇详细的技术文章。\n</think>\n\n# 深度学习反向传播算法详解：数学原理与推导过程\n\n## 引言\n\n反向传播（Backpropagation）是深度学习中最核心的算法之一，它使得训练深层神经网络成为可能。没有反向传播，我们无法有效地计算损失函数关于网络参数的梯度，也就无法通过梯度下降或其变体来优化网络权重。从本质上讲，反向传播是一种高效计算复合函数梯度的算法，它巧妙地利用了链式法则，将输出端的误差逐层传播回输入端，从而获得每个参数对最终损失的贡献。\n\n理解反向传播不仅对于实际应用深度学习至关重要，更能够帮助我们深入理解神经网络的学习机制。许多从业者仅仅停留在使用现成框架（如PyTorch、TensorFlow）的层面，对底层的数学原理知之甚少，这种认知上的缺失往往会限制他们在遇到复杂问题时的解决能力。本文将系统地介绍反向传播的数学基础，从链式法则出发，逐步推导出完整的反向传播算法，并通过具体例子加深理解。\n\n## 基础概念与数学工具\n\n### 神经网络作为复合函数\n\n在深入反向传播之前，我们首先需要理解神经网络的数学本质。一个多层神经网络本质上是一个复杂的复合函数，它由多个简单的非线性函数组合而成。假设我们有一个$L$层的神经网络，第$l$层（从1开始计数）的输出可以表示为：\n\n$$h^{(l)} = f^{(l)}(z^{(l)}) = f^{(l)}(W^{(l)}h^{(l-1)} + b^{(l)})$$\n\n其中$z^{(l)}$是第$l$层的线性变换结果，$W^{(l)}$和$b^{(l)}$分别是该层的权重矩阵和偏置向量，$f^{(l)}$是激活函数。整个网络的前向传播过程可以看作是将输入$x = h^{(0)}$依次通过这些变换，最终产生输出$\\hat{y} = h^{(L)}$。\n\n我们的目标是调整网络参数$\\theta = \\{W^{(l)}, b^{(l)}\\}_{l=1}^{L}$，使得网络的输出$\\hat{y}$尽可能接近真实标签$y$。这需要一个损失函数来量化预测误差，常见的损失函数包括均方误差（MSE）和交叉熵损失（Cross-Entropy Loss）。对于回归任务，损失函数定义为：\n\n$$\\mathcal{L} = \\frac{1}{2}\\|\\hat{y} - y\\|_2^2$$\n\n对于分类任务，常用交叉熵损失：\n\n$$\\mathcal{L} = -\\sum_{k=1}^{K}y_k\\log(\\hat{y}_k)$$\n\n其中$K$是类别数量，$\\hat{y}$通常经过softmax函数处理以满足概率分布的性质。\n\n### 链式法则：反向传播的数学基石\n\n反向传播的核心数学工具是多元微积分中的链式法则。考虑一个复合函数$y = f(g(x))$，其中$x \\in \\mathbb{R}^m$，$g: \\mathbb{R}^m \\to \\mathbb{R}^n$，$f: \\mathbb{R}^n \\to \\mathbb{R}$。链式法则告诉我们：\n\n$$\\frac{\\partial y}{\\partial x_i} = \\sum_{j=1}^{n}\\frac{\\partial y}{\\partial g_j}\\frac{\\partial g_j}{\\partial x_i}$$\n\n用向量形式简洁地表示为：\n\n$$\\nabla_x y = \\left(\\frac{\\partial g}{\\partial x}\\right)^T \\nabla_g y$$\n\n这个看似简单的公式蕴含着反向传播的全部精髓——它告诉我们如何将上游的梯度（$\\nabla_g y$）\"传播\"回下游的变量（$\\nabla_x y$），而这个过程只需要计算局部雅可比矩阵（或其近似）。\n\n对于神经网络这样具有复杂拓扑结构的计算图，链式法则的应用需要遵循特定的顺序：我们从输出层开始，逐层向输入层推进，每一步都利用当前层的局部梯度信息和上游传来的梯度信号，计算出当前层各参数的梯度，并将剩余的梯度继续向下游传播。\n\n## 前向传播过程回顾\n\n在详细推导反向传播之前，我们有必要先完整地描述前向传播的过程，这不仅有助于建立统一的符号约定，也为后续的梯度计算提供清晰的上下文。\n\n### 单层神经元的数学描述\n\n考虑一个全连接层（即Dense层或Linear层）。设第$l-1$层的输出为列向量$h^{(l-1)} \\in \\mathbb{R}^{n_{l-1}}$，其中$n_{l-1}$是第$l-1$层的神经元数量。该层通过以下变换得到第$l$层的输入：\n\n$$z^{(l)} = W^{(l)}h^{(l-1)} + b^{(l)}$$\n\n其中权重矩阵$W^{(l)} \\in \\mathbb{R}^{n_l \\times n_{l-1}}$，偏置向量$b^{(l)} \\in \\mathbb{R}^{n_l}$。然后应用激活函数$f^{(l)}$得到该层的输出：\n\n$$h^{(l)} = f^{(l)}(z^{(l)}) = f^{(l)}(W^{(l)}h^{(l-1)} + b^{(l)})$$\n\n这里采用逐元素应用的激活函数，如Sigmoid、ReLU或tanh。对于第$l$层的第$i$个神经元，其输出可以明确地写为：\n\n$$h_i^{(l)} = f^{(l)}\\left(\\sum_{j=1}^{n_{l-1}}W_{ij}^{(l)}h_j^{(l-1)} + b_i^{(l)}\\right)$$\n\n### 整体前向传播的计算流程\n\n对于一个完整的$L$层神经网络，前向传播从输入层开始，依次计算每一层的输出。算法的伪代码如下：\n\n```\n输入: 训练样本 (x, y), 网络结构\n输出: 损失值 L\n\n# 初始化\nh^(0) = x\n\n# 逐层前向传播\nfor l = 1 to L:\n    # 计算线性变换\n    z^(l) = W^(l) * h^(l-1) + b^(l)\n    # 应用激活函数\n    h^(l) = f^(l)(z^(l))\n\n# 计算损失\nif 回归任务:\n    L = (1/2) * ||h^(L) - y||^2\nelse if 分类任务:\n    # 假设使用softmax激活和交叉熵损失\n    L = -sum(y_i * log(h_i^(L)))\n\n返回 L, {z^(l), h^(l)}_{l=1}^{L}\n```\n\n值得注意的是，在前向传播过程中，我们需要保存每一层的中间结果$z^{(l)}$和$h^{(l)}$，因为在反向传播计算梯度时，这些值都会被用到。这是实现反向传播的一个关键点——前向传播的空间复杂度与网络深度成正比，这也是深层网络需要大量内存的原因之一。\n\n## 反向传播的详细数学推导\n\n### 误差项的定义与意义\n\n反向传播的核心是计算每个参数对最终损失的贡献程度。用数学语言来说，我们需要计算形如$\\frac{\\partial \\mathcal{L}}{\\partial W^{(l)}}$和$\\frac{\\partial \\mathcal{L}}{\\partial b^{(l)}}$的梯度。\n\n为了使推导更加简洁和系统化，我们定义第$l$层的\"误差项\"（或称\"敏感度\"）为：\n\n$$\\delta^{(l)} = \\frac{\\partial \\mathcal{L}}{\\partial z^{(l)}} \\in \\mathbb{R}^{n_l}$$\n\n这个误差项衡量了损失函数对第$l$层净输入的敏感程度。选择$z^{(l)}$而非$h^{(l)}$作为变量，是因为这样可以简化后续的梯度计算—— activations的导数可以单独处理，而线性变换的部分则保持一致的数学形式。\n\n一旦我们计算出了$\\delta^{(l)}$，就可以直接得到参数梯度：\n\n$$\\frac{\\partial \\mathcal{L}}{\\partial W^{(l)}} = \\delta^{(l)} (h^{(l-1)})^T$$\n\n$$\\frac{\\partial \\mathcal{L}}{\\partial b^{(l)}} = \\delta^{(l)}$$\n\n这两个公式将在下面的推导中自然涌现。\n\n### 输出层误差项的推导\n\n我们从网络的最后一层开始推导，因为损失函数直接依赖于输出层的激活值。设第$L$层是网络的输出层，激活函数为$f^{(L)}$。\n\n根据链式法则，输出层的误差项可以展开为：\n\n$$\\delta^{(L)} = \\frac{\\partial \\mathcal{L}}{\\partial z^{(L)}} = \\frac{\\partial \\mathcal{L}}{\\partial h^{(L)}} \\cdot \\frac{\\partial h^{(L)}}{\\partial z^{(L)}}$$\n\n第二项$\\frac{\\partial h^{(L)}}{\\partial z^{(L)}} = (f^{(L)})'(z^{(L)})$是激活函数在$z^{(L)}$处的导数，通常是对角矩阵（因为 activations是逐元素计算的），我们可以将其视为逐元素的Hadamard积操作。\n\n第一项$\\frac{\\partial",
+      "success": true
+    },
+    {
+      "test_name": "reasoning",
+      "name": "推理能力",
+      "prompt": "有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。",
+      "max_tokens": 500,
+      "prompt_tokens": 67,
+      "completion_tokens": 499,
+      "total_time": 17.007381916046143,
+      "tps": 29.340200770654945,
+      "content": "We need to solve a logic puzzle: 5 people (A,B,C,D,E) line up, with constraints:\n\n1. A is not first.\n2. B is before C (i.e., B somewhere left of C).\n3. D is immediately next to E, i.e., D and E are adjacent; could be D left of E or right of E? Usually \"D紧挨着E\" means D is next to E, which could be either order. So we have adjacency.\n\n4. A is after D (i.e., D before A). \"A在D后面\" means A is directly behind D? Or just after D (i.e., later in the queue)? The phrase \"后面\" could be interpreted as immediate next? In Chinese, \"A在D后面\" usually means A is behind D (i.e., after D), not necessarily immediate. However, some puzzles interpret \"在后面\" as immediate neighbor? Usually they'd say \"紧挨着\" for immediate adjacency. So here it's likely just A after D (i.e., D before A). Could be immediate but not required. Let's parse the original: \"A在D后面\" could be ambiguous, but typical Chinese phrasing for immediate adjacency is \"紧挨着\", which they used for D and E. So A after D means any position later, not necessarily immediate.\n\nThus constraints:\n\n- Position indices: 1..5 left to right.\n- A ≠ position 1.\n- B before C (B < C).\n- D adjacent to E: |pos(D) - pos(E)| = 1.\n- D before A (D < A).\n\nWe need to find all possible orders satisfying these constraints.\n\nLet's solve systematically.\n\nWe have 5! =120 permutations. Let's impose constraints.\n\nConstraint list:\n\n1) pos(A) ≠ 1.\n2) pos(B) < pos(C).\n3) |pos(D) - pos(E)| = 1.\n4) pos(D) < pos(A).\n\nWe can attempt to enumerate manually or logically.\n\nLet's denote positions 1-5.\n\nFirst, D and E adjacent. There are possible adjacency pairs: (D,E) in positions (1,2), (2,3), (3,4), (4,5) or reversed (E,D). So there are 2*4 =8 possibilities for adjacency.\n\nNow D before A: pos(D) < pos(A). So we need to consider",
+      "success": true
+    },
+    {
+      "test_name": "instruction",
+      "name": "指令跟随",
+      "prompt": "请完成以下任务：\n1. 列出3种常见的排序算法\n2. 为每种算法写出时间复杂度\n3. 用一句话总结它们的适用场景",
+      "max_tokens": 400,
+      "prompt_tokens": 71,
+      "completion_tokens": 399,
+      "total_time": 16.474011182785034,
+      "tps": 24.219966562663615,
+      "content": "The user asks: \"请完成以下任务：1. 列出3种常见的排序算法 2. 为每种算法写出时间复杂度 3. 用一句话总结它们的适用场景\". So they want a list of three common sorting algorithms, their time complexities (presumably best-case, average-case, worst-case), and a one-sentence summary of their applicable scenarios.\n\nWe need to respond in Chinese, as the request is in Chinese. They likely want a clear answer.\n\nWe need to consider: typical sorting algorithms include Quick Sort, Merge Sort, Heap Sort. Also could be Insertion Sort, Bubble Sort, Selection Sort, but common advanced ones: Quick Sort (快速排序), Merge Sort (归并排序), Heap Sort (堆排序). Or could also mention Counting Sort, Radix Sort for special cases. The question says \"3种常见的排序算法\". So we can list Quick Sort, Merge Sort, Heap Sort. Then provide their time complexities: Quick sort O(n log n) average, O(n^2) worst; Merge sort O(n log n) always; Heap sort O(n log n) always. Then a one-sentence summary for each about applicable scenarios.\n\nWe need to output in Chinese. Provide bullet points maybe.\n\nMake sure not to violate any policy. It's a straightforward answer, no disallowed content.\n\nThus respond with:\n\n1. 快速排序 (Quick Sort) - 时间复杂度: 平均 O(n log n), 最坏 O(n^2); 适用于数据规模大且对原地排序有要求的情况（不稳定，但通常速度快）。\n\nBut one-sentence summary: \"快速排序在大多数随机数据上表现优秀，适合需要原地排序且对最坏情况不敏感的场合\".\n\nSimilarly for Merge Sort: \"归并排序在需要稳定排序或对最坏时间有严格保证时使用，常用于外部排序和链表\". Provide time complexity: O(n log n) best, average, worst.\n\nHeap Sort: \"堆排序在",
+      "success": true
+    }
+  ]
+}
