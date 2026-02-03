@@ -4,7 +4,7 @@ Comprehensive performance benchmarking of MiniMax M2.1 model variants on Mac (51
 
 [中文版](./README.zh-CN.md) | [English](./README.md)
 
-**🚀 [快速开始 - 5分钟运行MLX](./QUICKSTART.md)** | **📖 [完整本地运行指南](./docs/mlx-local-setup.md)**
+**🚀 [快速开始 - 5分钟运行MLX](./QUICKSTART.md)** | **📖 [完整本地运行指南](./docs/mlx-local-setup.md)** | **🔌 [OpenClaw API配置](./docs/openclaw-setup.md)**
 
 ## Model Overview
 
