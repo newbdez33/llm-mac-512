@@ -144,6 +144,12 @@ python scripts/benchmark_llama.py --model /path/to/MiniMax-M2.1-Q4_K_M.gguf
 - [ ] Aggregate throughput measurement
 - [ ] Mixed workload testing
 
+### 🆕 Phase 5: VRAM/Memory Optimization
+- [ ] System VRAM limit adjustment (default 384GB → 448GB/480GB)
+- [ ] llama.cpp Metal backend optimization (FORCE_PRIVATE, DEVICE_INDEX)
+- [ ] Performance impact measurement
+- [ ] Large model optimization (8-bit, bf16)
+
 > 📖 Full test plan: [docs/test-plan.md](./docs/test-plan.md)
 > 🔧 Execution guide: [docs/test-execution-guide.md](./docs/test-execution-guide.md)
 

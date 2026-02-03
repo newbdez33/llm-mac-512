@@ -80,6 +80,12 @@
 - [ ] 聚合吞吐量测量
 - [ ] 混合工作负载测试
 
+### 🆕 Phase 5: VRAM/内存优化
+- [ ] 系统VRAM限制调整（默认384GB → 448GB/480GB）
+- [ ] llama.cpp Metal后端优化（FORCE_PRIVATE、DEVICE_INDEX）
+- [ ] 性能影响测量
+- [ ] 大模型优化（8-bit、bf16）
+
 > 📖 完整测试计划: [docs/test-plan.md](./docs/test-plan.md)
 > 🔧 执行指南: [docs/test-execution-guide.md](./docs/test-execution-guide.md)
 

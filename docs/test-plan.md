@@ -246,7 +246,153 @@ On M3 Ultra (512GB):
 
 ---
 
-### Phase 5: Analysis & Documentation
+### Phase 5: Memory/VRAM Optimization Testing 🆕
+
+**Objective:** Test impact of macOS VRAM limits and Metal backend configurations on performance
+
+#### 5.1 Background
+
+**macOS Unified Memory Constraints:**
+- By default, macOS only allows GPU to use ~75% of unified memory
+- On 512GB system: ~384GB available for GPU, 128GB reserved
+- Can be adjusted via `sysctl iogpu.wired_limit_mb`
+
+**llama.cpp Metal Backend Options:**
+- `GGML_METAL_FORCE_PRIVATE=1` - Force private VRAM mode
+- `GGML_METAL_DEVICE_INDEX` - Select specific GPU die (M3 Ultra has 2)
+- `GGML_METAL_N_CB` - Tune command buffer count
+
+#### 5.2 Test Matrix
+
+**Test 1: System VRAM Limit Impact (MLX)**
+
+| Config | VRAM Limit | Expected GPU Memory | Test Model |
+|--------|------------|---------------------|------------|
+| Default | ~384GB | 384GB | MLX 4-bit |
+| Optimized | 448GB | 448GB | MLX 4-bit |
+| Aggressive | 480GB | 480GB | MLX 4-bit |
+
+**Commands:**
+```bash
+# Baseline (default)
+sysctl iogpu.wired_limit_mb  # Check current
+python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-4bit
+
+# Optimized (448GB for GPU)
+sudo sysctl iogpu.wired_limit_mb=458752
+python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-4bit
+
+# Aggressive (480GB for GPU)
+sudo sysctl iogpu.wired_limit_mb=491520
+python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-4bit
+```
+
+**Test 2: VRAM Impact on Large Models**
+
+Test same VRAM configs with 8-bit model (252GB baseline):
+```bash
+# Default vs Optimized VRAM limit
+python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-8bit
+```
+
+**Test 3: llama.cpp Metal Backend Optimization**
+
+| Config | FORCE_PRIVATE | DEVICE_INDEX | N_CB | Purpose |
+|--------|---------------|--------------|------|---------|
+| Baseline | 0 (default) | - | - | Reference |
+| Private VRAM | 1 | - | 2 | Force private memory |
+| Die 0 | - | 0 | 2 | Test first die |
+| Die 1 | - | 1 | 2 | Test second die |
+| CB tuning | 1 | - | 1 | Reduce buffers |
+| CB tuning | 1 | - | 3 | Increase buffers |
+| Combined | 1 | 0 | 2 | All optimizations |
+
+**Commands:**
+```bash
+# Baseline
+python scripts/benchmark_llama.py --model model.gguf
+
+# Force private VRAM
+export GGML_METAL_FORCE_PRIVATE=1
+python scripts/benchmark_llama.py --model model.gguf
+unset GGML_METAL_FORCE_PRIVATE
+
+# Test different dies
+export GGML_METAL_DEVICE_INDEX=0
+python scripts/benchmark_llama.py --model model.gguf
+
+export GGML_METAL_DEVICE_INDEX=1
+python scripts/benchmark_llama.py --model model.gguf
+unset GGML_METAL_DEVICE_INDEX
+
+# Test command buffer count
+export GGML_METAL_FORCE_PRIVATE=1
+export GGML_METAL_N_CB=1
+python scripts/benchmark_llama.py --model model.gguf
+
+export GGML_METAL_N_CB=3
+python scripts/benchmark_llama.py --model model.gguf
+```
+
+**Test 4: Combined Optimization**
+
+```bash
+# System-level + Metal optimizations
+sudo sysctl iogpu.wired_limit_mb=458752
+export GGML_METAL_FORCE_PRIVATE=1
+export GGML_METAL_DEVICE_INDEX=0
+export GGML_METAL_N_CB=2
+
+# Test Q4_K_M
+python scripts/benchmark_llama.py --model ~/models/MiniMax-M2.1-Q4_K_M.gguf
+
+# Test Q8_0
+python scripts/benchmark_llama.py --model ~/models/MiniMax-M2.1-Q8_0.gguf
+```
+
+#### 5.3 Metrics to Track
+
+**Primary:**
+- TPS change (baseline vs optimized)
+- Memory usage (actual GPU memory allocated)
+- TTFT impact
+
+**Secondary:**
+- Stability (any crashes or OOM)
+- Temperature/power consumption
+- Sustained performance over multiple runs
+
+#### 5.4 Expected Results
+
+**System VRAM Limit:**
+- Small models (4-bit, 135GB): 0-5% TPS improvement
+- Large models (8-bit, 252GB): 5-10% TPS improvement
+- May enable bf16 to run without OOM
+
+**Metal Backend:**
+- FORCE_PRIVATE: 0-10% improvement, but higher memory pressure
+- DEVICE_INDEX: Minimal difference (load balancing)
+- N_CB: Varies, 2 is generally optimal
+
+#### 5.5 Script: benchmark_vram.sh
+
+Automated testing script (to be created):
+```bash
+#!/bin/bash
+# Test different VRAM configurations automatically
+./scripts/benchmark_vram.sh --model mlx-community/MiniMax-M2.1-4bit
+```
+
+#### 5.6 Safety Notes
+
+- ⚠️ VRAM settings revert on restart (safe to test)
+- ⚠️ Setting VRAM too high (>480GB) may cause system instability
+- ⚠️ Monitor memory pressure during tests
+- ✅ Test with smaller models first before bf16
+
+---
+
+### Phase 6: Analysis & Documentation
 
 1. Aggregate all test results
 2. Generate comparison charts
@@ -254,6 +400,7 @@ On M3 Ultra (512GB):
 4. Update benchmark-results.md with:
    - llama.cpp quantization results
    - MLX batching results
+   - Memory optimization results
    - Framework recommendations
 
 ## Key Files

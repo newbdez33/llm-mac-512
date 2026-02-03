@@ -210,3 +210,65 @@ Root causes:
    - Memory pressure causes severe performance degradation
    - Estimated TPS <0.3 (vs 45+ for 4-bit MLX)
    - **Recommendation**: Use 8-bit or lower for any interactive use
+
+---
+
+## VRAM/Memory Optimization Results
+
+**Status:** ⏳ Pending
+
+### Background
+
+macOS by default limits GPU memory usage to ~75% of total unified memory:
+- 512GB system → ~384GB available for GPU
+- Remaining 128GB reserved for system/CPU
+- Can be adjusted via `sysctl iogpu.wired_limit_mb`
+
+### Planned Tests
+
+#### System-Level VRAM Limit
+
+| Config | VRAM Limit | GPU Memory | MLX 4-bit TPS | MLX 8-bit TPS | Status |
+|--------|------------|------------|---------------|---------------|--------|
+| Default | ~384GB | 384GB | TBD | TBD | ⏳ Pending |
+| Optimized | 448GB | 448GB | TBD | TBD | ⏳ Pending |
+| Aggressive | 480GB | 480GB | TBD | TBD | ⏳ Pending |
+
+**Test Command:**
+```bash
+# Test with optimized VRAM
+sudo sysctl iogpu.wired_limit_mb=458752  # 448GB
+./scripts/benchmark_vram.sh --model mlx-community/MiniMax-M2.1-4bit
+```
+
+#### llama.cpp Metal Backend Optimization
+
+| Config | Environment Variables | Expected Impact | Status |
+|--------|----------------------|-----------------|--------|
+| Baseline | (default) | Reference | ⏳ Pending |
+| Private VRAM | GGML_METAL_FORCE_PRIVATE=1 | 0-10% faster | ⏳ Pending |
+| Die Selection | GGML_METAL_DEVICE_INDEX=0/1 | Minimal | ⏳ Pending |
+| Buffer Tuning | GGML_METAL_N_CB=1/2/3 | Varies | ⏳ Pending |
+
+**Test Command:**
+```bash
+# Test with Metal optimizations
+export GGML_METAL_FORCE_PRIVATE=1
+export GGML_METAL_N_CB=2
+python scripts/benchmark_llama.py --model model.gguf
+```
+
+### Expected Outcomes
+
+1. **Small Models (4-bit, 135GB)**: 0-5% TPS improvement with higher VRAM limit
+2. **Large Models (8-bit, 252GB)**: 5-10% TPS improvement
+3. **BF16 (~460GB)**: May become runnable with 480GB VRAM limit
+4. **Metal Backend**: FORCE_PRIVATE may help, but increases memory pressure
+
+### Safety Notes
+
+- ⚠️ VRAM settings reset on restart (safe to test)
+- ⚠️ Setting >480GB may cause instability
+- ✅ Test with small models first
+
+> 📝 Run tests with: `./scripts/benchmark_vram.sh --model <model-name>`

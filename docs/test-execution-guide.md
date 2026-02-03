@@ -362,15 +362,318 @@ python scripts/benchmark_batching.py --model mlx-community/MiniMax-M2.1-4bit --c
 
 ---
 
+## Phase 5: VRAM/Memory Optimization Tests
+
+### Background
+
+macOS limits GPU memory usage to ~75% of unified memory by default:
+- 512GB system → ~384GB for GPU, 128GB reserved
+- Can be increased via `sysctl iogpu.wired_limit_mb`
+- Settings reset on restart (safe to test)
+
+### Test 9: Check Current VRAM Limit
+
+```bash
+# Check current setting
+sysctl iogpu.wired_limit_mb
+
+# Expected: ~393216 (384GB) or similar
+```
+
+---
+
+### Test 10: MLX with Optimized VRAM (448GB)
+
+**Purpose:** Test if higher VRAM limit improves MLX performance
+
+```bash
+# Check current baseline (for comparison)
+# Should already have results from Phase 2
+
+# Set VRAM to 448GB
+sudo sysctl iogpu.wired_limit_mb=458752
+
+# Verify
+sysctl iogpu.wired_limit_mb
+
+# Re-run 4-bit test
+python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-4bit
+
+# Compare TPS with baseline (Phase 2: 45.73 TPS)
+```
+
+**Expected results:**
+- TPS: 45.73 → 46-48? (0-5% improvement)
+- Memory: Similar (~135GB)
+
+---
+
+### Test 11: MLX 8-bit with VRAM Optimization
+
+**Purpose:** Test VRAM impact on larger models
+
+```bash
+# Keep VRAM at 448GB
+sudo sysctl iogpu.wired_limit_mb=458752
+
+# Re-run 8-bit test
+python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-8bit
+
+# Compare with baseline (Phase 2: 33.04 TPS)
+```
+
+**Expected results:**
+- TPS: 33.04 → 34-36? (5-10% improvement)
+- Larger models benefit more from extra VRAM
+
+---
+
+### Test 12: Aggressive VRAM (480GB)
+
+**Purpose:** Find maximum safe VRAM limit
+
+```bash
+# Set VRAM to 480GB (aggressive)
+sudo sysctl iogpu.wired_limit_mb=491520
+
+# Verify
+sysctl iogpu.wired_limit_mb
+
+# Test with 4-bit
+python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-4bit
+
+# Monitor system stability
+```
+
+**Expected results:**
+- May see additional improvement or no change
+- Watch for system instability
+
+**Note:** If system becomes unstable, restart to reset VRAM limit.
+
+---
+
+### Test 13: llama.cpp with Metal Optimization
+
+**Purpose:** Test Metal backend environment variables
+
+```bash
+# Baseline (already done or pending)
+python scripts/benchmark_llama.py --model ~/models/MiniMax-M2.1-Q4_K_M.gguf
+
+# Test with FORCE_PRIVATE
+export GGML_METAL_FORCE_PRIVATE=1
+python scripts/benchmark_llama.py --model ~/models/MiniMax-M2.1-Q4_K_M.gguf
+unset GGML_METAL_FORCE_PRIVATE
+
+# Compare TPS
+```
+
+**Expected results:**
+- 0-10% improvement with FORCE_PRIVATE
+- May use more memory
+
+---
+
+### Test 14: Metal Device Selection (M3 Ultra)
+
+**Purpose:** Test if different GPU dies perform differently
+
+```bash
+# Test die 0
+export GGML_METAL_DEVICE_INDEX=0
+python scripts/benchmark_llama.py --model ~/models/MiniMax-M2.1-Q4_K_M.gguf
+
+# Test die 1
+export GGML_METAL_DEVICE_INDEX=1
+python scripts/benchmark_llama.py --model ~/models/MiniMax-M2.1-Q4_K_M.gguf
+
+# Compare performance
+unset GGML_METAL_DEVICE_INDEX
+```
+
+**Expected results:**
+- Minimal difference (load balancing should be automatic)
+- Interesting data point for M3 Ultra architecture
+
+---
+
+### Test 15: Combined Optimization
+
+**Purpose:** Test all optimizations together
+
+```bash
+# System-level VRAM
+sudo sysctl iogpu.wired_limit_mb=458752
+
+# Metal backend optimizations
+export GGML_METAL_FORCE_PRIVATE=1
+export GGML_METAL_DEVICE_INDEX=0
+export GGML_METAL_N_CB=2
+
+# Run test
+python scripts/benchmark_llama.py --model ~/models/MiniMax-M2.1-Q4_K_M.gguf
+
+# Cleanup
+unset GGML_METAL_FORCE_PRIVATE
+unset GGML_METAL_DEVICE_INDEX
+unset GGML_METAL_N_CB
+```
+
+**Expected results:**
+- Best possible performance for llama.cpp
+- Baseline for future tests
+
+---
+
+### Test 16: Automated VRAM Testing
+
+**Purpose:** Run all VRAM configs automatically
+
+```bash
+# MLX model testing
+./scripts/benchmark_vram.sh --model mlx-community/MiniMax-M2.1-4bit
+
+# llama.cpp testing
+./scripts/benchmark_vram.sh --gguf ~/models/MiniMax-M2.1-Q4_K_M.gguf
+
+# Results saved to docs/test-results/vram-optimization/
+```
+
+**The script will test:**
+- Default VRAM (~384GB)
+- Optimized VRAM (448GB)
+- Aggressive VRAM (480GB)
+
+---
+
+### Monitoring During VRAM Tests
+
+```bash
+# Monitor GPU memory usage
+watch -n 1 'sysctl -a | grep iogpu'
+
+# Monitor system memory pressure
+memory_pressure
+
+# Check GPU activity
+sudo powermetrics --samplers gpu_power -i 1000
+```
+
+---
+
+### Restore Default VRAM
+
+```bash
+# VRAM settings automatically reset on restart
+# Or manually reset (if you know the default):
+sudo sysctl iogpu.wired_limit_mb=393216  # Example: 384GB
+
+# To restore without knowing default, just restart:
+sudo reboot
+```
+
+---
+
+## Test Checklist (Updated)
+
+**Phase 3: llama.cpp**
+- [ ] Q4_K_M downloaded (138GB)
+- [ ] Q4_K_M benchmark completed
+- [ ] Q4_K_M model deleted (save space)
+- [ ] Q8_0 downloaded (243GB)
+- [ ] Q8_0 benchmark completed
+- [ ] Q8_0 model deleted (save space)
+
+**Phase 4: Batching**
+- [ ] vllm-mlx installed (or using mlx-lm fallback)
+- [ ] Baseline (1 concurrent) completed
+- [ ] 2 concurrent completed
+- [ ] 4 concurrent completed
+- [ ] 8 concurrent completed
+- [ ] 16 concurrent completed
+- [ ] Mixed workload completed
+
+**Phase 5: VRAM Optimization** 🆕
+- [ ] Current VRAM limit checked
+- [ ] MLX 4-bit with 448GB VRAM
+- [ ] MLX 8-bit with 448GB VRAM
+- [ ] Aggressive VRAM (480GB) tested
+- [ ] llama.cpp with FORCE_PRIVATE
+- [ ] Metal device selection tested
+- [ ] Combined optimization tested
+- [ ] Automated testing script run
+
+**Documentation**
+- [ ] Results added to benchmark-results.md
+- [ ] VRAM optimization analysis written
+- [ ] Summary analysis written
+- [ ] Comparison charts created (optional)
+- [ ] Twitter summary prepared
+
+---
+
+## Quick Commands Summary (Updated)
+
+```bash
+# llama.cpp Q4_K_M
+python scripts/benchmark_llama.py --model ~/models/minimax-m2.1-gguf/MiniMax-M2.1-Q4_K_M.gguf
+
+# llama.cpp Q8_0
+python scripts/benchmark_llama.py --model ~/models/minimax-m2.1-gguf/MiniMax-M2.1-Q8_0.gguf
+
+# Batching: baseline
+python scripts/benchmark_batching.py --model mlx-community/MiniMax-M2.1-4bit --concurrent 1
+
+# Batching: scaling tests
+for c in 2 4 8 16; do
+  python scripts/benchmark_batching.py --model mlx-community/MiniMax-M2.1-4bit --concurrent $c
+done
+
+# Batching: mixed workload
+python scripts/benchmark_batching.py --model mlx-community/MiniMax-M2.1-4bit --concurrent 4 --mixed
+
+# VRAM optimization (automated)
+./scripts/benchmark_vram.sh --model mlx-community/MiniMax-M2.1-4bit
+
+# VRAM optimization (manual)
+sudo sysctl iogpu.wired_limit_mb=458752
+python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-4bit
+
+# llama.cpp with Metal optimization
+export GGML_METAL_FORCE_PRIVATE=1
+python scripts/benchmark_llama.py --model ~/models/model.gguf
+```
+
+---
+
+## Estimated Time (Updated)
+
+| Test | Duration | Notes |
+|------|----------|-------|
+| Q4_K_M download | 20-40 min | Depends on network |
+| Q4_K_M benchmark | 10-15 min | 5 test cases |
+| Q8_0 download | 30-60 min | Larger file |
+| Q8_0 benchmark | 15-20 min | Slower TPS |
+| Batching baseline | 5 min | Already have model |
+| Batching 2-16 concurrent | 20-30 min | 4 tests |
+| Mixed workload | 5-10 min | |
+| **VRAM optimization** 🆕 | **30-45 min** | Multiple configs |
+| **Total** | **3-4 hours** | Excludes download time |
+
+---
+
 ## Next Steps
 
 After completing all tests:
 
 1. Update `docs/benchmark-results.md`
-2. Create comparison summary
-3. Write Twitter thread with findings
-4. Consider additional tests:
+2. Analyze VRAM optimization impact
+3. Create comparison summary
+4. Write Twitter thread with findings
+5. Consider additional tests:
    - 6-bit batching tests
    - 8-bit batching tests
    - Context length scaling
    - Long-running stability tests
+   - bf16 with optimized VRAM (may now be runnable!)
