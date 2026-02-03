@@ -1,10 +1,12 @@
 # MiniMax M2.1 Benchmark on Mac with 512GB Unified Memory
 
-Comprehensive performance benchmarking of MiniMax M2.1 model variants on Mac (512GB unified memory), comparing MLX and llama.cpp frameworks.
+Comprehensive performance benchmarking of MiniMax M2.1 model variants on Mac (512GB unified memory), testing LM Studio, MLX, and llama.cpp frameworks.
 
 [中文版](./README.zh-CN.md) | [English](./README.md)
 
-**🚀 [快速开始 - 5分钟运行MLX](./QUICKSTART.md)** | **📖 [完整本地运行指南](./docs/mlx-local-setup.md)** | **🔌 [OpenClaw API配置](./docs/openclaw-setup.md)**
+**🚀 [LM Studio 快速开始 - 3分钟运行](./QUICKSTART-LMSTUDIO.md)** | **📖 [LM Studio 完整指南](./docs/lm-studio-setup.md)** | **🔌 [OpenClaw API配置](./docs/openclaw-setup.md)**
+
+*备选方案:* [MLX 命令行方式](./QUICKSTART.md) | [MLX 完整设置](./docs/mlx-local-setup.md)
 
 ## Model Overview
 
@@ -66,7 +68,26 @@ Comprehensive performance benchmarking of MiniMax M2.1 model variants on Mac (51
 
 ## Quick Start
 
-### 1. Environment Setup
+### 🎯 推荐方式: LM Studio (GUI + CLI)
+
+**3 个命令开始:**
+
+```bash
+# 1. 安装 LM Studio
+brew install --cask lm-studio
+
+# 2. 下载模型
+lms download mlx-community/MiniMax-M2.1-4bit
+
+# 3. 启动 API 服务器
+lms server start mlx-community/MiniMax-M2.1-4bit
+```
+
+完整指南: [QUICKSTART-LMSTUDIO.md](./QUICKSTART-LMSTUDIO.md) | [LM Studio 完整设置](./docs/lm-studio-setup.md)
+
+### 备选方式: MLX (命令行)
+
+**环境设置:**
 
 ```bash
 # Create virtual environment
@@ -75,12 +96,9 @@ source venv/bin/activate
 
 # Install dependencies
 pip install -U mlx-lm psutil
-
-# Install llama.cpp (optional)
-brew install llama.cpp
 ```
 
-### 2. Run MLX Benchmarks
+**运行测试:**
 
 ```bash
 # Test 4-bit version (recommended to start)
@@ -88,15 +106,17 @@ python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-4bit
 
 # Test 8-bit version
 python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-8bit
-
-# Test full precision version (requires ~460GB memory)
-python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-bf16
 ```
 
-### 3. Run llama.cpp Benchmarks
+完整指南: [QUICKSTART.md](./QUICKSTART.md) | [MLX 完整设置](./docs/mlx-local-setup.md)
+
+### 备选方式: llama.cpp (GGUF)
 
 ```bash
-# Run after downloading GGUF model
+# Install llama.cpp
+brew install llama.cpp
+
+# Run benchmark
 python scripts/benchmark_llama.py --model /path/to/MiniMax-M2.1-Q4_K_M.gguf
 ```
 

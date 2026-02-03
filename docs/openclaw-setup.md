@@ -1,13 +1,13 @@
-# OpenClaw + MLX 本地配置指南
+# OpenClaw 本地 API 配置指南
 
-> 在本地使用MLX MiniMax M2.1为OpenClaw提供AI能力
+> 使用本地 LLM 为 OpenClaw 提供 AI 能力
 
 ## 📋 目录
 
 - [概述](#概述)
-- [前置要求](#前置要求)
-- [快速开始](#快速开始)
-- [详细配置](#详细配置)
+- [方式选择](#方式选择)
+- [方式 1: LM Studio (推荐)](#方式-1-lm-studio-推荐)
+- [方式 2: MLX (命令行)](#方式-2-mlx-命令行)
 - [测试验证](#测试验证)
 - [故障排除](#故障排除)
 
@@ -15,52 +15,164 @@
 
 ## 概述
 
-这个指南将帮你：
-1. 启动本地MLX API服务器
-2. 配置OpenClaw使用本地API
-3. 验证配置是否正常工作
+本指南提供两种方式为 OpenClaw 配置本地 LLM API：
+
+1. **LM Studio** (推荐): GUI + CLI，开箱即用
+2. **MLX**: 命令行方式，更多控制
 
 **架构：**
 ```
-OpenClaw → 本地API服务器 (127.0.0.1:8000) → MLX MiniMax M2.1
+OpenClaw → 本地 API 服务器 → LLM (MiniMax M2.1)
 ```
 
 ---
 
-## 前置要求
+## 方式选择
 
-### 1. MLX环境已配置
+| 特性 | LM Studio | MLX |
+|------|----------|-----|
+| **安装难度** | ⭐ 简单 (GUI) | ⭐⭐ 中等 (命令行) |
+| **使用方式** | GUI + CLI | 仅命令行 |
+| **性能** | 🚀 优秀 | 🚀 优秀 |
+| **灵活性** | ⭐⭐⭐ | ⭐⭐⭐⭐ |
+| **推荐用户** | 所有用户 | 开发者/高级用户 |
 
-```bash
-# 检查MLX是否已安装
-source venv/bin/activate
-python -c "import mlx_lm; print('MLX OK')"
-```
-
-如果未安装，参考：[docs/mlx-local-setup.md](./mlx-local-setup.md)
-
-### 2. 安装API服务器依赖
-
-```bash
-# 激活环境
-source venv/bin/activate
-
-# 安装Flask（API服务器）
-pip install flask flask-cors
-
-# 验证安装
-python -c "import flask; print('Flask installed')"
-```
-
-### 3. OpenClaw已安装
-
-参考：https://openclaw.ai 或 https://github.com/openclaw/openclaw
+**推荐:** 除非你需要高度自定义，否则选择 LM Studio。
 
 ---
 
-## 快速开始
+## 方式 1: LM Studio (推荐)
 
-### 第1步：启动API服务器
+### 前置要求
+
+- LM Studio 已安装（如未安装，参考下方）
+
+### 快速开始 (3 步)
+
+```bash
+# 1. 安装 LM Studio (如果未安装)
+brew install --cask lm-studio
+
+# 2. 下载模型
+lms download mlx-community/MiniMax-M2.1-4bit
+
+# 3. 启动 API 服务器
+lms server start mlx-community/MiniMax-M2.1-4bit --port 1234
+```
+
+**完成！** API 运行在 `http://localhost:1234`
+
+### 配置 OpenClaw
+
+**方法 A: 环境变量 (最简单)**
+
+```bash
+export OPENAI_API_BASE="http://localhost:1234/v1"
+export OPENAI_API_KEY="lm-studio"
+
+# 添加到 ~/.bashrc 或 ~/.zshrc 永久生效
+echo 'export OPENAI_API_BASE="http://localhost:1234/v1"' >> ~/.zshrc
+echo 'export OPENAI_API_KEY="lm-studio"' >> ~/.zshrc
+```
+
+**方法 B: OpenClaw 配置文件 (推荐)**
+
+编辑 `~/.openclaw/openclaw.json`:
+
+```json
+{
+  "models": {
+    "providers": {
+      "lmstudio": {
+        "baseUrl": "http://localhost:1234/v1",
+        "api": "openai-completions",
+        "apiKey": "lm-studio",
+        "models": [
+          {
+            "id": "minimax-m2.1",
+            "name": "MiniMax M2.1 (Local)",
+            "reasoning": true,
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "lmstudio/minimax-m2.1"
+      }
+    }
+  }
+}
+```
+
+**方法 C: config.yaml**
+
+编辑 `~/.openclaw/config.yaml`:
+
+```yaml
+llm:
+  provider: openai
+  base_url: http://localhost:1234/v1
+  api_key: lm-studio
+  model: minimax-m2.1
+  temperature: 0.7
+  max_tokens: 4000
+```
+
+### 重启 OpenClaw
+
+```bash
+# 重启 gateway
+openclaw gateway restart
+
+# 或重启整个服务
+openclaw restart
+```
+
+### 管理服务器
+
+```bash
+# 查看状态
+lms server status
+
+# 查看日志
+lms server logs
+
+# 停止服务器
+lms server stop
+
+# 后台运行
+lms server start mlx-community/MiniMax-M2.1-4bit --detach
+```
+
+---
+
+## 方式 2: MLX (命令行)
+
+### 前置要求
+
+```bash
+# 1. 检查 Python 环境
+python3 --version  # 需要 3.12+
+
+# 2. 创建虚拟环境
+cd ~/projects/llm-mac-512
+python3 -m venv venv
+source venv/bin/activate
+
+# 3. 安装依赖
+pip install -U mlx-lm flask flask-cors psutil
+```
+
+完整安装指南: [docs/mlx-local-setup.md](./mlx-local-setup.md)
+
+### 快速开始
+
+#### 第1步：启动API服务器
 
 ```bash
 # 进入项目目录
@@ -68,7 +180,7 @@ cd ~/projects/llm-mac-512
 source venv/bin/activate
 
 # 启动API服务器（使用4-bit模型，最快）
-python scripts/api_server.py
+python scripts/api_server.py --model mlx-community/MiniMax-M2.1-4bit --port 8000
 ```
 
 **首次运行会下载模型（~120GB），请耐心等待！**
@@ -96,6 +208,274 @@ API 服务器配置
 按 Ctrl+C 停止服务器
 ════════════════════════════════════════════════════════════
 ```
+
+**首次运行会下载模型（~120GB），请耐心等待！**
+
+服务器启动后会显示：
+```
+╔══════════════════════════════════════════════════════════╗
+║         MLX MiniMax M2.1 API Server                      ║
+╚══════════════════════════════════════════════════════════╝
+
+✓ 模型加载完成！用时 21.25 秒
+
+API 服务器配置
+模型: mlx-community/MiniMax-M2.1-4bit
+地址: http://127.0.0.1:8000
+```
+
+#### 第2步：配置 OpenClaw
+
+**环境变量方式:**
+```bash
+export OPENAI_API_BASE="http://127.0.0.1:8000/v1"
+export OPENAI_API_KEY="sk-dummy"
+```
+
+**配置文件方式 (config.yaml):**
+```yaml
+llm:
+  provider: openai
+  base_url: http://127.0.0.1:8000/v1
+  api_key: sk-dummy
+  model: mlx-community/MiniMax-M2.1-4bit
+  temperature: 0.7
+  max_tokens: 4000
+```
+
+#### 第3步：重启 OpenClaw
+
+```bash
+openclaw restart
+```
+
+---
+
+## 测试验证
+
+### 方法 1: curl 测试
+
+**LM Studio (端口 1234):**
+```bash
+curl http://localhost:1234/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages": [{"role": "user", "content": "你好"}],
+    "max_tokens": 100
+  }'
+```
+
+**MLX (端口 8000):**
+```bash
+curl http://127.0.0.1:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "messages": [{"role": "user", "content": "你好"}],
+    "max_tokens": 100
+  }'
+```
+
+### 方法 2: Python 测试
+
+```python
+import openai
+
+# LM Studio
+openai.api_base = "http://localhost:1234/v1"
+openai.api_key = "lm-studio"
+
+# 或 MLX
+# openai.api_base = "http://127.0.0.1:8000/v1"
+# openai.api_key = "sk-dummy"
+
+response = openai.ChatCompletion.create(
+    model="minimax-m2.1",
+    messages=[{"role": "user", "content": "你好"}],
+    max_tokens=100
+)
+
+print(response.choices[0].message.content)
+```
+
+### 方法 3: OpenClaw CLI
+
+```bash
+# 测试连接
+openclaw models list
+
+# 发送测试消息
+openclaw chat "请介绍一下量子计算"
+
+# 检查响应时间和质量
+openclaw chat "写一个Python快速排序算法"
+```
+
+---
+
+## 故障排除
+
+### LM Studio 相关
+
+**问题: 端口被占用**
+```bash
+# 查找占用进程
+lsof -i :1234
+
+# 使用其他端口
+lms server start --port 8080
+```
+
+**问题: 模型未加载**
+```bash
+# 检查模型列表
+lms models list
+
+# 重启服务器
+lms server restart
+```
+
+**问题: 连接超时**
+```bash
+# 检查服务器状态
+lms server status
+
+# 查看日志
+lms server logs --tail 50
+```
+
+### MLX 相关
+
+**问题: Flask 未安装**
+```bash
+source venv/bin/activate
+pip install flask flask-cors
+```
+
+**问题: 模型下载失败**
+```bash
+# 手动下载
+huggingface-cli download mlx-community/MiniMax-M2.1-4bit
+
+# 或使用 LM Studio 下载，然后创建符号链接
+ln -s ~/.lmstudio/models/mlx-community/MiniMax-M2.1-4bit \
+      ~/.cache/huggingface/hub/
+```
+
+**问题: 端口被占用**
+```bash
+# 使用其他端口
+python scripts/api_server.py --port 8080
+
+# 更新 OpenClaw 配置中的端口
+```
+
+### OpenClaw 相关
+
+**问题: OpenClaw 无法连接**
+
+检查清单:
+```bash
+# 1. API 服务器是否运行
+curl http://localhost:1234/health  # LM Studio
+curl http://127.0.0.1:8000/health  # MLX
+
+# 2. OpenClaw 配置是否正确
+cat ~/.openclaw/config.yaml | grep base_url
+
+# 3. 防火墙设置
+# System Settings -> Network -> Firewall
+
+# 4. 重启服务
+openclaw restart
+```
+
+**问题: 响应速度慢**
+
+优化建议:
+1. 使用 4-bit 模型 (最快)
+2. 关闭其他应用释放内存
+3. 确保 GPU layers = -1 (全部)
+4. 检查系统资源: `Activity Monitor`
+
+**问题: 输出质量差**
+
+调整参数:
+```yaml
+llm:
+  temperature: 0.7    # 降低获得更确定的输出
+  top_p: 0.95         # 调整采样策略
+  max_tokens: 4000    # 增加允许更长输出
+```
+
+---
+
+## 性能对比
+
+### M3 Ultra 512GB 实测
+
+| 方式 | 模型 | TPS | TTFT | 内存 |
+|------|------|-----|------|------|
+| LM Studio | MLX 4-bit | 45.7 | 67ms | 135GB |
+| LM Studio | GGUF Q4 | ~40 | ~80ms | 140GB |
+| MLX | 4-bit | 45.7 | 67ms | 135GB |
+| MLX | 8-bit | 33.0 | 95ms | 252GB |
+
+**结论:** LM Studio 和 MLX 性能相当，选择取决于偏好。
+
+---
+
+## 推荐配置
+
+### 日常使用 (对话/编程)
+
+**LM Studio:**
+```bash
+lms server start mlx-community/MiniMax-M2.1-4bit \
+  --port 1234 \
+  --gpu-layers -1
+```
+
+**OpenClaw config.yaml:**
+```yaml
+llm:
+  provider: openai
+  base_url: http://localhost:1234/v1
+  model: minimax-m2.1
+  temperature: 0.7
+  max_tokens: 2000
+```
+
+### 高质量输出 (文档生成/分析)
+
+**LM Studio:**
+```bash
+lms server start mlx-community/MiniMax-M2.1-8bit \
+  --port 1234 \
+  --gpu-layers -1
+```
+
+**OpenClaw config.yaml:**
+```yaml
+llm:
+  provider: openai
+  base_url: http://localhost:1234/v1
+  model: minimax-m2.1
+  temperature: 0.5
+  max_tokens: 4000
+```
+
+---
+
+## 相关资源
+
+- **LM Studio 完整设置**: [docs/lm-studio-setup.md](./lm-studio-setup.md)
+- **MLX 完整设置**: [docs/mlx-local-setup.md](./mlx-local-setup.md)
+- **快速开始指南**: [QUICKSTART-LMSTUDIO.md](../QUICKSTART-LMSTUDIO.md)
+- **性能测试结果**: [docs/benchmark-results.md](./benchmark-results.md)
+
+---
+
+**准备好了吗？** 选择你喜欢的方式开始配置！
 
 ### 第2步：验证API工作
 
