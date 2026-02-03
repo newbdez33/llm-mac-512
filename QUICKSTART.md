@@ -7,7 +7,11 @@
 ### 1. 激活环境
 
 ```bash
-cd /Users/jacky/projects/llm-mac-512
+# 进入项目目录（如果不在项目目录下）
+cd ~/projects/llm-mac-512
+# 或使用相对路径
+# cd path/to/llm-mac-512
+
 source venv/bin/activate
 ```
 
@@ -38,7 +42,7 @@ python scripts/chat_mlx.py
 ```bash
 # 确认在项目目录
 pwd
-# 应该显示: /Users/jacky/projects/llm-mac-512
+# 应该显示项目路径，例如: /Users/your-username/projects/llm-mac-512
 
 # 激活虚拟环境
 source venv/bin/activate

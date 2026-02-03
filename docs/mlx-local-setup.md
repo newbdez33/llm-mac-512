@@ -92,7 +92,7 @@ python3.12 --version
 
 ```bash
 # 进入项目目录
-cd /Users/jacky/projects/llm-mac-512
+cd ~/projects/llm-mac-512  # 或你的项目实际路径
 
 # 激活虚拟环境
 source venv/bin/activate
@@ -150,8 +150,8 @@ python -c "import mlx.core as mx; print('MLX installed successfully!')"
 #### 1. 最简单的方式（4-bit，推荐首次测试）
 
 ```bash
-# 激活环境
-cd /Users/jacky/projects/llm-mac-512
+# 进入项目目录并激活环境
+cd ~/projects/llm-mac-512  # 或你的项目实际路径
 source venv/bin/activate
 
 # 运行模型（会自动下载）
@@ -696,7 +696,7 @@ pip install --upgrade mlx mlx-lm
 
 ## 相关资源
 
-- **项目主页：** [/Users/jacky/projects/llm-mac-512](file:///Users/jacky/projects/llm-mac-512)
+- **项目根目录：** 本项目所在目录
 - **测试脚本：** `scripts/benchmark_mlx.py`
 - **性能结果：** `docs/benchmark-results.md`
 - **测试计划：** `docs/test-plan.md`
