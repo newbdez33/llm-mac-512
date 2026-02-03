@@ -4,6 +4,8 @@ Comprehensive performance benchmarking of MiniMax M2.1 model variants on Mac (51
 
 [中文版](./README.zh-CN.md) | [English](./README.md)
 
+**🚀 [快速开始 - 5分钟运行MLX](./QUICKSTART.md)** | **📖 [完整本地运行指南](./docs/mlx-local-setup.md)**
+
 ## Model Overview
 
 - **MiniMax M2.1**: 230B parameter MoE model (10B active parameters)

@@ -4,6 +4,8 @@
 
 [中文版](./README.zh-CN.md) | [English](./README.md)
 
+**🚀 [快速开始 - 5分钟运行MLX](./QUICKSTART.md)** | **📖 [完整本地运行指南](./docs/mlx-local-setup.md)**
+
 ## 模型概述
 
 - **MiniMax M2.1**: 230B 参数的 MoE 模型（10B 激活参数）
