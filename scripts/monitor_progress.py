@@ -28,31 +28,33 @@ def get_dir_size_gb(directory):
             total += path.stat().st_size
     return total / (1024 ** 3)
 
-def send_notification(title, message, priority="normal"):
-    """发送OpenClaw通知"""
-    NOTIFY_DIR.mkdir(parents=True, exist_ok=True)
+def send_notification(title, message, urgent=False):
+    """发送lily-notify通知"""
+    # 构建lily-notify命令
+    cmd = [
+        '/Users/jacky/.openclaw/workspace/skills/lily-notify/scripts/lily-notify.sh',
+        '--title', title
+    ]
 
-    timestamp = datetime.now().strftime("%Y-%m-%d-%H%M")
-    notify_file = NOTIFY_DIR / f"{timestamp}.md"
+    if urgent:
+        cmd.append('--urgent')
 
-    content = f"""# 通知
-## 消息
-{message}
-## 优先级
-{priority}
-"""
+    cmd.append(message)
 
-    notify_file.write_text(content)
-    print(f"✓ OpenClaw通知已发送: {notify_file}")
-
-    # 系统通知
     try:
-        subprocess.run([
-            'osascript', '-e',
-            f'display notification "{title}" with title "MLX 8-bit" sound name "Glass"'
-        ], check=False, capture_output=True)
-    except:
-        pass
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            check=False,
+            cwd='/Users/jacky/.openclaw/workspace'
+        )
+        if result.returncode == 0:
+            print(f"✓ Lily通知已发送: {title}")
+        else:
+            print(f"⚠ 通知发送失败: {result.stderr}")
+    except Exception as e:
+        print(f"⚠ 通知错误: {e}")
 
 def is_complete():
     """检查是否完成"""
@@ -101,8 +103,8 @@ def main():
 
 性能: 33 TPS, 95ms TTFT"""
 
-            send_notification("下载完成！", message)
-            print("\n✓ 通知已发送！可以开始测试了！")
+            send_notification("MLX下载", message, urgent=True)
+            print("\n✓ 通知已发送到Telegram！可以开始测试了！")
             break
 
         # 每5分钟汇报一次
@@ -130,7 +132,7 @@ def main():
 
 请继续等待..."""
 
-            send_notification(f"进度 {progress:.0f}%", message)
+            send_notification("MLX下载", message, urgent=False)
             last_report = elapsed
 
         # 每30秒检查一次
