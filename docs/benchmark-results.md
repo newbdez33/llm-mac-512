@@ -137,6 +137,25 @@
 - Killed by system (exit code 137 - likely OOM)
 - Memory usage at limit, causing severe performance degradation
 
+**Failure Analysis:**
+
+Exit code 137 = SIGKILL (killed by system)
+
+| Factor | Value |
+|--------|-------|
+| Model size | 457 GB |
+| Memory used | 426 GB |
+| System total | 512 GB |
+| Usage ratio | **83%** |
+
+Root causes:
+1. **Memory near limit** - Only ~86GB left for system and other processes
+2. **Swap pressure** - macOS swaps heavily under memory pressure, causing severe slowdown
+3. **Extreme slowdown** - 6 hours for <100 tokens = TPS < 0.3 (normal: 30-50)
+4. **OOM kill** - System killed process when additional memory was needed
+
+**Recommendation:** BF16 requires at least **640GB+ RAM** for practical use. On 512GB Mac, use 8-bit or lower quantization.
+
 ---
 
 ### Q4_K_M
