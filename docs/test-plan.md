@@ -96,23 +96,165 @@ Comprehensive performance testing of MiniMax M2.1 variants on Mac (512GB unified
 }
 ```
 
-### Phase 3: Model Testing (In Progress)
+### Phase 3: llama.cpp Testing (In Progress)
+
+**Objective:** Compare llama.cpp quantized versions with MLX baseline
 
 **Test Order:**
-1. ✅ MLX 4bit → Validate workflow
-2. ⏳ llama.cpp Q4_K_M → Compare frameworks
-3. ⏳ Progressively test larger versions
-4. ⏳ Finally test bf16 full version
+1. ⏳ Q4_K_M (138GB) → Compare with MLX 4-bit
+2. ⏳ Q8_0 (243GB) → Compare with MLX 8-bit
+3. ❌ BF16 (457GB) → Already tested, FAILED (see benchmark-results.md)
 
-**Notes:**
-- bf16 version ~460GB, close to 512GB limit, need to close other apps
-- Record results for each version before downloading the next (save disk space)
+**Test Configuration:**
+```bash
+# Q4_K_M test
+llama-cli \
+  --model MiniMax-M2.1-Q4_K_M.gguf \
+  --prompt "..." \
+  --n-predict 100 \
+  --temp 0.7 \
+  --ctx-size 4096
 
-### Phase 4: Analysis & Documentation
+# Q8_0 test
+llama-cli \
+  --model MiniMax-M2.1-Q8_0.gguf \
+  --prompt "..." \
+  --n-predict 100 \
+  --temp 0.7 \
+  --ctx-size 4096
+```
+
+**Metrics to Track:**
+- Load time (model loading into memory)
+- TPS (tokens per second)
+- TTFT (time to first token)
+- Peak memory usage
+- Memory efficiency (TPS per GB)
+
+**Comparison Points:**
+| Quantization | MLX Version | llama.cpp Version | Expected Comparison |
+|--------------|-------------|-------------------|---------------------|
+| 4-bit | MiniMax-M2.1-4bit (135GB) | Q4_K_M (138GB) | Similar size, speed comparison |
+| 8-bit | MiniMax-M2.1-8bit (252GB) | Q8_0 (243GB) | Similar size, speed comparison |
+
+**Success Criteria:**
+- llama.cpp models complete all 5 test cases
+- Results comparable or better than MLX in some metrics
+- Memory usage stays within 512GB limit
+- No OOM kills (unlike BF16)
+
+**Expected Outcomes:**
+- Determine if llama.cpp quantization is competitive with MLX
+- Identify which framework is better for different use cases
+- Document trade-offs: performance vs compatibility
+
+---
+
+### Phase 4: MLX Batching & Concurrency Testing 🆕
+
+**Objective:** Test MLX batching performance for multi-user scenarios
+
+#### 4.1 vllm-mlx Setup
+
+**Installation:**
+```bash
+pip install vllm-mlx
+```
+
+**Framework Comparison:**
+| Feature | mlx-lm (current) | vllm-mlx (new) |
+|---------|------------------|----------------|
+| Mode | Single request | Continuous batching |
+| Best for | One user | Multiple concurrent users |
+| Throughput | Optimized per-request | Optimized aggregate |
+| Scheduling | None | PagedAttention |
+
+#### 4.2 Test Scenarios
+
+**Scenario 1: Single Request Baseline**
+- Purpose: Compare vllm-mlx single mode with mlx-lm baseline
+- Config: 1 concurrent request
+- Expected: Similar or slightly lower TPS (overhead from batching framework)
+
+**Scenario 2: Concurrent Load**
+- Purpose: Measure throughput scaling with concurrent requests
+- Config: 2, 4, 8, 16 concurrent requests
+- Expected: Aggregate throughput increases, per-request latency increases
+
+**Scenario 3: Mixed Workload**
+- Purpose: Simulate real-world usage with varying request lengths
+- Config: Mix of short (100), medium (500), long (2000) token requests
+- Expected: Batching handles mixed lengths efficiently
+
+#### 4.3 Test Matrix
+
+| Test | Concurrent Requests | Tokens per Request | Quantization | Metric |
+|------|---------------------|-------------------|--------------|--------|
+| baseline | 1 | 100, 500, 2000 | 4-bit | TPS, latency |
+| scale-2 | 2 | 500 | 4-bit | Aggregate TPS |
+| scale-4 | 4 | 500 | 4-bit | Aggregate TPS |
+| scale-8 | 8 | 500 | 4-bit | Aggregate TPS |
+| scale-16 | 16 | 500 | 4-bit | Aggregate TPS |
+| mixed | 4 | 100, 500, 2000 (mixed) | 4-bit | Fairness |
+
+#### 4.4 Metrics
+
+**Primary Metrics:**
+- **Aggregate TPS**: Total tokens/sec across all requests
+- **Per-request TPS**: Average TPS per request
+- **Throughput Scaling**: Aggregate TPS at N requests / Baseline TPS
+- **P50/P95/P99 Latency**: Response time percentiles
+
+**Secondary Metrics:**
+- **Memory usage**: Peak memory at different concurrency levels
+- **Queue time**: Time waiting for batch scheduling
+- **Batch efficiency**: Actual batch size vs theoretical max
+
+#### 4.5 Implementation
+
+**Script: `scripts/benchmark_batching.py`**
+```python
+# Test vllm-mlx batching performance
+# Usage:
+#   python benchmark_batching.py --model MiniMax-M2.1-4bit --concurrent 4
+#   python benchmark_batching.py --model MiniMax-M2.1-4bit --concurrent 16
+```
+
+**Key Features:**
+- Async request handling (concurrent requests)
+- Latency tracking per request
+- Aggregate throughput calculation
+- Memory monitoring during concurrent load
+- Results comparison with baseline
+
+#### 4.6 Expected Results
+
+Based on vllm-mlx benchmarks (M4 Max):
+- **Single request**: ~450 TPS (baseline)
+- **16 concurrent**: ~1900 TPS aggregate (4.3x scaling)
+
+On M3 Ultra (512GB):
+- MLX 4-bit baseline: 45.73 TPS
+- Expected 16-concurrent: ~200 TPS aggregate (4.4x scaling)
+- Memory headroom: 512GB - 135GB = 377GB available for batching
+
+**Questions to Answer:**
+1. Does M3 Ultra scale better than M4 Max due to more memory/cores?
+2. What's the optimal concurrent request count for 512GB?
+3. Is batching worth it for single-user scenarios?
+4. Memory per concurrent request overhead?
+
+---
+
+### Phase 5: Analysis & Documentation
 
 1. Aggregate all test results
 2. Generate comparison charts
 3. Write analysis report
+4. Update benchmark-results.md with:
+   - llama.cpp quantization results
+   - MLX batching results
+   - Framework recommendations
 
 ## Key Files
 

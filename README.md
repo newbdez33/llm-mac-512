@@ -2,6 +2,8 @@
 
 Comprehensive performance benchmarking of MiniMax M2.1 model variants on Mac (512GB unified memory), comparing MLX and llama.cpp frameworks.
 
+[中文版](./README.zh-CN.md) | [English](./README.md)
+
 ## Model Overview
 
 - **MiniMax M2.1**: 230B parameter MoE model (10B active parameters)
@@ -16,6 +18,49 @@ Comprehensive performance benchmarking of MiniMax M2.1 model variants on Mac (51
 | **CPU Cores** | 32 (24 performance + 8 efficiency) |
 | **Unified Memory** | 512 GB |
 | **macOS** | 26.2 (Build 25C56) |
+| **Python** | 3.12.12 |
+| **MLX** | 0.30.4 |
+| **mlx-lm** | 0.30.5 |
+
+## 🚀 Benchmark Results
+
+### MLX Performance Summary
+
+| Version | Load Time | Memory | Avg TPS | TTFT (Prefill) | Status |
+|---------|-----------|--------|---------|----------------|--------|
+| **4-bit** | 21.25s | 135 GB | **45.73** | 67ms | ✅ Recommended |
+| **6-bit** | 29.85s | 192 GB | **41.83** | 75ms | ✅ Complete |
+| **8-bit** | 28.07s | 252 GB | **33.04** | 95ms | ✅ Complete |
+| **bf16** | - | ~460 GB | N/A | N/A | ❌ Not available |
+
+### llama.cpp Performance Summary
+
+| Version | Load Time | Memory | Avg TPS | Status |
+|---------|-----------|--------|---------|--------|
+| **BF16** | - | 426 GB | <0.3 | ❌ Failed (OOM after 6h) |
+| **Q4_K_M** | - | ~140 GB | TBD | ⏳ Pending |
+| **Q8_0** | - | ~250 GB | TBD | ⏳ Pending |
+
+### Key Findings
+
+#### ✅ MLX 4-bit (Recommended)
+- **Best performance**: 45.73 TPS with only 135GB memory
+- **Ultra-low latency**: 67ms TTFT (prefill speed)
+- **Stable generation**: Consistent 48-49 TPS after warm-up
+- **Memory efficient**: Leaves 377GB headroom for other workloads
+
+#### ⚡ Performance Insights
+- **Prefill speed**: 60-95ms across all quantization levels (near-GPU level)
+- **Memory scaling**: Linear with quantization bits (4→6→8 bit)
+- **Speed vs Quality**: 4-bit offers best balance for interactive use
+- **8-bit trade-off**: 28% slower but better quality
+
+#### ❌ BF16 Not Practical
+- **llama.cpp BF16**: Failed after 6+ hours, system OOM killed
+- **Memory pressure**: 83% usage causes severe performance degradation
+- **Recommendation**: Use 8-bit or lower for any practical workload
+
+> 📊 Detailed results: [docs/benchmark-results.md](./docs/benchmark-results.md)
 
 ## Quick Start
 
@@ -82,19 +127,45 @@ python scripts/benchmark_llama.py --model /path/to/MiniMax-M2.1-Q4_K_M.gguf
 | **TPS** | Tokens per Second (generation speed) |
 | **Peak Memory** | Maximum memory usage during inference |
 
+## 📋 Test Plan Status
+
+### ✅ Phase 1-2: Completed (50%)
+- [x] Environment setup
+- [x] MLX 4-bit, 6-bit, 8-bit benchmarks
+- [x] llama.cpp BF16 failure analysis
+
+### ⏳ Phase 3: llama.cpp Quantization Testing
+- [ ] Q4_K_M (138GB) - Compare with MLX 4-bit
+- [ ] Q8_0 (243GB) - Compare with MLX 8-bit
+
+### 🆕 Phase 4: MLX Batching & Concurrency
+- [ ] vllm-mlx continuous batching tests
+- [ ] Concurrent request scaling (1/2/4/8/16 users)
+- [ ] Aggregate throughput measurement
+- [ ] Mixed workload testing
+
+> 📖 Full test plan: [docs/test-plan.md](./docs/test-plan.md)
+> 🔧 Execution guide: [docs/test-execution-guide.md](./docs/test-execution-guide.md)
+
 ## Project Structure
 
 ```
 llm-mac-512/
 ├── README.md
+├── README.zh-CN.md         # Chinese version
 ├── docs/
-│   └── test-results/      # Benchmark results
+│   ├── test-plan.md        # Detailed test plan
+│   ├── test-execution-guide.md  # Step-by-step instructions
+│   ├── test-design-summary.md   # Test design overview
+│   ├── benchmark-results.md     # Complete results
+│   └── test-results/       # Individual test outputs
 ├── scripts/
-│   ├── benchmark_mlx.py   # MLX benchmark script
-│   ├── benchmark_llama.py # llama.cpp benchmark script
-│   └── utils.py           # Utility functions
+│   ├── benchmark_mlx.py    # MLX benchmark script
+│   ├── benchmark_llama.py  # llama.cpp benchmark script
+│   ├── benchmark_batching.py  # Batching/concurrency tests
+│   └── utils.py            # Utility functions
 └── prompts/
-    └── test_prompts.json  # Test cases
+    └── test_prompts.json   # Test cases
 ```
 
 ## CLI Options
