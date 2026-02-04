@@ -20,14 +20,24 @@
 
 ### Testing Strategy
 
-**🔬 Dual Framework Comparison**
+**🔬 Fair Comparison via Unified Platform: LM Studio**
 
-| Framework | Format | Testing Method | Advantage |
-|-----------|--------|----------------|-----------|
-| **MLX** | MLX Native | `benchmark_mlx.py` | Apple Silicon Optimized |
-| **llama.cpp** | GGUF | `benchmark_lmstudio.py` | Universal, Mature Ecosystem |
+| Backend | Format | Loading | Testing | Advantage |
+|---------|--------|---------|---------|-----------|
+| **MLX Backend** | MLX Native | LM Studio | `benchmark_lmstudio.py` | Apple Silicon Optimized |
+| **llama.cpp Backend** | GGUF | LM Studio | `benchmark_lmstudio.py` | Universal, Mature |
 
-**Goal**: Compare performance between MLX and llama.cpp at **identical quantization levels**
+**Key**: Both tested through **LM Studio API** for fair comparison
+
+**Why Fair**:
+- ✅ Same API overhead
+- ✅ Same request/response handling
+- ✅ Eliminates external factors
+- ✅ Real production scenario (API-based)
+
+**Testing**:
+- ✅ MLX backend (in LM Studio) vs llama.cpp backend (in LM Studio)
+- ❌ NOT: native mlx-lm vs LM Studio (unfair API overhead)
 
 ---
 
@@ -35,23 +45,27 @@
 
 ### MiniMax M2.1 Performance
 
-#### MLX Baseline (Native Framework)
+**Note**: All tests via LM Studio API for fair comparison
 
-| Version | Load Time | Memory | Avg TPS | TTFT | Status |
-|---------|-----------|--------|---------|------|--------|
-| **mlx-4bit** | 21.25s | 135 GB | **45.73** | 67ms | ✅ Complete |
-| **mlx-6bit** | 29.85s | 198 GB | **39.01** | 75ms | ✅ Complete |
-| **mlx-8bit** | 28.07s | 252 GB | **33.04** | 95ms | ✅ Complete |
+#### MLX Backend (via LM Studio) - Baseline Reference
 
-#### llama.cpp GGUF (via LM Studio)
+| Version | Memory | Avg TPS | TTFT | Status | Source |
+|---------|--------|---------|------|--------|--------|
+| **mlx-4bit** | 135 GB | **45.73** | 67ms | 📦 Archived | Native mlx-lm |
+| **mlx-6bit** | 198 GB | **39.01** | 75ms | 📦 Archived | Native mlx-lm |
+| **mlx-8bit** | 252 GB | **33.04** | 95ms | 📦 Archived | Native mlx-lm |
 
-| Version | Memory | Avg TPS | vs MLX | Status |
-|---------|--------|---------|--------|--------|
-| **Q4_K_S** | ~135 GB | 🔄 Testing | vs mlx-4bit | 🔄 In Progress |
-| **Q4_K_M** | ~143 GB | ⏳ Pending | vs mlx-4bit | ⏳ Pending |
-| **Q6_K** | ~193 GB | ⏳ Pending | vs mlx-6bit | ⏳ Pending |
-| **Q8_0** | ~248 GB | ⏳ Pending | vs mlx-8bit | ⏳ Pending |
-| **BF16** | 462 GB | ❌ Failed | OOM after 6h | ❌ Failed |
+*Note: Baseline data from native mlx-lm. Will be re-tested via LM Studio for fair comparison.*
+
+#### Fair Comparison Tests (Both via LM Studio API)
+
+| Quantization | MLX Backend | llama.cpp Backend | Comparison |
+|--------------|-------------|-------------------|------------|
+| **4-bit** | ⏳ Re-test needed | 🔄 Q4_K_S (testing) | TBD |
+| **4-bit+** | N/A | ⏳ Q4_K_M (pending) | Larger Q4 |
+| **6-bit** | ⏳ Re-test needed | ⏳ Q6_K (pending) | TBD |
+| **8-bit** | ⏳ Re-test needed | ⏳ Q8_0 (pending) | TBD |
+| **BF16** | N/A | ❌ Failed (OOM 6h) | Not practical |
 
 ### Qwen3-Coder-Next Performance
 
@@ -97,7 +111,7 @@
 
 ## 🚀 Quick Start
 
-### Option 1: LM Studio (Recommended)
+### Unified Testing via LM Studio (Recommended for Fair Comparison)
 
 **3 commands to start:**
 
@@ -105,41 +119,33 @@
 # 1. Install LM Studio
 brew install --cask lm-studio
 
-# 2. Download model (example: MiniMax M2.1 GGUF)
+# 2. Download models (both MLX and GGUF)
+# MLX model
+lms download mlx-community/MiniMax-M2.1-4bit
+
+# OR GGUF model
 lms download unsloth/MiniMax-M2.1-GGUF:Q4_K_S
 
-# 3. Start API server
+# 3. Load model in LM Studio GUI, then start API server
 lms server start --port 1234
 ```
 
-**Run benchmark:**
+**Run unified benchmark:**
 ```bash
+# Same script for both MLX and GGUF!
 python scripts/benchmark_lmstudio.py
+
+# LM Studio automatically uses:
+# - MLX backend for .mlx models
+# - llama.cpp backend for .gguf models
 ```
+
+**Why this way?**
+- ✅ Fair comparison (same API overhead)
+- ✅ Real-world scenario (API-based deployment)
+- ✅ Easy to switch between backends
 
 📖 Complete guide: [QUICKSTART-LMSTUDIO.md](./QUICKSTART-LMSTUDIO.md)
-
----
-
-### Option 2: MLX (Native Framework)
-
-**Setup:**
-```bash
-# Create environment
-python3 -m venv venv
-source venv/bin/activate
-
-# Install dependencies
-pip install -U mlx-lm psutil
-```
-
-**Run benchmark:**
-```bash
-# Test MiniMax M2.1 MLX 4-bit
-python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-4bit
-```
-
-📖 Complete guide: [QUICKSTART.md](./QUICKSTART.md)
 
 ---
 
@@ -265,16 +271,36 @@ llm-mac-512/
 
 ## 🎯 Current Status
 
-**Active**: Testing MiniMax M2.1 Q4_K_S (GGUF) via LM Studio
+**🚨 Important Update**: All tests now via LM Studio for fair comparison
 
-**Next**:
+**Pending Actions**:
+
+1. **Re-test MLX models via LM Studio** (for fair comparison)
+   - Load MLX 4-bit in LM Studio → Run benchmark_lmstudio.py
+   - Load MLX 6-bit in LM Studio → Run benchmark_lmstudio.py
+   - Load MLX 8-bit in LM Studio → Run benchmark_lmstudio.py
+
+2. **Test GGUF models via LM Studio**
+   - Load Q4_K_S in LM Studio → Run benchmark_lmstudio.py
+   - Load Q4_K_M in LM Studio → Run benchmark_lmstudio.py
+   - Load Q6_K in LM Studio → Run benchmark_lmstudio.py
+   - Load Q8_0 in LM Studio → Run benchmark_lmstudio.py
+
+3. **Compare**: MLX backend vs llama.cpp backend (both in LM Studio)
+
+**Next Steps**:
 ```bash
-# Run current test
-cd /Users/jacky/projects/llm-mac-512
-python scripts/benchmark_lmstudio.py
+# Day 1: Test MLX 4-bit via LM Studio
+# 1. Load mlx-community/MiniMax-M2.1-4bit in LM Studio
+# 2. Confirm "MLX" backend in GUI
+# 3. Run: python scripts/benchmark_lmstudio.py
 
-# Compare with MLX baseline
-# Q4_K_S TPS vs mlx-4bit (45.73 TPS)
+# Then: Test GGUF Q4_K_S via LM Studio
+# 1. Load Q4_K_S in LM Studio
+# 2. Confirm "llama.cpp" backend in GUI
+# 3. Run: python scripts/benchmark_lmstudio.py
+
+# Compare: MLX vs GGUF at same 4-bit level
 ```
 
 ---
