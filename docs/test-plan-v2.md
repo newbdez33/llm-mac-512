@@ -24,81 +24,104 @@
 
 ## 测试框架
 
-**🎯 统一测试平台: LM Studio**
+**🎯 双框架独立测试**
 
-| 组件 | 作用 | 说明 |
-|------|------|------|
-| **LM Studio** | 统一模型加载器 + API 服务器 | 支持 MLX 和 GGUF |
-| **MLX Backend** | Apple Silicon 优化 | LM Studio 自动使用 |
-| **llama.cpp Backend** | GGUF 格式支持 | LM Studio 内置 |
-| **测试脚本** | benchmark_lmstudio.py | OpenAI-compatible API |
+| 框架 | 测试方法 | 模型格式 | 测试脚本 | 说明 |
+|------|----------|----------|----------|------|
+| **MLX** | 原生 mlx-lm | MLX 格式 | benchmark_mlx.py | Apple Silicon 原生优化 |
+| **llama.cpp** | LM Studio | GGUF 格式 | benchmark_lmstudio.py | 通用量化格式 |
+
+**测试目的**: 对比两个框架在相同量化级别下的性能差异
 
 ## 测试矩阵
 
 ### MiniMax M2.1
 
-#### Phase 1: GGUF 版本测试 (优先)
+#### Phase 1A: MLX 版本测试 (原生框架)
 
-| 版本 | 文件大小 | 内存占用 | 优先级 | 状态 | 说明 |
-|------|----------|----------|--------|------|------|
-| **Q4_K_S** | 130GB | ~135GB | 🔥 1 | 🔄 进行中 | 当前已加载 |
-| **Q4_K_M** | 138GB | ~143GB | 🔥 2 | ⏳ 待测 | 标准4-bit |
-| **Q6_K** | 188GB | ~193GB | 3 | ⏳ 待测 | 6-bit精度 |
-| **Q8_0** | 243GB | ~248GB | 4 | ⏳ 待测 | 8-bit精度 |
-| **BF16** | 457GB | ~462GB | 5 | ❌ 失败 | OOM (已测) |
+| 版本 | 大小 | 内存占用 | 优先级 | 状态 | 基准性能 | 测试方法 |
+|------|------|----------|--------|------|----------|----------|
+| **mlx-4bit** | ~120GB | ~135GB | 🔥 1 | ✅ 已测 | 45.73 TPS | mlx-lm |
+| **mlx-6bit** | ~180GB | ~198GB | 🔥 2 | ✅ 已测 | 39.01 TPS | mlx-lm |
+| **mlx-8bit** | ~240GB | ~252GB | 🔥 3 | ✅ 已测 | 33.04 TPS | mlx-lm |
+| **mlx-bf16** | ~460GB | ~478GB | 4 | ❌ 不可用 | - | 无官方版本 |
 
-#### Phase 2: MLX 版本对比 (可选)
+**注**: 已有归档数据，可直接使用或重新测试验证
 
-| 版本 | 预估大小 | 优先级 | 状态 | 说明 |
-|------|----------|--------|------|------|
-| MiniMax-M2.1-4bit | ~120GB | 备选 | ✅ 已归档 | 45.73 TPS |
-| MiniMax-M2.1-6bit | ~180GB | 备选 | ✅ 已归档 | 39.01 TPS |
-| MiniMax-M2.1-8bit | ~240GB | 备选 | ✅ 已归档 | 33.04 TPS |
+#### Phase 1B: llama.cpp 版本测试 (GGUF via LM Studio)
+
+| 版本 | 大小 | 内存占用 | 优先级 | 状态 | 对比MLX | 测试方法 |
+|------|------|----------|--------|------|---------|----------|
+| **Q4_K_S** | 130GB | ~135GB | 🔥 1 | 🔄 进行中 | vs mlx-4bit | LM Studio |
+| **Q4_K_M** | 138GB | ~143GB | 🔥 2 | ⏳ 待测 | vs mlx-4bit | LM Studio |
+| **Q6_K** | 188GB | ~193GB | 🔥 3 | ⏳ 待测 | vs mlx-6bit | LM Studio |
+| **Q8_0** | 243GB | ~248GB | 🔥 4 | ⏳ 待测 | vs mlx-8bit | LM Studio |
+| **BF16** | 457GB | ~462GB | 5 | ❌ 失败 | vs mlx-bf16 | OOM (已测) |
+
+**对比重点**: 相同量化级别下 MLX vs llama.cpp 的性能差异
 
 ### Qwen3-Coder-Next
 
-#### Phase 3: GGUF 版本测试
+#### Phase 2A: MLX 版本测试 (待确认)
 
-| 版本 | 文件大小 | 内存占用 | 优先级 | 状态 | 说明 |
-|------|----------|----------|--------|------|------|
-| **Q4_K_M** | 48.5GB | ~53GB | 🔥 1 | ⏳ 待测 | 推荐起点 |
-| **Q6_K** | 65.5GB | ~70GB | 🔥 2 | ⏳ 待测 | 平衡选择 |
-| **Q8_0** | 84.8GB | ~90GB | 🔥 3 | ⏳ 待测 | 高精度 |
-| **Q4_0** | 45.3GB | ~50GB | 4 | ⏳ 待测 | 快速测试 |
-| **Q2_K** | 29.2GB | ~34GB | 5 | ⏳ 待测 | 最小版本 |
-| **BF16** | 159GB | ~164GB | 6 | ⏳ 待测 | 完整精度 |
+| 版本 | 大小 | 内存占用 | 优先级 | 状态 | 说明 |
+|------|------|----------|--------|------|------|
+| **mlx-4bit** | ~45GB | ~50GB | 🔥 1 | 🔍 待查找 | 查找 mlx-community 版本 |
+| **mlx-6bit** | ~68GB | ~73GB | 2 | 🔍 待查找 | 如果存在 |
+| **mlx-8bit** | ~90GB | ~95GB | 3 | 🔍 待查找 | 如果存在 |
 
-**注**: Qwen3-Coder-Next 暂无官方 MLX 量化版本，使用 GGUF 版本测试。
+**注**: 需要确认是否有 mlx-community 转换的 Qwen3-Coder-Next，或使用 mlx-lm 手动转换
+
+#### Phase 2B: llama.cpp 版本测试 (GGUF via LM Studio)
+
+| 版本 | 大小 | 内存占用 | 优先级 | 状态 | 对比MLX | 测试方法 |
+|------|------|----------|--------|------|---------|----------|
+| **Q4_K_M** | 48.5GB | ~53GB | 🔥 1 | ⏳ 待测 | vs mlx-4bit | LM Studio |
+| **Q6_K** | 65.5GB | ~70GB | 🔥 2 | ⏳ 待测 | vs mlx-6bit | LM Studio |
+| **Q8_0** | 84.8GB | ~90GB | 🔥 3 | ⏳ 待测 | vs mlx-8bit | LM Studio |
+| **Q4_0** | 45.3GB | ~50GB | 4 | ⏳ 待测 | 快速版本 | LM Studio |
+| **Q2_K** | 29.2GB | ~34GB | 5 | ⏳ 待测 | 最小版本 | LM Studio |
+| **BF16** | 159GB | ~164GB | 6 | ⏳ 待测 | 完整精度 | LM Studio |
+
+**对比重点**: 如果有 MLX 版本，对比两个框架性能；否则仅测试 GGUF 版本
 
 ## 测试顺序规划
 
-### Week 1: MiniMax M2.1 完整测试
+### Week 1: MiniMax M2.1 - llama.cpp 测试
 
 ```
-Day 1: Q4_K_S (当前) → 完整benchmark
-Day 2: Q4_K_M → 对比Q4_K_S
-Day 3: Q6_K → 中等精度测试
-Day 4: Q8_0 → 高精度测试
-Day 5: 数据分析 + 文档整理
+Day 1: Q4_K_S (已加载) → 完整 GGUF benchmark
+Day 2: Q4_K_M → 对比 Q4_K_S
+Day 3: Q6_K → 中等精度
+Day 4: Q8_0 → 高精度
+Day 5: MLX 对比测试 (4bit, 6bit, 8bit) - 使用归档数据或重测
 ```
 
-### Week 2: Qwen3-Coder-Next 测试
+**对比输出**: MiniMax M2.1 MLX vs llama.cpp 性能表
+
+### Week 2: Qwen3-Coder-Next - 双框架测试
 
 ```
-Day 1: Q4_K_M → 基准测试
-Day 2: Q6_K → 精度对比
-Day 3: Q8_0 → 最高可用精度
-Day 4: Q4_0, Q2_K → 快速/最小版本
-Day 5: BF16 (可选) → 完整精度
+Day 1: 查找/转换 MLX 版本
+Day 2: MLX 4bit/6bit/8bit 测试 (如果有)
+Day 3: GGUF Q4_K_M, Q6_K 测试
+Day 4: GGUF Q8_0, Q4_0 测试
+Day 5: (可选) Q2_K, BF16 测试
 ```
 
-### Week 3: 对比分析
+**对比输出**: Qwen3-Coder-Next MLX vs llama.cpp 性能表 (如果有MLX版本)
+
+### Week 3: 综合对比分析
 
 ```
-Day 1-2: 模型间性能对比
-Day 3-4: 编写综合报告
-Day 5: 最佳实践建议
+Day 1: 框架对比 (MLX vs llama.cpp)
+Day 2: 模型对比 (MiniMax vs Qwen3)
+Day 3: 量化级别对比 (4bit vs 6bit vs 8bit)
+Day 4: 编写综合报告
+Day 5: 最佳实践建议 + 文档整理
 ```
+
+**最终输出**: 完整性能对比报告 + 选型建议
 
 ## 测试指标
 
@@ -171,8 +194,43 @@ Day 5: 最佳实践建议
 
 ## 测试流程
 
-### 1. 模型加载 (via LM Studio)
+### 流程 A: MLX 测试 (原生框架)
 
+#### 1. 模型准备
+```bash
+# 检查已安装模型
+ls ~/.cache/huggingface/hub/models--mlx-community--MiniMax*/
+
+# 或下载新模型 (Qwen3-Coder-Next)
+# 如果 mlx-community 有的话
+```
+
+#### 2. 运行 MLX 测试
+```bash
+cd /Users/jacky/projects/llm-mac-512
+
+# MiniMax M2.1 MLX 测试
+python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-4bit
+python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-6bit
+python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-8bit
+
+# Qwen3-Coder-Next MLX 测试 (如果有)
+python scripts/benchmark_mlx.py --model mlx-community/Qwen3-Coder-Next-4bit
+```
+
+#### 3. 结果保存
+```
+docs/test-results/
+├── mlx-minimax-m2-1-4bit-{timestamp}.json
+├── mlx-minimax-m2-1-4bit-{timestamp}.md
+└── ...
+```
+
+---
+
+### 流程 B: llama.cpp 测试 (via LM Studio)
+
+#### 1. 模型加载 (LM Studio)
 ```bash
 # 方法1: LM Studio GUI
 # - 搜索模型
@@ -180,24 +238,41 @@ Day 5: 最佳实践建议
 # - Load to Chat
 
 # 方法2: LM Studio CLI
-lms download unsloth/MiniMax-M2.1-GGUF:Q4_K_M
+lms download unsloth/MiniMax-M2.1-GGUF:Q4_K_S
 lms server start --port 1234
 
 # 方法3: 已有模型
 # 直接在 GUI 中加载
 ```
 
-### 2. 运行测试
-
+#### 2. 确认服务器运行
 ```bash
-# 确认服务器运行
+# 检查 API
 curl http://localhost:1234/v1/models
 
-# 运行完整benchmark
+# 测试响应
+curl http://localhost:1234/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{"model":"minimax","messages":[{"role":"user","content":"hi"}],"max_tokens":10}'
+```
+
+#### 3. 运行 GGUF 测试
+```bash
 cd /Users/jacky/projects/llm-mac-512
+
+# 运行完整 benchmark
 python scripts/benchmark_lmstudio.py
 
-# 结果自动保存到 docs/test-results/
+# 结果自动保存
+# docs/test-results/gguf-minimax-m2-1-q4ks-{timestamp}.json
+```
+
+#### 4. 切换模型重复
+```bash
+# 在 LM Studio GUI 中：
+# 1. Unload 当前模型
+# 2. Load 下一个模型
+# 3. 重复步骤 3
 ```
 
 ### 3. 结果记录
@@ -218,58 +293,114 @@ python scripts/benchmark_lmstudio.py
 
 ## 对比分析维度
 
-### 1. 模型间对比
+### 1. 🔥 框架对比 (MLX vs llama.cpp) - 核心重点
+
+**MiniMax M2.1:**
+```
+4-bit: mlx-4bit (45.73 TPS) vs Q4_K_S/Q4_K_M (待测)
+6-bit: mlx-6bit (39.01 TPS) vs Q6_K (待测)
+8-bit: mlx-8bit (33.04 TPS) vs Q8_0 (待测)
+```
+
+**Qwen3-Coder-Next:**
+```
+4-bit: mlx-4bit (待测) vs Q4_K_M (待测)
+6-bit: mlx-6bit (待测) vs Q6_K (待测)
+8-bit: mlx-8bit (待测) vs Q8_0 (待测)
+```
+
+**对比指标:**
+- TPS (生成速度)
+- TTFT (首token延迟)
+- 内存使用效率
+- 加载时间
+- 稳定性
+
+**预期问题:**
+- MLX 在 Apple Silicon 上是否更快？
+- llama.cpp 量化是否更节省内存？
+- 哪个框架更适合生产环境？
+
+### 2. 模型间对比
 
 ```
-MiniMax M2.1 vs Qwen3-Coder-Next:
+MiniMax M2.1 (230B/10B) vs Qwen3-Coder-Next (80B/3B):
 - 代码生成质量
 - 推理能力
-- 性能/内存效率
-- Context利用率
+- 性能/内存效率 (TPS per GB)
+- Context 利用率 (196K vs 256K)
+- 启动速度
 ```
 
-### 2. 量化版本对比
+### 3. 量化级别对比
 
 ```
-Q4 vs Q6 vs Q8:
+4-bit vs 6-bit vs 8-bit:
 - 质量下降程度
-- 性能提升幅度
+- 性能提升幅度 (TPS 增加)
 - 内存节省比例
 - 最佳性价比选择
 ```
 
-### 3. 框架对比 (MLX vs llama.cpp)
+### 4. 框架特性对比
 
-```
-仅针对 MiniMax M2.1:
-- 相同量化级别性能差异
-- 内存使用差异
-- 稳定性对比
-```
+| 特性 | MLX | llama.cpp (GGUF) |
+|------|-----|------------------|
+| Apple 优化 | ✅ 原生 | ⚠️ Metal 后端 |
+| 通用性 | ❌ Mac only | ✅ 跨平台 |
+| 生态系统 | mlx-lm | LM Studio, Ollama |
+| 易用性 | Python API | CLI + API |
+| 社区支持 | 🔥 Apple | 🔥🔥 最广泛 |
+
+## 测试对比总览
+
+### 完整测试矩阵
+
+| 模型 | MLX 4bit | MLX 6bit | MLX 8bit | GGUF Q4 | GGUF Q6 | GGUF Q8 |
+|------|----------|----------|----------|---------|---------|---------|
+| **MiniMax M2.1** | ✅ 45.73 TPS | ✅ 39.01 TPS | ✅ 33.04 TPS | 🔄 测试中 | ⏳ 待测 | ⏳ 待测 |
+| **Qwen3-Coder** | 🔍 待查找 | 🔍 待查找 | 🔍 待查找 | ⏳ 待测 | ⏳ 待测 | ⏳ 待测 |
+
+### 核心对比问题
+
+**框架对比:**
+1. 相同量化下，MLX vs llama.cpp 谁更快？
+2. 内存使用效率差异多大？
+3. 哪个框架更适合生产环境？
+
+**模型对比:**
+1. MiniMax M2.1 vs Qwen3-Coder-Next 代码能力？
+2. 230B/10B vs 80B/3B 的性能/质量权衡？
+3. 256K context 是否比 196K 更实用？
+
+**量化对比:**
+1. 4bit vs 6bit vs 8bit 质量下降多少？
+2. 性能提升是否值得额外内存？
+3. 最佳性价比选择是什么？
 
 ## 预期成果
 
 ### 测试报告
 
 1. **benchmark-results.md** - 汇总所有测试数据
-2. **model-comparison.md** - 模型对比分析
-3. **best-practices.md** - 512GB Mac 使用建议
+   - MLX 测试结果汇总
+   - GGUF 测试结果汇总
+   - 框架对比表格
 
-### 关键问题答案
+2. **framework-comparison.md** - MLX vs llama.cpp 深度对比
+   - 性能对比 (TPS, TTFT)
+   - 内存效率对比
+   - 稳定性和易用性
 
-1. **哪个模型更适合代码任务？**
+3. **model-comparison.md** - MiniMax vs Qwen3 对比
    - 代码生成质量
-   - 性能表现
-   - 内存效率
+   - 推理能力
+   - 适用场景
 
-2. **最佳量化级别是？**
-   - 质量/性能平衡点
-   - 推荐配置
-
-3. **512GB 内存可以运行什么？**
-   - 可运行模型列表
-   - 并发能力
-   - 资源余量
+4. **best-practices.md** - 512GB Mac 使用建议
+   - 模型选型建议
+   - 量化级别推荐
+   - 部署最佳实践
 
 ## 参考资源
 
@@ -344,17 +475,42 @@ Q4 vs Q6 vs Q8:
 
 ## 下一步行动
 
-**当前状态**: MiniMax M2.1 Q4_K_S 已加载
+**当前状态**: MiniMax M2.1 Q4_K_S (GGUF) 已加载在 LM Studio
 
-**立即执行**:
+### 立即执行 (Phase 1: MiniMax M2.1 GGUF)
+
 ```bash
-# 1. 运行完整测试
+# Step 1: 测试当前 Q4_K_S
+cd /Users/jacky/projects/llm-mac-512
 python scripts/benchmark_lmstudio.py
 
-# 2. 查看结果
-cat docs/test-results/minimax-*.md
+# Step 2: 查看结果
+cat docs/test-results/gguf-minimax-*.md
 
-# 3. 继续下一个版本 (Q4_K_M)
+# Step 3: 在 LM Studio 中切换到 Q4_K_M
+# (GUI: Unload → Load Q4_K_M)
+
+# Step 4: 测试 Q4_K_M
+python scripts/benchmark_lmstudio.py
+
+# Step 5: 重复 Q6_K, Q8_0
 ```
 
-**本周目标**: 完成 MiniMax M2.1 全部 GGUF 测试
+### 本周目标
+
+**Week 1 目标**: 完成 MiniMax M2.1 双框架测试
+- [x] MLX 测试 (已有归档数据)
+- [ ] GGUF Q4_K_S (进行中)
+- [ ] GGUF Q4_K_M
+- [ ] GGUF Q6_K
+- [ ] GGUF Q8_0
+- [ ] MLX vs GGUF 对比分析
+
+### 检查清单
+
+在开始测试前确认：
+- [ ] `scripts/benchmark_lmstudio.py` 存在且可运行
+- [ ] `scripts/benchmark_mlx.py` 存在（MLX 测试用）
+- [ ] LM Studio 服务器运行在 port 1234
+- [ ] Context Length 设置为 131,072+
+- [ ] 关闭其他大型应用释放内存
