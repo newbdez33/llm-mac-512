@@ -1,0 +1,49 @@
+{
+  "model_name": "mlx-community/MiniMax-M2.1-4bit",
+  "framework": "MLX",
+  "timestamp": "2026-02-02T12:18:00.763073",
+  "system_info": {
+    "platform": "macOS",
+    "python_version": "Python 3.12.12",
+    "macos_version": "26.2",
+    "chip": "Apple M3 Ultra",
+    "total_memory_gb": 512.0,
+    "mlx_version": "0.30.4"
+  },
+  "config": {
+    "temperature": 0.7,
+    "max_tokens_override": null
+  },
+  "metrics": {
+    "load_time_sec": 6.27,
+    "peak_memory_gb": 169.52,
+    "avg_memory_gb": 152.36
+  },
+  "tests": [
+    {
+      "name": "短文本生成",
+      "key": "short",
+      "error": "generate_step() got an unexpected keyword argument 'temp'"
+    },
+    {
+      "name": "代码生成",
+      "key": "medium",
+      "error": "generate_step() got an unexpected keyword argument 'temp'"
+    },
+    {
+      "name": "长文本生成",
+      "key": "long",
+      "error": "generate_step() got an unexpected keyword argument 'temp'"
+    },
+    {
+      "name": "推理能力",
+      "key": "reasoning",
+      "error": "generate_step() got an unexpected keyword argument 'temp'"
+    },
+    {
+      "name": "指令跟随",
+      "key": "instruction",
+      "error": "generate_step() got an unexpected keyword argument 'temp'"
+    }
+  ]
+}

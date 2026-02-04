@@ -1,0 +1,88 @@
+{
+  "model_name": "mlx-community/MiniMax-M2.1-4bit",
+  "framework": "MLX",
+  "timestamp": "2026-02-02T12:37:18.872928",
+  "system_info": {
+    "platform": "macOS",
+    "python_version": "Python 3.12.12",
+    "macos_version": "26.2",
+    "chip": "Apple M3 Ultra",
+    "total_memory_gb": 512.0,
+    "mlx_version": "0.30.4"
+  },
+  "config": {
+    "temperature": 0.7,
+    "max_tokens_override": null
+  },
+  "metrics": {
+    "load_time_sec": 21.25,
+    "peak_memory_gb": 134.81,
+    "avg_memory_gb": 124.33,
+    "avg_tps": 45.73,
+    "min_tps": 34.85,
+    "max_tps": 49.24,
+    "avg_ttft_sec": 0.067
+  },
+  "tests": [
+    {
+      "output": "嗯，用户要求用一句话解释量子计算。这个问题看似简单，但要精准概括量子计算的核心确实需要仔细推敲。\n\n用户可能是科技爱好者或学生，想快速理解这个前沿概念。ta的提问简洁直接，说明需要的是高度凝练的答案。不过量子计算涉及叠加、纠缠等复杂概念，如何在单句话里既准确又易懂呢？\n\n让我想想关键突破点。经典比特只有0/1两种状态，而量子比特能同时处于多种状态——这就是叠加原理。普通计算机",
+      "total_tokens": 100,
+      "ttft_sec": 0.089,
+      "generation_time_sec": 2.869,
+      "total_time_sec": 2.958,
+      "tps": 34.85,
+      "name": "短文本生成",
+      "key": "short",
+      "prompt": "请用一句话解释量子计算",
+      "max_tokens": 100
+    },
+    {
+      "output": "The user is asking for a Python quicksort algorithm with complete comments in Chinese. Let me analyze the requirements:\n\n1. **Writing Type**: Technical documentation/code explanation\n2. **Language**: Simplified Chinese (based on the user's request)\n3. **Content**: Python quicksort algorithm with full comments\n4. **Style**: Educational and clear, with comprehensive explanations\n\nI need to:\n- Write a complete, working quicksort algorithm in Python\n- Add detailed comments explaining each part\n- Include the algorithm explanation, complexity analysis, and usage example\n- Use consistent Chinese punctuation\n- Maintain a balanced structure\n\nLet me write a comprehensive quicksort implementation with extensive comments.\n</think>\n\n# Python快速排序算法实现\n\n快速排序（Quick Sort）是一种分治算法，由英国计算机科学家托尼·霍尔（Tony Hoare）在1959年发明。它是实践中应用最广泛的排序算法之一，平均时间复杂度为O(n log n)，最坏情况下为O(n²)，但通过合理的基准选择策略可以有效避免最坏情况的发生。\n\n## 算法原理\n\n快速排序的核心思想是通过一次分区操作找到一个元素的正确位置，然后将数组分成两部分分别递归排序。具体步骤包括：选择基准元素、将数组划分为小于基准和大于基准的两部分、递归排序子数组。基准元素的选择对算法性能有重要影响，常用的策略包括选择第一个元素、最后一个元素、随机元素或三数取中法。\n\n```python\ndef quick_sort(arr, low=None, high=None):\n    \"\"\"\n    快速排序算法的主函数。\n    \n    该函数使用分治策略对数组进行排序。通过选择基准元素，\n    将数组分成两部分，使得左边的元素都不大于基准，右边的元素都不小于基准，\n    然后递归地对这两部分进行排序。\n    \n    参数:\n        arr: list 待排序的列表，可以包含任意可比较的元素\n        low: int 子数组的起始索引，默认为0\n        high: int 子数组的结束索引，默认为列表长度减一\n    \n    返回:\n        list: 排序后的列表（返回新列表，不修改原列表）\n    \n    算法复杂度:\n        平均时间复杂度: O(n log n)\n        最坏时间复杂度: O(n²)（当数组已经有序或逆序时）\n        空间复杂度: O(log n)（递归栈空间）\n    \n    示例:\n        >>> quick_sort([3, 1, 4, 1, 5, 9, 2",
+      "total_tokens": 500,
+      "ttft_sec": 0.061,
+      "generation_time_sec": 10.154,
+      "total_time_sec": 10.215,
+      "tps": 49.24,
+      "name": "代码生成",
+      "key": "medium",
+      "prompt": "写一个Python快速排序算法，包含完整注释",
+      "max_tokens": 500
+    },
+    {
+      "output": "The user asks: \"详细解释深度学习的反向传播算法，包括数学推导过程\". So they want a detailed explanation of backpropagation in deep learning, including mathematical derivations.\n\nWe need to produce a thorough explanation in Chinese, as the prompt is in Chinese. The user wants a detailed explanation of backpropagation, including the derivation. The answer should be thorough, covering forward pass, loss function, gradient computation, chain rule, etc. Use mathematical notation, maybe include a simple network example, maybe a multi-layer perceptron, with activation functions (sigmoid, ReLU), maybe cross-entropy loss. Show the derivation of gradients for weights and biases. Also discuss computational graph, dynamic programming, automatic differentiation, algorithmic aspects, practical considerations (learning rate, momentum, weight initialization, regularization). Might also discuss variations (L-BFGS, Hessian-free) but focus on backprop. Also discuss implementation details. Could include pseudo-code. Also mention regularization, dropout, etc. But main focus: backprop algorithm.\n\nWe need to write in Chinese. Use LaTeX for formulas. Provide step-by-step derivation.\n\nWe need to watch for user content: \"详细解释深度学习的反向传播算法，包括数学推导过程\". Should be final answer. Provide a thorough explanation.\n\nWe'll produce a structured answer: introduction, forward pass, loss, backprop basics, chain rule, gradient computation, algorithmic steps, example network, derivation for weights, biases, activation, loss, gradient descent update, computational graph, automatic differentiation, implementation notes, extensions.\n\nAlso include some references.\n\nWe should be careful: no disallowed content. It's fine.\n\nWe'll produce the answer.\n</think>\n\n# 深度学习中的反向传播（Back‑Propagation）算法\n\n## 1. 什么是反向传播？\n\n反向传播（Back‑Propagation，简称 BP）是 **利用链式法则（chain rule）** 计算神经网络中 **每个参数（权重、偏置）** 对 **整体损失函数** 的梯度，从而实现 **随机梯度下降（SGD）**、**Adam** 等基于梯度的优化算法。  \n它本质上是 **自动微分（automatic differentiation）** 的一种实现方式，利用 **计算图（computational graph）** 的结构，以 **自底向上（从输出到输入）** 的方式递推计算梯度。\n\n---\n\n## 2. 基本符号与网络结构\n\n| 符号 | 含义 |\n|------|------|\n| $L$ | 损失函数（如均方误差 MSE、交叉熵 CE）。 |\n| $K$ | 网络层数（输入层不算在内）。 |\n| $\\mathbf{W}^{(l)}$ | 第 $l$ 层的权重矩阵，维度为 $n_{l}\\times n_{l-1}$。 |\n| $\\mathbf{b}^{(l)}$ | 第 $l$ 层的偏置向量，维度为 $n_{l}\\times 1$。 |\n| $\\mathbf{z}^{(l)}$ | 第 $l$ 层的线性输出（激活前），维度为 $n_{l}\\times 1$。 |\n| $\\mathbf{a}^{(l)}$ | 第 $l$ 层的激活输出（激活后），维度为 $n_{l}\\times 1$。 |\n| $f^{(l)}(\\cdot)$ | 第 $l$ 层的激活函数（如 ReLU、Sigmoid、Tanh）。 |\n| $\\mathbf{x}$ | 输入向量，维度为 $n_{0}\\times 1$。 |\n| $\\mathbf{y}$ | 目标标签向量，维度为 $n_{K}\\times 1$。 |\n\n> **前向传播（Forward Pass）**  \n> \\[\n> \\begin{aligned}\n> \\mathbf{z}^{(1)} &= \\mathbf{W}^{(1)}\\mathbf{x} + \\mathbf{b}^{(1)} ,\\\\\n> \\mathbf{a}^{(1)} &= f^{(1)}\\!\\big(\\mathbf{z}^{(1)}\\big),\\\\\n> &\\;\\;\\vdots\\\\\n> \\mathbf{z}^{(K)} &= \\mathbf{W}^{(K)}\\mathbf{a}^{(K-1)} + \\mathbf{b}^{(K)} ,\\\\\n> \\mathbf{a}^{(K)} &= f^{(K)}\\!\\big(\\mathbf{z}^{(K)}\\big) .\n> \\end{aligned}\n> \\]\n\n---\n\n## 3. 损失函数与目标\n\n我们先给出两种常见损失的表达式（其余过程完全类似）：\n\n### 3.1 均方误差（Mean Squared Error，MSE）\n\n\\[\nL(\\mathbf{W},\\mathbf{b}) = \\frac{1}{2N}\\sum_{i=1}^{N}\\big\\|\\mathbf{a}^{(K)}_i - \\mathbf{y}_i\\big\\|_{2}^{2},\n\\]\n\n其中 $N$ 为批大小，$i$ 表示第 $i$ 个样本。\n\n### 3.2 交叉熵（Cross‑Entropy）\n\n对二分类使用 **二元交叉熵**，对多分类使用 **softmax + 交叉熵**：\n\n\\[\nL = -\\frac{1}{N}\\sum_{i=1}^{N}\\sum_{c=1}^{C} y_{ic}\\,\\log \\big(\\hat y_{ic}\\big),\n\\qquad\n\\hat y_{ic} = \\frac{\\exp(z^{(K)}_{ic})}{\\sum_{c'=1}^{C}\\exp(z^{(K)}_{ic'})}.\n\\]\n\n---\n\n## 4. 反向传播的数学推导\n\n### 4.1 链式法则的抽象形式\n\n假设网络的计算图是 **有向无环图（DAG）**，每个节点的输出是若干前驱节点的线性组合后经过激活函数。令 $\\delta^{(l)}$ 表示 **误差信号**，即 **损失对第 $l$ 层线性输出 $\\mathbf{z}^{(l)}$ 的梯度**：\n\n\\[\n\\boxed{\\;\\delta^{(l)} \\equiv \\frac{\\partial L}{\\partial \\mathbf{z}^{(l)}}\\;}\n\\]\n\n则链式法则给出：\n\n\\[\n\\delta^{(K)} = \\frac{\\partial L}{\\partial \\mathbf{z}^{(K)}} = \\frac{\\partial L}{\\partial \\mathbf{a}^{(K)}}\\odot f'^{(K)}(\\mathbf{z}^{(K)}),\n\\]\n\n其中 $\\odot$ 表示逐元素（Hadamard）乘积。\n\n随后递推：\n\n\\[\n\\delta^{(l)} = \\big(\\mathbf{W}^{(l+1)}\\!^{\\top}\\,\\delta^{(l+1)}\\big)\\odot f'^{(l)}(\\mathbf{z}^{(l)}),\\qquad l = K-1,\\dots,1 .\n\\]\n\n### 4.2 梯度计算（矩阵形式）\n\n有了 $\\delta^{(l)}$，权重的梯度可以直接写出：\n\n\\[\n\\frac{\\partial L}{\\partial \\mathbf{W}^{(l)}} = \\delta^{(l)}\\,\\mathbf{a}^{(l-1)\\!^{\\top}},\n\\qquad\n\\frac{\\partial L}{\\partial \\mathbf{b}^{(l)}} = \\delta^{(l)} .\n\\]\n\n这就是 **“误差乘以前一层激活”** 的经典公式。\n\n下面我们给出 **完整的推导过程**（以多层感知机 MLP 为例），每一步都明确使用 **链式法则**。\n\n---\n\n#### 4.2.1 步骤 1：计算输出层的误差 $\\delta^{(K)}$\n\n**情形（a）：MSE 损失 + Sigmoid 激活**  \n\nMSE 损失（简化版）：\n\n\\[\nL = \\frac{1}{2}\\|\\mathbf{a}^{(K)}-\\mathbf{y}\\|^{2}.\n\\]\n\n对 $\\mathbf{z}^{(K)}$ 求梯度：\n\n\\[\n\\begin{aligned}\n\\frac{\\partial L}{\\partial \\mathbf{z}^{(K)}}\n&= \\frac{\\partial L}{\\partial \\mathbf{a}^{(K)}}\\;\\frac{\\partial \\mathbf{a}^{(K)}}{\\partial \\mathbf{z}^{(K)}}   \\\\\n&= (\\mathbf{a}^{(K)}-\\mathbf{y})\\;\\odot\\; f'^{(K)}(\\mathbf{z}^{(K)}).\n\\end{aligned}\n\\]\n\n因为 $\\mathbf{a}^{(K)} = f^{(K)}(\\mathbf{z}^{(K)})$，所以 $\\frac{\\partial \\mathbf{a}^{(K)}}{\\partial \\mathbf{z}^{(K)}} = \\operatorname{diag}\\big(f'^{(K)}(\\mathbf{z}^{(K)})\\big)$，只保留对角元素即可。\n\n**情形（b）：交叉熵 + Softmax 激活**  \n\n交叉熵（对数形式）：\n\n\\[\nL = -\\sum_{c=1}^{C} y_{c}\\,\\log \\hat y_{c},\\qquad \n\\hat y_{c} = \\frac{e^{z_{c}}}{\\sum_{c'}e^{z_{c'}}}.\n\\]\n\n对 $\\mathbf{z}^{(K)}$ 的导数得到著名的 **softmax + cross‑entropy** 简化形式：\n\n\\[\n\\frac{\\partial L}{\\partial \\mathbf{z}^{(K)}} = \\hat{\\mathbf{y}} - \\mathbf{y},\n\\]\n\n即误差信号直接等于预测向量减去真实标签向量，无需显式乘以激活函数的导数（因为二者相互抵消）。\n\n---\n\n#### 4.2.2 步骤 2：递推误差信号\n\n对第 $l$ 层（$l<K$），有：\n\n\\[\n\\mathbf{z}^{(l)} = \\mathbf{W}^{(l)}\\mathbf{a}^{(l-1)} + \\mathbf{b}^{(l)},\n\\qquad\n\\mathbf{a}^{(l)} = f^{(l)}(\\mathbf{z}^{(l)}).\n\\]\n\n利用链式法则：\n\n\\[\n\\begin{aligned}\n\\delta^{(l)} &\\equiv \\frac{\\partial L}{\\partial \\mathbf{z}^{(l)}} \\\\\n&= \\frac{\\partial L}{\\partial \\mathbf{a}^{(l)}}\\;\\frac{\\partial \\mathbf{a}^{(l)}}{\\partial \\mathbf{z}^{(l)}} \\\\\n&= \\Big(\\frac{\\partial L}{\\partial \\mathbf{z}^{(l+1)}}\\;\\frac{\\partial \\mathbf{z}^{(l+1)}}{\\partial \\mathbf{a}^{(l)}}\\Big)\\;\\odot\\; f'^{(l)}(\\mathbf{z",
+      "total_tokens": 2000,
+      "ttft_sec": 0.062,
+      "generation_time_sec": 41.528,
+      "total_time_sec": 41.59,
+      "tps": 48.16,
+      "name": "长文本生成",
+      "key": "long",
+      "prompt": "详细解释深度学习的反向传播算法，包括数学推导过程",
+      "max_tokens": 2000
+    },
+    {
+      "output": "We need to interpret the puzzle: \"有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。\" So Chinese: There are 5 people queuing, known: A is not at the first position, B is before C, D is adjacent to E, A is after D. Find the arrangement.\n\nWe need to find any possible ordering consistent with constraints.\n\nWe have 5 individuals: A, B, C, D, E.\n\nConstraints:\n\n1. A is not first (i.e., position 1 is not A)\n2. B is before C (i.e., B appears somewhere earlier than C)\n3. D is adjacent to E (i.e., they are next to each other, either D E or E D)\n4. A is after D (i.e., D appears before A)\n\nGoal: Find all possible orderings that satisfy these constraints.\n\nWe need to produce all possible orderings. Let's reason.\n\nDefine positions 1 to 5 (leftmost = front? Usually first means position 1). We need to satisfy constraints.\n\nWe can brute-force mental enumeration.\n\nLet’s denote positions p(A), p(B), p(C), p(D), p(E). All distinct from 1 to 5.\n\nConstraints:\n\n- p(A) ≠ 1.\n- p(B) < p(C)\n- |p(D) - p(E)| = 1\n- p(D) < p(A)\n\nWe want all permutations of 5 that satisfy these.\n\nWe can approach systematically.\n\nFirst, consider D and E adjacency. Options: (D, E) as a block or (E, D) as a block. And the block can be placed in positions (1,2), (2,3), (3,4), (4,5). Since we have 5 positions, a block of two occupies two consecutive positions.\n\nLet’s denote the block as X (two elements) with two possible internal orders: D-E or E-D.\n\nNow constraints: p(D) < p(A). So D must be before A. So D cannot be after A. So block orientation matters: if we have block D-E, then D is before E, and D must be before A, so A must be somewhere after D (or after block? Actually D is before A, so A must be after D's position; if block is D-E, then D",
+      "total_tokens": 500,
+      "ttft_sec": 0.062,
+      "generation_time_sec": 10.279,
+      "total_time_sec": 10.341,
+      "tps": 48.64,
+      "name": "推理能力",
+      "key": "reasoning",
+      "prompt": "有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。",
+      "max_tokens": 500
+    },
+    {
+      "output": "用户现在需要完成三个任务，首先是列出三种常见排序算法，然后每个的时间复杂度，最后一句话总结适用场景。首先，得选三个有代表性的，比如冒泡排序、插入排序、选择排序，或者快排、归并、堆排？不过前面三个更基础，容易讲清楚时间复杂度。首先排序算法：冒泡排序、插入排序、选择排序，或者快排、归并、堆排？等下，要常见的话，前三个可能更基础，但快排也是常见的。不过不管，先确定三个。\n\n第一个任务：列出3种常见排序算法，比如冒泡排序、插入排序、选择排序，或者快排、归并、堆排？其实不管选哪三个，只要常见就行。比如我选冒泡排序、插入排序、快速排序？因为快速排序更实用，时间复杂度好。\n\n然后第二个任务，每个的时间复杂度：冒泡排序平均O(n²)，最好O(n)，最坏O(n²)；插入排序平均O(n²)，最好O(n)，最坏O(n²)；快速排序平均O(nlogn)，最坏O(n²)，最好O(nlogn)。\n\n第三个任务，用一句话总结适用场景：冒泡排序适合小规模数据或基本有序的数据；插入排序适合小规模或基本有序的数据，因为移动元素的代价小；快速排序适合大规模随机数据，效率高。\n\n等下，要确认每个的适用场景准确吗？比如插入排序，当数组基本有序时，时间复杂度接近O(n)，所以适合这种情况。冒泡排序也是，当基本有序时，交换次数少，接近O(n)。快速排序的话，随机数据下平均O(nlogn)，最坏情况是数组已有序时，但如果用随机化pivot可以避免，所以适合大规模随机数据。\n\n现在组织语言：\n\n1. 常见排序算法：冒泡排序、插入排序、快速排序。\n\n2. 时间复杂度：\n   - 冒泡排序：平均O(n²)，最好O(n)（基本有序时），最坏O(n²)（完全逆序",
+      "total_tokens": 400,
+      "ttft_sec": 0.063,
+      "generation_time_sec": 8.373,
+      "total_time_sec": 8.437,
+      "tps": 47.77,
+      "name": "指令跟随",
+      "key": "instruction",
+      "prompt": "请完成以下任务：\n1. 列出3种常见的排序算法\n2. 为每种算法写出时间复杂度\n3. 用一句话总结它们的适用场景",
+      "max_tokens": 400
+    }
+  ]
+}

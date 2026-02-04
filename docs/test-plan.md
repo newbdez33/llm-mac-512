@@ -14,12 +14,33 @@ Comprehensive performance testing of MiniMax M2.1 variants on Mac (512GB unified
 
 ## Test Configuration
 
-### Frameworks
+### Testing Framework
 
-| Framework | Purpose | Installation |
-|-----------|---------|--------------|
-| **MLX** | Apple Silicon native optimization | `pip install -U mlx-lm` |
-| **llama.cpp** | Universal GGUF format support | `brew install llama.cpp` |
+**🎯 统一测试平台: LM Studio**
+
+所有后续测试（MLX 和 llama.cpp）统一通过 LM Studio 加载模型并提供 API 服务器。
+
+| 组件 | 作用 | 说明 |
+|------|------|------|
+| **LM Studio** | 统一模型加载器 + API 服务器 | GUI + CLI，支持 MLX 和 GGUF |
+| **MLX Backend** | Apple Silicon 优化 | LM Studio 自动使用 MLX |
+| **llama.cpp Backend** | GGUF 格式支持 | LM Studio 内置 llama.cpp |
+
+**优势：**
+- ✅ 统一的测试接口（OpenAI-compatible API）
+- ✅ 易于切换不同模型
+- ✅ 内置性能监控
+- ✅ 配置一致性
+- ✅ 适配 OpenClaw
+
+**安装：**
+```bash
+# LM Studio
+brew install --cask lm-studio
+
+# 或下载
+open https://lmstudio.ai/download
+```
 
 ### Test Matrix
 
@@ -79,7 +100,8 @@ Comprehensive performance testing of MiniMax M2.1 variants on Mac (512GB unified
 
 ### Phase 2: Benchmark Scripts ✅
 
-**benchmark_mlx.py features:**
+**benchmark_lmstudio.py features:**
+- Unified testing interface for both MLX and GGUF models via LM Studio API
 - Model loading with timing
 - Memory monitoring (using psutil)
 - Token generation timing
@@ -96,32 +118,46 @@ Comprehensive performance testing of MiniMax M2.1 variants on Mac (512GB unified
 }
 ```
 
-### Phase 3: llama.cpp Testing (In Progress)
+### Phase 3: llama.cpp (GGUF) Testing via LM Studio
 
 **Objective:** Compare llama.cpp quantized versions with MLX baseline
 
+**🎯 测试方法: 通过 LM Studio 统一测试**
+
+所有 GGUF 模型通过 LM Studio 加载和测试，使用相同的 API 接口。
+
 **Test Order:**
-1. ⏳ Q4_K_M (138GB) → Compare with MLX 4-bit
-2. ⏳ Q8_0 (243GB) → Compare with MLX 8-bit
-3. ❌ BF16 (457GB) → Already tested, FAILED (see benchmark-results.md)
+1. ⏳ Q4_K_S (130GB) → 当前已加载，待完整测试
+2. ⏳ Q4_K_M (138GB) → Compare with MLX 4-bit
+3. ⏳ Q8_0 (243GB) → Compare with MLX 8-bit
+4. ❌ BF16 (457GB) → Already tested, FAILED (see benchmark-results.md)
 
-**Test Configuration:**
+**Test Configuration via LM Studio:**
+
 ```bash
-# Q4_K_M test
-llama-cli \
-  --model MiniMax-M2.1-Q4_K_M.gguf \
-  --prompt "..." \
-  --n-predict 100 \
-  --temp 0.7 \
-  --ctx-size 4096
+# 1. 通过 LM Studio 下载模型
+lms download unsloth/MiniMax-M2.1-GGUF:Q4_K_M
 
-# Q8_0 test
-llama-cli \
-  --model MiniMax-M2.1-Q8_0.gguf \
-  --prompt "..." \
-  --n-predict 100 \
-  --temp 0.7 \
-  --ctx-size 4096
+# 2. 启动 API 服务器
+lms server start unsloth/MiniMax-M2.1-GGUF --port 1234
+
+# 3. 运行统一测试脚本
+python scripts/benchmark_lmstudio.py
+
+# 或直接测试 API
+curl http://localhost:1234/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "minimax-m2.1",
+    "messages": [{"role": "user", "content": "测试提示"}],
+    "max_tokens": 100
+  }'
+```
+
+**统一测试脚本:**
+```bash
+# 所有模型使用相同的测试脚本
+python scripts/benchmark_lmstudio.py
 ```
 
 **Metrics to Track:**
@@ -276,15 +312,18 @@ On M3 Ultra (512GB):
 ```bash
 # Baseline (default)
 sysctl iogpu.wired_limit_mb  # Check current
-python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-4bit
+# Load MLX 4-bit model via LM Studio
+python scripts/benchmark_lmstudio.py
 
 # Optimized (448GB for GPU)
 sudo sysctl iogpu.wired_limit_mb=458752
-python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-4bit
+# Load MLX 4-bit model via LM Studio
+python scripts/benchmark_lmstudio.py
 
 # Aggressive (480GB for GPU)
 sudo sysctl iogpu.wired_limit_mb=491520
-python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-4bit
+# Load MLX 4-bit model via LM Studio
+python scripts/benchmark_lmstudio.py
 ```
 
 **Test 2: VRAM Impact on Large Models**
@@ -292,7 +331,8 @@ python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-4bit
 Test same VRAM configs with 8-bit model (252GB baseline):
 ```bash
 # Default vs Optimized VRAM limit
-python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-8bit
+# Load MLX 8-bit model via LM Studio, then test
+python scripts/benchmark_lmstudio.py
 ```
 
 **Test 3: llama.cpp Metal Backend Optimization**
@@ -309,29 +349,39 @@ python scripts/benchmark_mlx.py --model mlx-community/MiniMax-M2.1-8bit
 
 **Commands:**
 ```bash
+# Note: All tests run via LM Studio API
+# LM Studio internally uses llama.cpp for GGUF models
+# Set environment variables before starting LM Studio server
+
 # Baseline
-python scripts/benchmark_llama.py --model model.gguf
+# Start LM Studio normally, load GGUF model
+python scripts/benchmark_lmstudio.py
 
 # Force private VRAM
 export GGML_METAL_FORCE_PRIVATE=1
-python scripts/benchmark_llama.py --model model.gguf
+# Restart LM Studio server with this env var
+python scripts/benchmark_lmstudio.py
 unset GGML_METAL_FORCE_PRIVATE
 
 # Test different dies
 export GGML_METAL_DEVICE_INDEX=0
-python scripts/benchmark_llama.py --model model.gguf
+# Restart LM Studio server
+python scripts/benchmark_lmstudio.py
 
 export GGML_METAL_DEVICE_INDEX=1
-python scripts/benchmark_llama.py --model model.gguf
+# Restart LM Studio server
+python scripts/benchmark_lmstudio.py
 unset GGML_METAL_DEVICE_INDEX
 
 # Test command buffer count
 export GGML_METAL_FORCE_PRIVATE=1
 export GGML_METAL_N_CB=1
-python scripts/benchmark_llama.py --model model.gguf
+# Restart LM Studio server
+python scripts/benchmark_lmstudio.py
 
 export GGML_METAL_N_CB=3
-python scripts/benchmark_llama.py --model model.gguf
+# Restart LM Studio server
+python scripts/benchmark_lmstudio.py
 ```
 
 **Test 4: Combined Optimization**
@@ -343,11 +393,12 @@ export GGML_METAL_FORCE_PRIVATE=1
 export GGML_METAL_DEVICE_INDEX=0
 export GGML_METAL_N_CB=2
 
-# Test Q4_K_M
-python scripts/benchmark_llama.py --model ~/models/MiniMax-M2.1-Q4_K_M.gguf
+# Restart LM Studio server with these env vars
+# Load Q4_K_M via LM Studio
+python scripts/benchmark_lmstudio.py
 
-# Test Q8_0
-python scripts/benchmark_llama.py --model ~/models/MiniMax-M2.1-Q8_0.gguf
+# Load Q8_0 via LM Studio
+python scripts/benchmark_lmstudio.py
 ```
 
 #### 5.3 Metrics to Track
@@ -380,7 +431,8 @@ Automated testing script (to be created):
 ```bash
 #!/bin/bash
 # Test different VRAM configurations automatically
-./scripts/benchmark_vram.sh --model mlx-community/MiniMax-M2.1-4bit
+# Loads models via LM Studio and runs benchmark_lmstudio.py
+./scripts/benchmark_vram.sh
 ```
 
 #### 5.6 Safety Notes
@@ -407,10 +459,10 @@ Automated testing script (to be created):
 
 | File | Purpose |
 |------|---------|
-| `scripts/benchmark_mlx.py` | MLX performance test script |
-| `scripts/benchmark_llama.py` | llama.cpp performance test script |
+| `scripts/benchmark_lmstudio.py` | Unified performance test script (via LM Studio API) |
 | `docs/benchmark-results.md` | Aggregated results |
 | `docs/test-plan.md` | This plan document |
+| `docs/lmstudio-openclaw-troubleshooting.md` | LM Studio + OpenClaw setup guide |
 
 ## Validation Methods
 
