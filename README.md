@@ -255,6 +255,7 @@ llm-mac-512/
 
 ### Test Planning
 - [Test Plan v2](./docs/test-plan-v2.md) - Complete testing strategy
+- [Model Inventory](./docs/model-inventory.md) - All models to test (with HuggingFace links)
 - [Test Parameters](./docs/test-parameters.md) - Configuration design
 - [Benchmark Results](./docs/benchmark-results.md) - All test data
 

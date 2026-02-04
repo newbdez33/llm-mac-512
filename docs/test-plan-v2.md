@@ -47,53 +47,84 @@
 
 ### MiniMax M2.1
 
-#### Phase 1A: MLX 版本测试 (原生框架)
+📖 **完整模型列表**: [docs/model-inventory.md](./model-inventory.md#minimax-m21-230b10b-moe)
 
-| 版本 | 大小 | 内存占用 | 优先级 | 状态 | 基准性能 | 测试方法 |
-|------|------|----------|--------|------|----------|----------|
-| **mlx-4bit** | ~120GB | ~135GB | 🔥 1 | ✅ 已测 | 45.73 TPS | mlx-lm |
-| **mlx-6bit** | ~180GB | ~198GB | 🔥 2 | ✅ 已测 | 39.01 TPS | mlx-lm |
-| **mlx-8bit** | ~240GB | ~252GB | 🔥 3 | ✅ 已测 | 33.04 TPS | mlx-lm |
-| **mlx-bf16** | ~460GB | ~478GB | 4 | ❌ 不可用 | - | 无官方版本 |
+#### Phase 1A: MLX Backend (via LM Studio)
 
-**注**: 已有归档数据，可直接使用或重新测试验证
+| 版本 | HuggingFace 仓库 | 大小 | 优先级 | 状态 | 基准TPS |
+|------|------------------|------|--------|------|---------|
+| **mlx-4bit** | [mlx-community/MiniMax-M2.1-4bit](https://huggingface.co/mlx-community/MiniMax-M2.1-4bit) | 120GB | 🔥 1 | ⏳ 需重测 | 45.73* |
+| **mlx-8bit** | [mlx-community/MiniMax-M2.1-8bit-gs32](https://huggingface.co/mlx-community/MiniMax-M2.1-8bit-gs32) | 240GB | 🔥 2 | ⏳ 需重测 | 33.04* |
+| **mlx-3bit** | [mlx-community/MiniMax-M2.1-3bit](https://huggingface.co/mlx-community/MiniMax-M2.1-3bit) | 90GB | 3 | ⏳ 备选 | - |
 
-#### Phase 1B: llama.cpp 版本测试 (GGUF via LM Studio)
+*基准数据来自 native mlx-lm，需通过 LM Studio 重测以公平对比
 
-| 版本 | 大小 | 内存占用 | 优先级 | 状态 | 对比MLX | 测试方法 |
-|------|------|----------|--------|------|---------|----------|
-| **Q4_K_S** | 130GB | ~135GB | 🔥 1 | 🔄 进行中 | vs mlx-4bit | LM Studio |
-| **Q4_K_M** | 138GB | ~143GB | 🔥 2 | ⏳ 待测 | vs mlx-4bit | LM Studio |
-| **Q6_K** | 188GB | ~193GB | 🔥 3 | ⏳ 待测 | vs mlx-6bit | LM Studio |
-| **Q8_0** | 243GB | ~248GB | 🔥 4 | ⏳ 待测 | vs mlx-8bit | LM Studio |
-| **BF16** | 457GB | ~462GB | 5 | ❌ 失败 | vs mlx-bf16 | OOM (已测) |
+**注意**: ❌ 无 MLX 6-bit 版本
 
-**对比重点**: 相同量化级别下 MLX vs llama.cpp 的性能差异
+#### Phase 1B: llama.cpp Backend (via LM Studio)
+
+| 版本 | HuggingFace 仓库 | 量化文件 | 大小 | 优先级 | 状态 | 对比 |
+|------|------------------|----------|------|--------|------|------|
+| **Q4_K_S** | [unsloth/MiniMax-M2.1-GGUF](https://huggingface.co/unsloth/MiniMax-M2.1-GGUF) | Q4_K_S | 130GB | 🔥 1 | 🔄 已加载 | vs mlx-4bit |
+| **Q4_K_M** | [unsloth/MiniMax-M2.1-GGUF](https://huggingface.co/unsloth/MiniMax-M2.1-GGUF) | Q4_K_M | 138GB | 🔥 2 | ⏳ 待测 | vs mlx-4bit |
+| **Q6_K** | [unsloth/MiniMax-M2.1-GGUF](https://huggingface.co/unsloth/MiniMax-M2.1-GGUF) | Q6_K | 188GB | 🔥 3 | ⏳ 待测 | 无MLX对应 |
+| **Q8_0** | [unsloth/MiniMax-M2.1-GGUF](https://huggingface.co/unsloth/MiniMax-M2.1-GGUF) | Q8_0 | 243GB | 🔥 4 | ⏳ 待测 | vs mlx-8bit |
+| **BF16** | [unsloth/MiniMax-M2.1-GGUF](https://huggingface.co/unsloth/MiniMax-M2.1-GGUF) | BF16 | 457GB | 5 | ❌ 失败 | OOM (已测) |
+
+**下载命令**:
+```bash
+lms download mlx-community/MiniMax-M2.1-4bit
+lms download mlx-community/MiniMax-M2.1-8bit-gs32
+lms download unsloth/MiniMax-M2.1-GGUF:Q4_K_M
+lms download unsloth/MiniMax-M2.1-GGUF:Q6_K
+lms download unsloth/MiniMax-M2.1-GGUF:Q8_0
+```
 
 ### Qwen3-Coder-Next
 
-#### Phase 2A: MLX 版本测试 (待确认)
+📖 **完整模型列表**: [docs/model-inventory.md](./model-inventory.md#qwen3-coder-next-80b3b-moe)
 
-| 版本 | 大小 | 内存占用 | 优先级 | 状态 | 说明 |
-|------|------|----------|--------|------|------|
-| **mlx-4bit** | ~45GB | ~50GB | 🔥 1 | 🔍 待查找 | 查找 mlx-community 版本 |
-| **mlx-6bit** | ~68GB | ~73GB | 2 | 🔍 待查找 | 如果存在 |
-| **mlx-8bit** | ~90GB | ~95GB | 3 | 🔍 待查找 | 如果存在 |
+#### Phase 2A: MLX Backend
 
-**注**: 需要确认是否有 mlx-community 转换的 Qwen3-Coder-Next，或使用 mlx-lm 手动转换
+| 状态 | 说明 |
+|------|------|
+| ❌ **无预量化 MLX 版本** | mlx-community 暂无 Qwen3-Coder-Next 转换版本 |
+| ⚠️ **可手动转换** | 官方支持 MLX-LM，可自行转换 ([Qwen/Qwen3-Coder-Next](https://huggingface.co/Qwen/Qwen3-Coder-Next)) |
+| 💡 **备选方案** | 只测试 GGUF 版本，或花 1-2 小时手动转换 MLX 4-bit |
 
-#### Phase 2B: llama.cpp 版本测试 (GGUF via LM Studio)
+**手动转换命令** (如需要):
+```bash
+mlx_lm.convert \
+  --hf-path Qwen/Qwen3-Coder-Next \
+  --quantize \
+  --q-bits 4 \
+  --mlx-path ./qwen3-coder-next-4bit
 
-| 版本 | 大小 | 内存占用 | 优先级 | 状态 | 对比MLX | 测试方法 |
-|------|------|----------|--------|------|---------|----------|
-| **Q4_K_M** | 48.5GB | ~53GB | 🔥 1 | ⏳ 待测 | vs mlx-4bit | LM Studio |
-| **Q6_K** | 65.5GB | ~70GB | 🔥 2 | ⏳ 待测 | vs mlx-6bit | LM Studio |
-| **Q8_0** | 84.8GB | ~90GB | 🔥 3 | ⏳ 待测 | vs mlx-8bit | LM Studio |
-| **Q4_0** | 45.3GB | ~50GB | 4 | ⏳ 待测 | 快速版本 | LM Studio |
-| **Q2_K** | 29.2GB | ~34GB | 5 | ⏳ 待测 | 最小版本 | LM Studio |
-| **BF16** | 159GB | ~164GB | 6 | ⏳ 待测 | 完整精度 | LM Studio |
+# 注意: 需要 200GB+ 临时空间，耗时 1-2 小时
+```
 
-**对比重点**: 如果有 MLX 版本，对比两个框架性能；否则仅测试 GGUF 版本
+#### Phase 2B: llama.cpp Backend (via LM Studio) ✅
+
+| 版本 | HuggingFace 仓库 | 量化文件 | 大小 | 优先级 | 状态 |
+|------|------------------|----------|------|--------|------|
+| **Q4_K_M** | [unsloth/Qwen3-Coder-Next-GGUF](https://huggingface.co/unsloth/Qwen3-Coder-Next-GGUF) | Q4_K_M | 48.5GB | 🔥 1 | ⏳ 待测 |
+| **Q4_0** | [unsloth/Qwen3-Coder-Next-GGUF](https://huggingface.co/unsloth/Qwen3-Coder-Next-GGUF) | Q4_0 | 45.3GB | 2 | ⏳ 待测 |
+| **Q6_K** | [unsloth/Qwen3-Coder-Next-GGUF](https://huggingface.co/unsloth/Qwen3-Coder-Next-GGUF) | Q6_K | 65.5GB | 🔥 3 | ⏳ 待测 |
+| **Q8_0** | [unsloth/Qwen3-Coder-Next-GGUF](https://huggingface.co/unsloth/Qwen3-Coder-Next-GGUF) | Q8_0 | 84.8GB | 🔥 4 | ⏳ 待测 |
+| **Q2_K** | [unsloth/Qwen3-Coder-Next-GGUF](https://huggingface.co/unsloth/Qwen3-Coder-Next-GGUF) | Q2_K | 29.2GB | 5 | ⏳ 可选 |
+| **BF16** | [unsloth/Qwen3-Coder-Next-GGUF](https://huggingface.co/unsloth/Qwen3-Coder-Next-GGUF) | BF16 | 159GB | 6 | ⏳ 可选 |
+
+**下载命令**:
+```bash
+lms download unsloth/Qwen3-Coder-Next-GGUF:Q4_K_M
+lms download unsloth/Qwen3-Coder-Next-GGUF:Q6_K
+lms download unsloth/Qwen3-Coder-Next-GGUF:Q8_0
+```
+
+**测试限制**:
+- ❌ 无法进行 MLX vs llama.cpp 框架对比
+- ✅ 可以测试 GGUF 性能和与 MiniMax M2.1 的模型对比
+- ✅ 可以测试不同量化级别 (Q4 vs Q6 vs Q8)
 
 ## 测试顺序规划
 
