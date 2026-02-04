@@ -40,6 +40,23 @@ log_section() {
     echo "========================================" | tee -a "$LOG_FILE"
 }
 
+# 发送通知（支持 lily notify 和 osascript）
+send_notification() {
+    local title="$1"
+    local message="$2"
+    local sound="${3:-Glass}"
+
+    log "📢 通知: $title - $message"
+
+    # 尝试使用 lily notify
+    if command -v lily &> /dev/null; then
+        lily notify "$title: $message" 2>/dev/null || true
+    fi
+
+    # 同时使用 macOS 系统通知
+    osascript -e "display notification \"$message\" with title \"$title\" sound name \"$sound\"" 2>/dev/null || true
+}
+
 # ==================== 工具函数 ====================
 
 # 等待到指定时间
@@ -204,6 +221,9 @@ run_test() {
             log "测试完成，准备删除模型..."
             sleep 5  # 等待5秒确保文件已保存
             delete_model "$model_name" "$test_label"
+
+            # 通知测试完成和删除
+            send_notification "测试完成" "$test_label 已完成并删除 (TPS: $(grep "Average TPS" "$latest_result" 2>/dev/null | head -1 | awk '{print $NF}'))"
         fi
 
         return 0
@@ -230,8 +250,8 @@ wait_for_model_switch() {
     local old_model=$(get_current_model)
     log "当前模型: $old_model"
 
-    # 发送系统通知 (macOS)
-    osascript -e "display notification \"请切换到: $next_model\" with title \"LM Studio 测试\" sound name \"Glass\""
+    # 发送通知
+    send_notification "LM Studio 测试" "请切换到: $next_model"
 
     log "等待模型切换..."
 
@@ -247,7 +267,7 @@ wait_for_model_switch() {
             sleep 10
 
             # 发送通知
-            osascript -e "display notification \"模型已加载，即将开始测试\" with title \"LM Studio 测试\" sound name \"Glass\""
+            send_notification "LM Studio 测试" "模型已加载，即将开始测试"
 
             break
         fi
@@ -308,6 +328,7 @@ main() {
 
     # 执行测试
     log_section "开始执行测试"
+    send_notification "测试开始" "开始测试 ${#tests[@]} 个模型"
 
     local test_count=0
     local success_count=0
@@ -348,7 +369,7 @@ main() {
     log "日志文件: $LOG_FILE"
 
     # 发送完成通知
-    osascript -e "display notification \"全部测试完成！成功: $success_count, 失败: $fail_count\" with title \"LM Studio 测试\" sound name \"Glass\""
+    send_notification "LM Studio 测试完成" "全部测试完成！成功: $success_count, 失败: $fail_count" "Hero"
 
     # 生成测试摘要
     generate_summary
