@@ -103,10 +103,71 @@ wait_for_model_ready() {
     return 1
 }
 
+# 删除模型
+delete_model() {
+    local model_name="$1"
+    local model_label="$2"
+
+    log "准备删除模型: $model_label"
+
+    # 保护列表：不删除这些模型
+    local keep_models=(
+        "Q4_K_S"  # 保留当前的 MiniMax 4-bit
+    )
+
+    # 检查是否在保护列表中
+    for keep in "${keep_models[@]}"; do
+        if [[ "$model_name" == *"$keep"* ]]; then
+            log "✓ 保留模型: $model_label (在保护列表中)"
+            return 0
+        fi
+    done
+
+    # LM Studio 模型存储路径
+    local lms_models_dir="$HOME/.lmstudio/models"
+
+    # 尝试多种路径格式
+    local model_paths=(
+        # mlx-community/MiniMax-M2.1-4bit → mlx-community--MiniMax-M2.1-4bit
+        "$lms_models_dir/$(echo $model_name | sed 's|/|--|g')"
+        # unsloth/MiniMax-M2.1-GGUF:Q4_K_M → unsloth--MiniMax-M2.1-GGUF@Q4_K_M
+        "$lms_models_dir/$(echo $model_name | sed 's|/|--|g' | sed 's|:|@|g')"
+        # 仅使用仓库名
+        "$lms_models_dir/$(echo $model_name | cut -d'/' -f2 | cut -d':' -f1)"
+    )
+
+    local deleted=false
+    for model_path in "${model_paths[@]}"; do
+        if [[ -d "$model_path" ]]; then
+            local dir_size=$(du -sh "$model_path" 2>/dev/null | cut -f1)
+            log "找到模型目录: $model_path (大小: $dir_size)"
+
+            # 自动删除（无需确认）
+            log "删除中..."
+            rm -rf "$model_path"
+
+            if [[ ! -d "$model_path" ]]; then
+                log "✓ 已删除: $model_path (释放: $dir_size)"
+                deleted=true
+            else
+                log "✗ 删除失败: $model_path"
+            fi
+        fi
+    done
+
+    if [[ "$deleted" == false ]]; then
+        log "⚠ 未找到模型文件，可能已被删除或路径不匹配"
+        # 列出所有模型目录供参考
+        log "当前模型目录列表:"
+        ls -lh "$lms_models_dir" 2>/dev/null | grep "^d" | awk '{print "  - " $NF}' | tee -a "$LOG_FILE"
+    fi
+}
+
 # 运行单个测试
 run_test() {
     local model_name="$1"
     local test_label="$2"
+    local auto_delete="${3:-false}"  # 新增：是否自动删除
 
     log_section "测试: $test_label"
     log "模型: $model_name"
@@ -136,6 +197,13 @@ run_test() {
             log "结果文件: $latest_result"
             # 提取关键指标
             grep -E "Average TPS|Total tokens|Peak memory" "$latest_result" | tee -a "$LOG_FILE"
+        fi
+
+        # 测试完成后删除模型（如果启用）
+        if [[ "$auto_delete" == "true" ]]; then
+            log "测试完成，准备删除模型..."
+            sleep 5  # 等待5秒确保文件已保存
+            delete_model "$model_name" "$test_label"
         fi
 
         return 0
@@ -256,10 +324,10 @@ main() {
         # 等待用户切换模型
         wait_for_model_switch "$model_name"
 
-        # 运行测试
-        if run_test "$model_name" "$test_label"; then
+        # 运行测试（启用自动删除）
+        if run_test "$model_name" "$test_label" "true"; then
             success_count=$((success_count + 1))
-            log "✓ 测试通过"
+            log "✓ 测试通过（模型已删除）"
         else
             fail_count=$((fail_count + 1))
             log "✗ 测试失败"
