@@ -1,0 +1,57 @@
+{
+  "model_config": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "top_k": 40,
+    "frequency_penalty": 0.1,
+    "seed": 42
+  },
+  "server_config": {
+    "context_length": 131072,
+    "n_gpu_layers": -1,
+    "use_mlock": true,
+    "use_mmap": true,
+    "rope_freq_base": 0,
+    "rope_freq_scale": 0,
+    "num_threads": 0
+  },
+  "test_cases": {
+    "short": {
+      "name": "短对话",
+      "prompt": "请用一句话解释量子计算",
+      "max_tokens": 100
+    },
+    "medium": {
+      "name": "代码生成",
+      "prompt": "写一个Python快速排序算法，包含详细注释和测试用例",
+      "max_tokens": 500
+    },
+    "long": {
+      "name": "长文本",
+      "prompt": "详细解释深度学习的反向传播算法，包含数学推导和代码实现",
+      "max_tokens": 2000
+    },
+    "reasoning": {
+      "name": "逻辑推理",
+      "prompt": "有三个盒子：红盒、蓝盒、绿盒。红盒里装蓝球，蓝盒里装红球，绿盒里装绿球，但所有标签都贴错了。你最少需要从几个盒子中各取一个球才能确定每个盒子的真实内容？请详细说明推理过程。",
+      "max_tokens": 500
+    },
+    "instruction": {
+      "name": "指令跟随",
+      "prompt": "作为Python代码审查专家，请审查以下代码并提出改进建议：\n\n```python\ndef calc(a,b,op):\n    if op=='+':\n        return a+b\n    elif op=='-':\n        return a-b\n    elif op=='*':\n        return a*b\n    elif op=='/':\n        return a/b\n```",
+      "max_tokens": 400
+    }
+  },
+  "qwen_special_cases": {
+    "code_agent": {
+      "name": "代码代理",
+      "prompt": "分析以下项目结构，建议重构方案：\n\nproject/\n├── main.py (500行)\n├── utils.py (300行)\n└── config.py (100行)\n\n所有业务逻辑都在main.py中，没有模块化。",
+      "max_tokens": 1000
+    },
+    "multi_file": {
+      "name": "多文件重构",
+      "prompt": "将以下单文件Flask应用重构为模块化结构，包括路由、模型、服务层的分离。",
+      "max_tokens": 1500
+    }
+  }
+}

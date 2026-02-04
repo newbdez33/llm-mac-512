@@ -1,0 +1,37 @@
+{
+  "model_config": {
+    "max_kv_size": 131072,
+    "temp": 0.7,
+    "top_p": 0.9,
+    "repetition_penalty": 1.1,
+    "repetition_context_size": 20,
+    "seed": 42
+  },
+  "test_cases": {
+    "short": {
+      "name": "短对话",
+      "prompt": "请用一句话解释量子计算",
+      "max_tokens": 100
+    },
+    "medium": {
+      "name": "代码生成",
+      "prompt": "写一个Python快速排序算法，包含详细注释和测试用例",
+      "max_tokens": 500
+    },
+    "long": {
+      "name": "长文本",
+      "prompt": "详细解释深度学习的反向传播算法，包含数学推导和代码实现",
+      "max_tokens": 2000
+    },
+    "reasoning": {
+      "name": "逻辑推理",
+      "prompt": "有三个盒子：红盒、蓝盒、绿盒。红盒里装蓝球，蓝盒里装红球，绿盒里装绿球，但所有标签都贴错了。你最少需要从几个盒子中各取一个球才能确定每个盒子的真实内容？请详细说明推理过程。",
+      "max_tokens": 500
+    },
+    "instruction": {
+      "name": "指令跟随",
+      "prompt": "作为Python代码审查专家，请审查以下代码并提出改进建议：\n\n```python\ndef calc(a,b,op):\n    if op=='+':\n        return a+b\n    elif op=='-':\n        return a-b\n    elif op=='*':\n        return a*b\n    elif op=='/':\n        return a/b\n```",
+      "max_tokens": 400
+    }
+  }
+}
