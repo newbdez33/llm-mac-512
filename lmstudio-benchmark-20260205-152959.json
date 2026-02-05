@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-02-05T15:29:59.000510",
+  "api_base": "http://localhost:1234/v1",
+  "model": "minimax-m2.1",
+  "summary": {
+    "avg_tps": 25.984899450137448,
+    "max_tps": 32.91594525651162,
+    "min_tps": 14.470588924075601,
+    "total_tokens": 3096,
+    "total_time": 102.86633491516113
+  },
+  "results": [
+    {
+      "test_name": "short",
+      "name": "短文本生成",
+      "prompt": "请用一句话解释量子计算",
+      "max_tokens": 100,
+      "prompt_tokens": 44,
+      "completion_tokens": 99,
+      "total_time": 6.841463088989258,
+      "tps": 14.470588924075601,
+      "content": "The user asks: \"请用一句话解释量子计算\" which translates to \"Please explain quantum computing in one sentence.\" So a concise, single-sentence explanation.\n\nThe answer should be in Chinese. The user wrote Chinese request. So respond in Chinese with one sentence.\n\nPotential answer: \"量子计算利用量子位的叠加和纠缠特性，通过并行处理大量状态，实现对特定问题的指数级加速。\" That's one sentence.\n\nMake sure it's a single sentence. Probably best to keep it clear: \"",
+      "success": true
+    },
+    {
+      "test_name": "medium",
+      "name": "代码生成",
+      "prompt": "写一个Python快速排序算法，包含完整注释",
+      "max_tokens": 500,
+      "prompt_tokens": 47,
+      "completion_tokens": 499,
+      "total_time": 17.611948013305664,
+      "tps": 28.333038436350716,
+      "content": "首先，用户要求我写一个Python快速排序算法，并包含完整注释。快速排序是一种分治算法，通过选择一个基准元素，将数组分成两部分，一部分小于基准，另一部分大于基准，然后递归地对这两部分进行排序。\n\n我的角色是MiniMax-M2.1，一个由MiniMax构建的AI助手。我需要提供帮助性的响应。用户是用中文写的，所以我应该用中文回复。\n\n关键点：\n- 写一个Python快速排序算法。\n- 添加完整注释：意思是代码中要有详细的注释，解释每一步。\n\n结构我的响应：\n1. 先简要介绍快速排序算法。\n2. 提供Python代码，包括注释。\n3. 确保代码正确且高效。\n\n编写快速排序算法：\n- 通常包括一个主函数（如quick_sort）和一个辅助函数（如partition）。\n- partition函数负责选择基准，分割数组，并返回基准的索引。\n- 递归调用quick_sort函数处理左右子数组。\n\n代码结构：\n```python\ndef quick_sort(arr):\n    # 递归的基准情况：如果数组只有一个元素或为空，直接返回\n    if len(arr) <= 1:\n        return arr\n\n    # 选择基准元素（这里选择最后一个元素）\n    pivot = arr[-1]\n\n    # 分割数组：小于基准的在左边，大于或等于的在右边\n    left = [x for x in arr[:-1] if x < pivot]\n    right = [x for x in arr[:-1] if x >= pivot]\n\n    # 递归排序左右部分\n    return quick_sort(left) + [pivot] + quick_sort(right)\n```\n\n但这种实现不是原地排序，它创建了新列表。对于教学目的，这可能可以接受，但标准快速排序通常是原地的。我应该提供一种常见的原地实现。\n\n原地快速排序：\n- 使用两个指针，从左和右开始交换元素。\n- 更高效，因为它不需要额外的空间。\n\n示例原地快速排序代码：\n```python\ndef quick_sort(arr, low, high):\n    if low < high:\n        # 分割数组，返回基准索引\n        pi = partition(arr, low, high)\n\n        # 递归排序左边和右边部分\n        quick_sort(arr, low, pi - 1)\n        quick_sort(arr, pi + 1, high)\n\ndef partition(arr, low, high):\n    # 选择最后一个元素作为基准\n    pivot = arr[high]\n    i = low - 1  # 小于基准的元素的索引\n\n    for j in range(low, high):\n       ",
+      "success": true
+    },
+    {
+      "test_name": "long",
+      "name": "长文本生成",
+      "prompt": "详细解释深度学习的反向传播算法，包括数学推导过程",
+      "max_tokens": 2000,
+      "prompt_tokens": 49,
+      "completion_tokens": 1999,
+      "total_time": 60.73044490814209,
+      "tps": 32.91594525651162,
+      "content": "用户想要我详细解释深度学习中的反向传播算法，包括数学推导过程。这是一个技术教育类内容，需要：\n\n1. **写作类型**：技术教程/教育文章\n2. **风格**：学术性但易于理解，循序渐进\n3. **受众**：学习深度学习的学生或研究者，需要数学基础\n4. **结构**：\n   - 引言（什么是反向传播）\n   - 基本概念和链式法则\n   - 简单网络的数学推导\n   - 一般化的反向传播算法\n   - 代码实现示例（可选）\n   - 常见问题和注意事项\n\n我需要：\n- 使用中文写作\n- 包含完整的数学推导（使用LaTeX格式）\n- 结构清晰，逻辑连贯\n- 内容详实深入\n- 适当使用公式和解释\n\n让我开始撰写这个详细的技术教程。\n</think>\n\n# 深度学习反向传播算法详解：数学推导与原理分析\n\n## 一、引言：为什么需要反向传播\n\n反向传播（Backpropagation）是深度学习中最核心的算法之一，它是训练神经网络时用来更新权重的关键机制。想象一下，当一个刚出生的婴儿学习认识物体时，每一次错误的判断都会帮助大脑调整神经连接的强度；反向传播正是模拟了这种学习过程，它通过计算损失函数对每个参数的梯度，告诉网络应该如何调整其权重以减少预测误差。\n\n在1986年，Rumelhart、Hinton和Williams发表的论文将反向传播算法带入公众视野，彻底改变了神经网络的训练方式。在此之前，训练多层神经网络几乎是一件不可能完成的任务，因为没有有效的方法来计算隐藏层中参数的梯度。反向传播的出现解决了这个根本性的难题，使得深度学习从理论走向实践成为可能。\n\n理解反向传播不仅对于实现深度学习模型至关重要，更能够帮助我们深入理解神经网络的学习本质。当我们在框架中简单地调用`loss.backward()`时，背后发生的是一套优雅而精密的数学运算。掌握这套运算的原理，将使我们在面对复杂的网络结构、超参数调优以及梯度相关的问题时，能够做出更加明智的决策。\n\n## 二、基础概念与数学工具\n\n### 2.1 神经网络的结构表示\n\n在深入反向传播之前，我们需要建立统一的数学符号体系。考虑一个具有$L$层的全连接神经网络，第$l$层（从1开始计数）的神经元数量记为$n_l$。令$\\mathbf{W}^{(l)} \\in \\mathbb{R}^{n_l \\times n_{l-1}}$表示从第$l-1$层到第$l层的权重矩阵，$\\mathbf{b}^{(l)} \\in \\mathbb{R}^{n_l}$表示对应的偏置向量。\n\n对于第$l$层的净输入（加权求和结果），我们记为$\\mathbf{z}^{(l)}$，其计算公式为：\n\n$$\\mathbf{z}^{(l)} = \\mathbf{W}^{(l)} \\mathbf{a}^{(l-1)} + \\mathbf{b}^{(l)}$$\n\n其中$\\mathbf{a}^{(l-1)}$是第$l-1$层的激活输出。对于输入层，$\\mathbf{a}^{(0)} = \\mathbf{x}$（输入数据）。第$l$层的激活输出$\\mathbf{a}^{(l)}$是通过激活函数$f_l(\\cdot)$对净输入进行非线性变换得到的：\n\n$$\\mathbf{a}^{(l)} = f_l(\\mathbf{z}^{(l)}) = f_l\\left(\\mathbf{W}^{(l)} \\mathbf{a}^{(l-1)} + \\mathbf{b}^{(l)}\\right)$$\n\n在反向传播算法中，我们还需要定义第$l$层的局部梯度$\\delta^{(l)}$，它表示损失函数对净输入$\\mathbf{z}^{(l)}$的偏导数：\n\n$$\\delta^{(l)} = \\frac{\\partial \\mathcal{L}}{\\partial \\mathbf{z}^{(l)}} \\in \\mathbb{R}^{n_l}$$\n\n这个局部梯度是反向传播的核心变量，它承载了从输出层向输入层传递的误差信息。\n\n### 2.2 链式法则：反向传播的数学基础\n\n反向传播的本质是应用链式法则（Chain Rule）来计算复合函数的导数。考虑一个简单的复合函数$y = f(g(x))$，链式法则告诉我们：\n\n$$\\frac{dy}{dx} = \\frac{df}{dg} \\cdot \\frac{dg}{dx}$$\n\n在神经网络的背景下，损失函数$\\mathcal{L}$是网络输出$\\mathbf{a}^{(L)}$的函数，而$\\mathbf{a}^{(L)}$又是通过网络层层计算得到的。因此，损失函数对任意参数（如权重或偏置）的梯度，都可以通过链式法则逐步展开计算。\n\n更一般地，对于多个中间变量的复合函数，链式法则可以推广为雅可比矩阵的形式。假设$\\mathbf{u} = f(\\mathbf{v})$和$\\mathbf{v} = g(\\mathbf{w})$，则：\n\n$$\\frac{\\partial \\mathbf{u}}{\\partial \\mathbf{w}} = \\frac{\\partial \\mathbf{u}}{\\partial \\mathbf{v}} \\cdot \\frac{\\partial \\mathbf{v}}{\\partial \\mathbf{w}}$$\n\n其中$\\frac{\\partial \\mathbf{u}}{\\partial \\mathbf{v}}$是雅可比矩阵，元素$(\\frac{\\partial \\mathbf{u}}{\\partial \\mathbf{v}})_{ij} = \\frac{\\partial u_i}{\\partial v_j}$。这种矩阵形式的链式法则正是反向传播能够高效计算梯度的关键。\n\n### 2.3 损失函数的选择\n\n在开始反向传播的推导之前，我们还需要明确损失函数的定义。不同的任务类型通常采用不同形式的损失函数。\n\n对于回归问题，均方误差（Mean Squared Error, MSE）是最常用的损失函数：\n\n$$\\mathcal{L}_{\\text{MSE}} = \\frac{1}{2}\\|\\mathbf{y} - \\hat{\\mathbf{y}}\\|^2 = \\frac{1}{2}\\sum_{i=1}^{n_L}(y_i - \\hat{y}_i)^2$$\n\n这里使用$\\frac{1}{2}$系数是为了简化后续的梯度计算。对于分类问题，交叉熵损失（Cross-Entropy Loss）更为合适：\n\n$$\\mathcal{L}_{\\text{CE}} = -\\sum_{i=1}^{n_L} y_i \\log(\\hat{y}_i)$$\n\n其中$\\mathbf{y}$是真实标签的one-hot编码，$\\hat{\\mathbf{y}}$是网络的softmax输出。\n\n## 三、简单案例：从数学推导到直观理解\n\n### 3.1 单层网络的反向传播\n\n让我们首先考虑最简单的情形：一个没有隐藏层的网络，直接从输入映射到输出。这种\"线性回归\"模型虽然简单，但已经包含了反向传播的核心思想。\n\n假设网络的输出为$\\hat{y} = \\mathbf{w}^T\\mathbf{x} + b$，损失函数为MSE：$\\mathcal{L} = \\frac{1}{2}(y - \\hat{y})^2$。我们需要计算损失对权重$\\mathbf{w}$和偏置$b$的梯度。\n\n**对权重的梯度计算：**\n\n$$\\frac{\\partial \\mathcal{L}}{\\partial \\mathbf{w}} = \\frac{\\partial \\mathcal{L}}{\\partial \\hat{y}} \\cdot \\frac{\\partial \\hat{y}}{\\partial \\mathbf{w}}$$\n\n第一项是损失对预测值的导数：\n$$\\frac{\\partial \\mathcal{L}}{\\partial \\hat{y}} = -(y - \\hat{y})$$\n\n第二项是预测值对权重的导数：\n$$\\frac{\\partial \\hat{y}}{\\partial \\mathbf{w}} = \\mathbf{x}$$\n\n因此，综合得到：\n$$\\frac{\\partial \\mathcal{L}}{\\partial \\mathbf{w}} = -(y - \\hat{y}) \\cdot \\mathbf{x}$$\n\n**对偏置的梯度计算：**\n\n$$\\frac{\\partial \\mathcal{L}}{\\partial b} = \\frac{\\partial \\mathcal{L}}{\\partial \\hat{y}} \\cdot \\frac{\\partial \\hat{y}}{\\partial b} = -(y - \\hat{y}) \\cdot 1 = -(y - \\hat{y})$$\n\n这个结果非常直观：预测误差$(y - \\hat{y})$直接决定了权重和偏置应该调整的方向和幅度。\n\n### 3.2 含激活函数的单层网络\n\n现在我们在输出层加入一个非线性激活函数，比如sigmoid函数。网络的计算过程变为：\n\n$$z = \\mathbf{w}^T\\mathbf{x} + b, \\quad \\hat{y} = \\sigma(z) = \\frac{1}{1 + e^{-z}}$$\n\nsigmoid函数的导数有一个优美的性质：$\\sigma'(z) = \\sigma(z)(1 - \\sigma(z))$。\n\n**对权重的梯度计算：**\n\n$$\\frac{\\partial \\mathcal{L}}{\\partial \\mathbf{w}} = \\frac{\\partial \\mathcal{L}}{\\partial \\hat{y}} \\cdot \\frac{\\partial \\hat{y}}{\\partial z} \\cdot \\frac{\\partial z}{\\partial \\mathbf{w}}$$\n\n我们已经知道$\\frac{\\partial \\mathcal{L}}{\\partial \\hat{y}} = -(y - \\hat{y})$和$\\frac{\\partial z}{\\partial \\mathbf{w}} = \\mathbf{x}$，新增的项是：\n\n$$\\frac{\\partial \\hat{y}}{\\partial z} = \\sigma'(z) = \\sigma(z)(1 - \\sigma(z)) = \\hat{y}(1 - \\hat{y})$$\n\n因此：\n$$\\frac{\\partial \\mathcal{L}}{\\partial \\mathbf{w}} = -(y - \\hat{y}) \\cdot \\hat{y}(1 - \\hat{y}) \\cdot \\mathbf{x}$$\n\n这个例子展示了链式法则在神经网络中的具体应用方式：误差信号从输出层开始，逐层向后传递，每经过一层就乘以该层激活函数的导数。\n\n### 3.3 含隐藏层的深层网络\n\n现在我们考虑一个具有一个隐藏层的神经网络，这是理解深度学习中反向传播的关键桥梁。网络结构如下：\n\n- **输入层**：$n_0$个神经元\n- **隐藏层**：$n_1$个",
+      "success": true
+    },
+    {
+      "test_name": "reasoning",
+      "name": "推理能力",
+      "prompt": "有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。",
+      "max_tokens": 500,
+      "prompt_tokens": 67,
+      "completion_tokens": 499,
+      "total_time": 17.68247890472412,
+      "tps": 28.220025183611853,
+      "content": "The user asks: \"有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。\" Chinese: \"There are 5 people queuing, given that: A is not first, B is before C, D is next to (adjacent to) E, A is behind D. Please deduce their order.\"\n\nWe need to solve a logic puzzle.\n\nDefine positions 1-5 from front (first) to back. Conditions:\n\n1. A not in position 1.\n2. B before C (i.e., positions: B < C).\n3. D adjacent to E (|pos(D) - pos(E)| = 1). Usually \"紧挨着\" means immediately adjacent. Could be D before E or after E.\n4. A behind D: pos(A) > pos(D).\n\nWe have 5 people: A, B, C, D, E.\n\nFind all possible permutations satisfying constraints. Then determine order (maybe unique). Let's do systematic reasoning.\n\nGiven B before C, A not first. D adjacent to E; A after D (i.e., D < A). So we need positions.\n\nLet’s list possible relative orderings. We'll do a search manually, but systematic.\n\nDefine positions for (D,E) adjacent pairs: possible adjacency placements in 5 slots:\n\nPositions (1,2), (2,3), (3,4), (4,5). Both orders: D left of E or E left of D.\n\nThus we have 2*4 =8 possibilities for (D,E) placement ignoring other constraints.\n\nAlso, A must be after D: pos(A) > pos(D). So if D is at 4, A must be after (position >4) i.e., position5. If D is at 3, A can be 4 or 5; if D is at2, A can be 3-5; etc.\n\nAlso B before C: positions for B and C must satisfy B<C. No other constraints about adjacency.\n\nA not first means pos(A) != 1.\n\nNow we must place B, C in remaining positions while respecting B<C. No constraints on adjacency between B and C.\n\nLet's enumerate all possibilities.\n\nWe have 5 positions: we need to assign D/E adjacency first, then A after D somewhere, B and C fill remaining slots with B<C.\n\nWe'll try to find all",
+      "success": true
+    },
+    {
+      "test_name": "instruction",
+      "name": "指令跟随",
+      "error": "400 Client Error: Bad Request for url: http://localhost:1234/v1/chat/completions",
+      "success": false
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "timestamp": "2026-02-05T15:24:09.473010",
+  "api_base": "http://localhost:1234/v1",
+  "model": "minimax-m2.1",
+  "summary": {
+    "avg_tps": 36.7523812531045,
+    "max_tps": 46.396709820112065,
+    "min_tps": 8.069790121203349,
+    "total_tokens": 3500,
+    "total_time": 87.94085001945496
+  },
+  "results": [
+    {
+      "test_name": "short",
+      "name": "短文本生成",
+      "prompt": "请用一句话解释量子计算",
+      "max_tokens": 100,
+      "prompt_tokens": 45,
+      "completion_tokens": 100,
+      "total_time": 12.39189600944519,
+      "tps": 8.069790121203349,
+      "content": "The user wrote in Chinese: \"请用一句话解释量子计算\" which translates to \"Please explain quantum computing in one sentence.\" So we need to respond with a single-sentence explanation of quantum computation, presumably in Chinese.\n\nWe must ensure that the response is concise, accurate. Provide a brief description like: 量子计算是利用量子叠加和纠缠等特性，通过量子比特（qubit）进行并行运算，可在特定问题上实现指数级加速的计算方式。 That's one sentence.\n\nThus answer in",
+      "success": true
+    },
+    {
+      "test_name": "medium",
+      "name": "代码生成",
+      "prompt": "写一个Python快速排序算法，包含完整注释",
+      "max_tokens": 500,
+      "prompt_tokens": 48,
+      "completion_tokens": 500,
+      "total_time": 11.42182183265686,
+      "tps": 43.77585356570859,
+      "content": "首先，用户要求用中文写一个Python快速排序算法的代码，并且要包含完整的注释。快速排序是一种分而治之的算法，它通过选择一个基准元素，将数组分成两部分，一部分的所有元素都小于基准，另一部分的所有元素都大于基准，然后递归地对这两部分进行排序。\n\n关键点：\n- 代码必须是用Python写的。\n- 算法是快速排序。\n- 需要包含完整的中文注释，解释每一步。\n\n我需要回忆快速排序的基本步骤：\n1. 选择一个基准元素（pivot）。常见的选择有：第一个元素、最后一个元素、中间元素或随机选择。为了简单，我可以选第一个或最后一个。这里，我选最后一个元素作为基准，因为它实现起来比较直观。\n2. 划分（partition）过程：将数组重新排列，使得所有小于基准的元素都在左边，大于的都在右边。基准元素最终在正确的位置。\n3. 递归地对左右子数组进行快速排序。\n\nPython代码结构：\n- 我会写一个函数，比如`quick_sort`，它接受一个列表作为参数，并返回排序后的列表。由于Python中列表是可变的，我可以直接修改原列表，也可以返回新列表。为了效率，通常直接修改原列表，但为了清晰，我可以创建一个新列表或原地排序。\n- 实际上，快速排序通常是原地排序的，所以我选择原地修改列表。\n\n函数签名：`def quick_sort(arr, low, high):`\n- `low`和`high`是索引，表示当前要排序的子数组的范围。这样我可以递归调用。\n- 我需要处理基本情况：当`low < high`时继续，否则返回。\n\n划分步骤：\n- 选择基准元素，比如`pivot = arr[high]`（最后一个元素）。\n- 使用两个指针：`i = low - 1`，表示小于基准的元素的最右边界；然后遍历从`low`到`high-1`的每个元素。\n- 对于每个元素，如果它小于或等于基准，就将`i`增加，并将arr[i]和arr[j]交换。这样，所有小元素都被推到左边。\n- 最后，将基准元素放到正确位置：`swap arr[i+1] 和 arr[high]`。然后返回分区点`i+1`。\n\n递归调用：\n- 对左半部分：`quick_sort(arr, low, i)`\n- 对右半部分：`quick_sort(arr, i+1, high)`\n\n完整代码结构：\n\n```python\ndef quick_sort(arr, low, high):\n    if low < high:\n        # 分区操作，返回基准的索引\n        pi = partition(arr, low,",
+      "success": true
+    },
+    {
+      "test_name": "long",
+      "name": "长文本生成",
+      "prompt": "详细解释深度学习的反向传播算法，包括数学推导过程",
+      "max_tokens": 2000,
+      "prompt_tokens": 50,
+      "completion_tokens": 2000,
+      "total_time": 43.106504917144775,
+      "tps": 46.396709820112065,
+      "content": "The user asks: \"详细解释深度学习的反向传播算法，包括数学推导过程\". They want a detailed explanation of the backpropagation algorithm in deep learning, including mathematical derivation.\n\nWe need to produce an answer in Chinese (the question is in Chinese). Provide thorough explanation of forward propagation, loss function, chain rule for gradients, computing gradients layer by layer. Derive formulas for typical activation functions and weight updates. Possibly include pseudocode, diagrams described verbally, discussion on computational graph, backprop through different layers, handling multiple outputs, batch processing, regularization terms.\n\nWe need to ensure we answer with high quality, thorough explanation, covering both intuition and math. We can also talk about backprop in various network architectures: fully connected, convolution (maybe not needed but mention), recurrence (RNN) maybe skip for brevity; but could discuss general case.\n\nThe answer should be self-contained, include derivation of gradient formulas using chain rule. Provide step-by-step example with a simple 2-layer network and a specific loss function like mean squared error or cross-entropy. Show the delta term (error signal). Also talk about weight updates: gradient descent update rules; mention momentum, Adam.\n\nExplain computational graph notion. Provide code snippet maybe pseudocode in Python for backprop.\n\nAlso discuss memory considerations, backward pass order, handling of batch dimension.\n\nMake sure to include mathematics using LaTeX style within markdown like $$ ... $$.\n\nSince the user asks \"详细解释深度学习的反向传播算法，包括数学推导过程\", we must produce a thorough explanation with derivations. Use Chinese language for answer.\n\nWe need to ensure formatting is correct: headings, bullet points, equations.\n\nThus final output should be well-structured:\n\n1. 简介\n2. 前向传播 (forward pass) and computational graph.\n3. 损失函数定义.\n4. 反向传播基本原理 - chain rule.\n5. 单层网络的梯度推导.\n6. 多层网络的递归梯度计算.\n7. 误差项 δ 的递推公式.\n8. 参数梯度与更新规则.\n9. 示例：两层网络 + MSE loss (or cross-entropy) with derivation.\n10. 代码实现示例 (pseudocode).\n11. 常见变体 (batch, regularization, momentum, Adam).\n12. 小结.\n\nMake sure to include LaTeX for formulas. Provide step-by-step math.\n\nNow produce answer in Chinese. Ensure no English unless needed. Use appropriate formatting.\n\nAlso ensure we talk about backprop algorithm's complexity and memory usage.\n\nOk let's write.\n</think>\n\n# 深度学习的反向传播（Back‑Propagation）详解  \n\n> **目标**：从数学角度系统阐述深度神经网络中 *前向传播* 与 *反向传播* 的工作机制，重点给出误差信号（δ）在每一层的递推公式以及权重梯度的闭式表达式，并辅以简单网络的完整推导示例。  \n> **适用读者**：对机器学习、梯度下降有一定了解，想深入理解 “链式求导” 在深度网络中的具体实现。\n\n---\n\n## 1. 前向传播与计算图\n\n### 1.1 计算图的视角\n- 将整个神经网络视作一个 **有向无环图（DAG）**，每个节点对应一次算子（矩阵乘法、激活函数、加法等），每条边对应一次数据流（张量）。\n- 前向传播即从输入层到输出层依次执行每个节点的运算，得到网络的预测值 $\\hat y$。\n- 反向传播则是沿着计算图的 **逆拓扑序**（从输出回到输入）传播误差信号，利用链式法则求出每个参数的梯度。\n\n### 1.2 基本记号\n\n| 符号 | 含义 |\n|------|------|\n| $L$      | 网络层数（不计输入层），第 $l$ 层为 $l=1,\\dots,L$ |\n| $\\mathbf{x}\\in\\mathbb{R}^{d}$ | 输入特征向量（或批次 $\\mathbf{X}\\in\\mathbb{R}^{N\\times d}$） |\n| $\\mathbf{z}^{(l)}$ | 第 $l$ 层的 **线性组合**（未激活），维度 $h_l$ |\n| $\\mathbf{h}^{(l)}$ 或 $\\mathbf{a}^{(l)}$ | 第 $l$ 层的 **激活值**，$\\mathbf{h}^{(l)} = f^{(l)}(\\mathbf{z}^{(l)})$ |\n| $\\mathbf{W}^{(l)}\\in\\mathbb{R}^{h_{l}\\times h_{l-1}}$ | 从第 $l-1$ 层到第 $l$ 层的权重矩阵（行向量对应输出神经元） |\n| $\\mathbf{b}^{(l)}\\in\\mathbb{R}^{h_l}$   | 第 $l$ 层的偏置向量 |\n| $\\hat y\\in\\mathbb{R}^K$                 | 网络对单个样本的预测（多分类时为概率分布） |\n| $y\\in\\mathbb{R}^K$                      | 真值标签（one‑hot 向量或回归目标） |\n| $\\mathcal{L}(\\hat y,y)$                | 损失函数（如 MSE、交叉熵等） |\n\n> **注**：以下推导默认使用 **批次**（batch）形式，梯度会对所有样本求和（或平均），这在实现时对应矩阵/张量的逐元素操作。\n\n---\n\n## 2. 损失函数的定义\n\n### 2.1 均方误差（MSE）\n\\[\n\\mathcal{L}_{\\text{MSE}}(\\hat y,y)=\\frac{1}{2}\\|\\hat y-y\\|_2^2\n\\]\n\n### 2.2 交叉熵（分类任务）\n- **二分类**（Sigmoid）  \n  \\[\n  \\mathcal{L}_{\\text{BCE}} = -\\bigl[ y\\log\\hat y + (1-y)\\log(1-\\hat y) \\bigr]\n  \\]\n- **多分类**（Softmax）  \n  \\[\n  \\mathcal{L}_{\\text{CE}}(\\hat y,y)= - \\sum_{k=1}^K y_k\\log\\bigl(\\hat p_k\\bigr),\\qquad \n  \\hat p = \\operatorname{softmax}(\\mathbf{z}^{(L)}).\n  \\]\n\n---\n\n## 3. 反向传播的核心思想：链式法则\n\n### 3.1 单层梯度表达式\n对任意可微函数 $f$ 与 $g$，链式法则给出  \n\\[\n\\frac{\\partial f(g(x))}{\\partial x}= \\frac{\\partial f}{\\partial g}\\cdot \\frac{\\partial g}{\\partial x}.\n\\]\n\n在神经网络中，**误差信号**（error signal）定义为  \n\\[\n\\delta^{(l)}\\;:=\\;\\frac{\\partial \\mathcal{L}}{\\partial\\mathbf{z}^{(l)}}.\n\\]\n它衡量了 **线性组合层 $\\mathbf{z}^{(l)}$ 的变化对最终损失的影响**，是反向传播的桥梁。\n\n### 3.2 输出层的误差信号\n\n- 对于 MSE（回归）  \n  \\[\n  \\delta^{(L)} = (\\hat y - y) \\odot f'^{(L)}(\\mathbf{z}^{(L)}) .\n  \\]\n  这里 $\\odot$ 表示逐元素（Hadamard）乘积，$f'$ 为激活函数的导数。\n\n- 对于 **Softmax + CE**（多分类）  \n  \\[\n  \\delta^{(L)} = \\hat y - y.\n  \\]\n  该式非常简洁，因为 $\\frac{\\partial\\mathcal{L}}{\\partial\\mathbf{z}^{(L)}} = \\hat p-y$，即 Softmax 的导数与交叉熵的组合恰好抵消。\n\n- 对于 **Sigmoid + BCE**（二分类）  \n  \\[\n  \\delta^{(L)} = (\\hat y - y) .\n  \\]\n  同理，Sigmoid 与 BCE 的梯度也简化为 $\\sigma(\\mathbf{z})-y$。\n\n> **结论**：只要损失函数与输出层的激活函数满足“配对”关系（Sigmoid↔BCE，Softmax↔CE），误差信号可以直接写成预测值减去真值，省去显式求导的步骤。\n\n---\n\n## 4. 从第 $l+1$ 层到第 $l$ 层的递推公式\n\n假设已经得到 $\\delta^{(l+1)}$，我们希望计算 $\\delta^{(l)}$。  \n从网络结构出发：\n\n\\[\n\\begin{aligned}\n\\mathbf{z}^{(l)} &= \\mathbf{W}^{(l)}\\,\\mathbf{h}^{(l-1)} + \\mathbf{b}^{(l)},\\\\\n\\mathbf{h}^{(l)} &= f^{(l)}(\\mathbf{z}^{(l)}) .\n\\end{aligned}\n\\]\n\n对 $\\mathcal{L}$ 求偏导：\n\n\\[\n\\delta^{(l)}\n= \\frac{\\partial\\mathcal{L}}{\\partial\\mathbf{z}^{(l)}}\n= \\underbrace{\\frac{\\partial\\mathcal{L}}{\\partial\\mathbf{h}^{(l)}}}_{\\displaystyle =:\\; \\nabla_{\\!h}\\mathcal{L}}\n\\;\\odot\\; f'^{(l)}(\\mathbf{z}^{(l)}).\n\\]\n\n而 $\\nabla_{\\!h}\\mathcal{L}$ 可通过 **下一层** 的误差信号传播得到：\n\n\\[\n\\begin{aligned}\n\\nabla_{\\!h^{(l)}}\\mathcal{L} \n&= \\frac{\\partial\\mathcal{L}}{\\partial\\mathbf{h}^{(l)}} \\\\\n&= \\underbrace{\\frac{\\partial\\mathcal{L}}{\\partial\\mathbf{z}^{(l+1)}}}_{\\displaystyle =:\\; \\delta^{(l+1)}}\n    \\,\\mathbf{W}^{(l+1)}^\\top .\n\\end{aligned}\n\\]\n\n> **关键**：  \n> - $\\mathbf{W}^{(l+1)}^\\top$ 把误差信号从第 $l+1$ 层的维度映射回第 $l$ 层。  \n> - 若使用 *权重共享*（如卷积、RNN），该算子会变成相应的 *转置卷积*、*循环矩阵* 等。\n\n将两式合并得到 **递推公式**：\n\n\\[\n\\boxed{\\;\n\\delta^{(l)} = \\bigl(\\mathbf{W}^{(l+1",
+      "success": true
+    },
+    {
+      "test_name": "reasoning",
+      "name": "推理能力",
+      "prompt": "有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。",
+      "max_tokens": 500,
+      "prompt_tokens": 68,
+      "completion_tokens": 500,
+      "total_time": 11.540998220443726,
+      "tps": 43.323808777155854,
+      "content": "The user asks in Chinese: \"There are 5 people queuing, known: A is not at the first position; B is before C; D is next to E (adjacent); A is behind D. Please deduce their order.\"\n\nWe need to produce a solution with reasoning and final ordering.\n\nThus we need to parse constraints:\n\n- Positions 1..5.\n- \"A不在第一位\" means A != position1.\n- \"B在C前面\" B before C: pos(B) < pos(C).\n- \"D紧挨着E\": D adjacent to E, i.e., |pos(D)-pos(E)|=1. Also they could be either order (D next to E). So possible pairs: DE or ED.\n- \"A在D后面\": A after D => pos(A) > pos(D).\n\nWe need a unique arrangement? Let's solve.\n\nLet positions 1,2,3,4,5.\n\nConstraints:\n\npos(A) != 1\npos(B)<pos(C)\n|pos(D)-pos(E)|=1\n\npos(A)>pos(D)\n\nGoal: find all possible sequences consistent. Then presumably a unique solution emerges.\n\nWe need to consider possibilities for D/E adjacency and positions relative to others.\n\nLet's denote D at position i, E at i+1 or i-1.\n\nCase 1: D before E: pos(E) = pos(D)+1\n\nThus sequence: ...D,E...\n\nA after D => A > i.\n\nConstraints also B < C.\n\nWe need assign remaining persons (A,B,C). Since we have only five positions, and D/E occupy two consecutive spots. Let's enumerate possibilities for where the D-E pair can be placed such that there is at least one position before it for B maybe? Not required but B must be somewhere.\n\nLet's systematically search:\n\nLet i = 1: then D=1, E=2 => A>1 (so A not in pos1). Also need to place B,C,A in positions 3-5 with B<C. Let's try assign possible ordering of remaining three persons. Positions left are 3,4,5.\n\nWe must satisfy A != 1 (already satisfied) and pos(A)>pos(D)=1 => any position >1 works. So all choices for A among {3,4,5}. For each choice, B<C in positions 2? Wait E occupies 2; so only leftover are 3-5.\n\nSo we",
+      "success": true
+    },
+    {
+      "test_name": "instruction",
+      "name": "指令跟随",
+      "prompt": "请完成以下任务：\n1. 列出3种常见的排序算法\n2. 为每种算法写出时间复杂度\n3. 用一句话总结它们的适用场景",
+      "max_tokens": 400,
+      "prompt_tokens": 72,
+      "completion_tokens": 400,
+      "total_time": 9.479629039764404,
+      "tps": 42.195743981342666,
+      "content": "The user asks in Chinese: \"Please complete the following tasks:\n1. List 3 common sorting algorithms.\n2. Write time complexity for each algorithm.\n3. Summarize their applicable scenarios in one sentence.\"\n\nWe need to respond presumably with a list of three sorting algorithms, each with its time complexities (best-case, average-case, worst-case maybe), and then a brief one-sentence summary about when they are suitable.\n\nThe user is speaking Chinese; we can answer in Chinese. Provide perhaps bullet points or enumerated items. Should be concise but thorough. Possibly include space complexity as well? Not required but could be helpful.\n\nThus produce:\n\n1. 冒泡排序 (Bubble Sort)\n   - 时间复杂度: O(n^2) 平均/最坏, O(n) 最好（已排序）\n   - 适用场景...\n\n2. 快速排序 (Quick Sort)\n   - 时间复杂度: O(n log n) 平均, 最坏 O(n^2)（极端不平衡划分），可通过随机化或三数取中避免\n   - 适用于...\n\n3. 归并排序 (Merge Sort)\n   - 时间复杂度: O(n log n) 任何情况，额外空间 O(n)\n   - 适用场景...\n\nAlternatively include堆排序 or基数排序, but three common ones are fine.\n\nWe also need to ensure compliance with policy. The request is standard and doesn't violate any policies. There's no disallowed content. So we can comply fully.\n\nMake sure the answer is in Chinese, uses proper formatting. Provide one-sentence summary per algorithm regarding applicable scenario.\n\nWill produce final answer accordingly.\n</think>\n\n**1️⃣ 冒泡排序（Bubble Sort）**  \n- **时间复杂度**：最坏/平均情况 \\(O(n^2)\\)，最好情况（已排好序）\\(O(n)\\)；空间复杂度 \\(O(1)\\)。  \n- **适用场景**：数据量小、基本有序或对稳定性有要求且不需要高效性能的场景",
+      "success": true
+    }
+  ]
+}

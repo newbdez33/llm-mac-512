@@ -1,0 +1,74 @@
+{
+  "timestamp": "2026-02-05T15:42:17.100347",
+  "api_base": "http://localhost:1234/v1",
+  "model": "minimax-m2.1",
+  "summary": {
+    "avg_tps": 36.285239485420064,
+    "max_tps": 47.929154919004084,
+    "min_tps": 1.7972842372465037,
+    "total_tokens": 3500,
+    "total_time": 129.21815872192383
+  },
+  "results": [
+    {
+      "test_name": "short",
+      "name": "短文本生成",
+      "prompt": "请用一句话解释量子计算",
+      "max_tokens": 100,
+      "prompt_tokens": 45,
+      "completion_tokens": 100,
+      "total_time": 55.63950204849243,
+      "tps": 1.7972842372465037,
+      "content": "The user asks: \"请用一句话解释量子计算\" which translates to \"Please explain quantum computing in one sentence.\"\n\nWe need to respond with a concise explanation, presumably in Chinese (since the request is in Chinese). The answer should be a single sentence. Provide a clear definition.\n\nWe can produce something like:\n\n\"量子计算利用叠加和纠缠等量子力学特性，通过并行处理多个状态来在特定问题上实现比传统计算机更高效的运算。\" That's one sentence.\n\nMake sure it's indeed",
+      "success": true
+    },
+    {
+      "test_name": "medium",
+      "name": "代码生成",
+      "prompt": "写一个Python快速排序算法，包含完整注释",
+      "max_tokens": 500,
+      "prompt_tokens": 48,
+      "completion_tokens": 500,
+      "total_time": 11.285711765289307,
+      "tps": 44.30380736267037,
+      "content": "首先，用户要求写一个Python快速排序算法，并包含完整注释。快速排序是一种分而治之的算法，用于对数组或列表进行排序。\n\n关键点：\n- **函数定义**：我需要创建一个名为`quick_sort`的函数，它接受一个列表作为输入。\n- **递归实现**：快速排序通常是递归实现的，所以我需要在函数内部调用自身。\n- **基本思想**：\n  - 选择一个基准元素（pivot）。\n  - 将数组分成两部分：一部分所有元素小于基准，另一部分大于基准。\n  - 对这两部分递归地应用快速排序。\n- **分区操作**：需要一个辅助函数来执行分区操作，或者直接在主函数中实现。我可以选择将分区逻辑内嵌在主函数中，以保持简单。\n\n用户要求“完整注释”，所以我需要为每一行代码添加详细的解释。注释应该用中文，因为用户的查询是中文的。\n\n结构安排：\n1. **函数定义**：描述函数的参数和用途。\n2. **基准选择**：选择一个简单的基准，比如列表的第一个元素或最后一个元素，或随机选择。为了简单，我可以使用第一个元素作为基准，但需要注意边界情况（如已排序数组）。一个更好的方法是使用三数取中法或随机选择来避免最坏情况。但为了保持代码简洁，我可以先实现基本版本，然后添加注释说明。\n3. **分区过程**：遍历列表，将小于基准的元素移到左边，大于的移到右边。\n4. **递归调用**：对左右子数组进行排序。\n\n算法步骤：\n- 如果列表为空或只有一个元素，直接返回（已排序）。\n- 选择一个基准（pivot）。\n- 分区：创建两个新列表，一个包含所有小于基准的元素，另一个包含大于基准的元素。基准元素单独处理。\n- 递归地对这两个列表应用快速排序。\n- 返回合并后的列表。\n\n但为了效率，通常我们使用原地分区，避免创建新列表。我应该实现原地分区的版本，因为它是更常见的做法。\n\n原地分区算法：\n- 选择一个索引作为基准位置（例如，左端）。\n- 使用两个指针，一个从左向右遍历，另一个从右向左。\n- 交换元素，直到所有小于基准的元素在左边，大于的在右边。\n\n我决定使用Lomuto分区方案，因为它更容易理解和实现。Hoare的分区方案可能更高效，但稍微复杂一些。\n\nLomuto方案的步骤：\n1. 选择一个基准（通常是最后一个元素）。\n2. 设置一个指针`i`，初始为-1，表示小于基准的元素应该结束的位置。\n3. 遍历数组从0到n",
+      "success": true
+    },
+    {
+      "test_name": "long",
+      "name": "长文本生成",
+      "prompt": "详细解释深度学习的反向传播算法，包括数学推导过程",
+      "max_tokens": 2000,
+      "prompt_tokens": 50,
+      "completion_tokens": 2000,
+      "total_time": 41.72825503349304,
+      "tps": 47.929154919004084,
+      "content": "嗯，用户想要深入理解深度学习中的反向传播算法，还特别要求包含数学推导过程。这个需求很明确，说明用户可能是有一定基础的机器学习或计算机科学背景的学习者，可能是研究生或在自学深度学习的工程师。\n\n用户的核心诉求是搞清楚反向传播的“来龙去脉”——不仅要知道它是做什么的，更要理解背后的数学原理。这类问题通常出现在用户尝试自己实现神经网络或者阅读经典论文时遇到的瓶颈。用户没提具体应用场景，但考虑到要求详细推导，应该是在做理论层面的学习而非工程实践。\n\n从专业角度，需要拆解几个关键点：首先是链式法则这个核心数学工具，其次是计算图的抽象表示，最后要展示具体网络结构（如全连接层）的参数更新过程。特别要注意区分前向传播和反向传播的对应关系，很多初学者会在这里混淆。\n\n用户可能没意识到但实际需要的是：理解如何用矩阵运算加速梯度计算（避免手算每个参数的偏导数），以及动量优化这类进阶概念的基础。不过既然要求“详细”，先聚焦在基础推导上比较稳妥。\n\n在组织内容时，决定采用分层结构：从简单线性回归的链式法则切入，帮助用户建立直觉；然后推广到多层网络；最后用三层网络的完整计算示例收尾。数学符号要统一，比如用w_{ij}^l表示层间权重，δ^l表示误差项——这是Andrew Ng课程和经典教材的标准记法。\n\n注意到用户没要求代码实现，但补充一个伪代码片段可能更有帮助：比如展示如何用numpy实现反向传播的核心步骤，这样理论结合实践。不过要注意别让代码喧宾夺主，重点还是数学推导。\n\n最后决定在结尾提一句“梯度消失问题”作为延伸点，因为这是反向传播的经典痛点。虽然用户没直接问，但了解这个问题有助于理解为什么需要ReLU、残差连接等技术。这个点到为止即可，展开讨论可能超出当前问题的范围。\n</think>\n\n好的，我们来详细解释深度学习中的反向传播算法（Backpropagation），并包含完整的数学推导过程。\n\n### 核心思想与目的\n\n反向传播是训练神经网络的核心优化算法的核心部分。它的目的是**高效地计算网络中每个参数（如权重 `w` 和偏置 `b`）相对于最终损失函数 `L` 的梯度（即偏导数）。**\n\n这个过程分为两个主要阶段：\n1. **前向传播（Forward Pass）：** 输入数据通过网络层进行计算，最终得到预测输出 `ŷ`，并计算预测值与真实标签之间的误差（损失）。\n2. **反向传播（Backward Pass）：** 根据链式法则，将输出层的误差梯度逐层“反向”传递回网络的前面各层，从而计算出每个参数对最终损失的贡献（即梯度）。这些梯度信息随后被用于更新网络的参数（如使用随机梯度下降 SGD）。\n\n### 1. 前向传播：计算预测和损失\n\n考虑一个简单的三层全连接神经网络（输入层 -> 隐藏层 -> 输出层）：\n*   **输入向量:** `x` (维度 `n_x`)\n*   **第一层权重矩阵:** `W^1` (维度 `n_h × n_x`, 其中 `n_h` 是隐藏单元数)\n*   **第一层偏置向量:** `b^1` (维度 `n_h`)\n*   **激活函数（隐藏层）:** `σ` (例如 Sigmoid, ReLU, Tanh)\n*   **第二层权重矩阵:** `W^2` (维度 `n_y × n_h`, 其中 `n_y` 是输出单元数)\n*   **第二层偏置向量:** `b^2` (维度 `n_y`)\n*   **激活函数（输出层）:** 可能没有（如回归任务）或 Softmax（二分类/多分类）\n*   **损失函数:** `L(ŷ, y)` (例如 均方误差 MSE 或 交叉熵 Cross-Entropy)\n\n**前向传播计算步骤：**\n\n1.  计算隐藏层的净输入 (`z^1`) 和输出 (`h`):\n    ```\n    z^1 = W^1 · x + b^1\n    h = σ(z^1)\n    ```\n\n2.  计算输出层的净输入 (`z^2`) 和预测值 (`ŷ`):\n    *   对于回归问题（无输出激活函数）：\n        ```\n        z^2 = W^2 · h + b^2\n        ŷ = z^2  (或者有时写为 a^2)\n        ```\n    *   对于二分类问题（Sigmoid 输出层）：\n        ```\n        σ(z^2) = 1 / (1 + exp(-z^2))\n        ŷ = σ(z^2)\n        ```\n\n3.  计算损失函数：\n    `L(ŷ, y)` 的值取决于具体任务。\n\n### 2. 反向传播：计算梯度\n\n这是算法的核心部分。我们需要计算 **所有参数 (`W^1`, `b^1`, `W^2`, `b^2`) 对最终损失 L 的偏导数**，即：\n`∂L/∂W^1, ∂L/∂b^1, ∂L/∂W^2, ∂L/∂b^2`\n\n反向传播利用**链式法则 (Chain Rule)** 来高效计算这些梯度。核心思想是：从输出层开始，依次计算每一层的“误差项”，这个误差项代表了该层对最终损失的贡献。\n\n#### 关键定义：局部梯度与误差项\n\n对于网络中的任意一层 `l`，我们定义一个至关重要的量：**δ^l** (读作 delta l)，它被称为第 `l` 层的 **误差项（Error Term）** 或 **敏感度（Sensitivity）**。它的作用是将来自下一层（更靠近输出端）的梯度信息传递到当前层。\n\n对于输出层（最后一层，`L = n_l`，其中 `n_l` 是总层数）：\n`δ^{n_l} = ∂L / ∂z^{n_l}`\n*   这个定义非常直接：它衡量的是输出层的净输入 `z^{n_l}` 的微小变化对最终损失 L 的影响。\n\n对于隐藏层 (`l < n_l`)：\n`δ^l = (W^{l+1})^T · δ^{l+1} ⊙ σ'(z^l)`\n*   `(W^{l+1})^T`: 下一层的权重矩阵的转置。\n*   `⊙`: Hadamard 积（逐元素乘法）。\n*   `σ'(z^l)`: 第 `l` 层激活函数在净输入 `z^l` 处的导数。\n\n#### 最终目标：计算参数梯度\n\n一旦我们有了误差项 `δ`，就可以直接计算出每个参数的梯度：\n\n1.  **对于权重矩阵 W^l:**\n    ```\n    ∂L/∂W^l = δ^l · (a^{l-1})^T\n    ```\n    *   `(a^{l-1})^T`: 第 `l` 层输入（上一层的输出）的转置。\n    *   这个公式的直观理解是：权重的梯度等于该层误差项与上一层激活值的外积。\n\n2.  **对于偏置向量 b^l:**\n    ```\n    ∂L/∂b^l = δ^l\n    ```\n    *   因为 `z^l` 对每个偏置 `b_j^l` 的导数都是 1，所以梯度就是该层的误差项本身（通常是对所有样本或一个 mini-batch 求和/平均）。\n\n#### 计算输出层误差项 (δ^{n_l})\n\n这个计算取决于具体的损失函数 `L` 和输出激活函数 `a^{n_l}`。我们使用链式法则：\n\n```\nδ^{n_l} = ∂L / ∂z^{n_l}\n        = [∂L / ∂ŷ] ⊙ [∂ŷ / ∂z^{n_l}]\n```\n\n让我们为两种常见任务推导这个公式：\n\n**A. 均方误差 (MSE) 损失 + 线性输出激活函数（回归）：**\n*   `L(ŷ, y) = (1/2)(y - ŷ)^2`\n*   `∂L / ∂ŷ = -(y - ŷ)` (标量)\n*   `∂ŷ / ∂z^{n_l} = 1` (因为 ŷ = z^{n_l})\n*   因此：\n    ```\n    δ^{n_l} = [-(y - ŷ)] ⊙ [1] = ŷ - y\n    ```\n\n**B. 二元交叉熵损失 + Sigmoid 输出激活函数（二分类）：**\n*   `L(ŷ, y) = -[y * log(ŷ) + (1-y)*log(1-ŷ)]`\n*   推导可得（关键步骤）：\n    `∂L / ∂z^{n_l} = ŷ - y` （标量）\n*   因此：\n    ```\n    δ^{n_l} = ŷ - y\n    ```\n\n**C. 多分类交叉熵损失 + Softmax 输出激活函数：**\n*   对于多分类问题，`ŷ` 是一个概率向量，Softmax 函数确保所有输出和为 1。\n*   `L(ŷ, y) = -∑_{k=1}^{K} [y_k * log(ŷ_k)]`，其中 `y` 是 one-hot 编码的标签向量。\n*   推导可得（关键步骤）：\n    `∂L / ∂z^{n_l} = ŷ - y`\n*   因此：\n    ```\n    δ^{n_l} = ŷ - y\n    ```\n\n**总结输出层误差项公式：**\n对于 MSE、Softmax+CrossEntropy 和 Sigmoid（二分类）+ CrossEntropy",
+      "success": true
+    },
+    {
+      "test_name": "reasoning",
+      "name": "推理能力",
+      "prompt": "有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。",
+      "max_tokens": 500,
+      "prompt_tokens": 68,
+      "completion_tokens": 500,
+      "total_time": 11.26280403137207,
+      "tps": 44.39391812263366,
+      "content": "The user asks: \"有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。\" This is a logic puzzle. We need to deduce the order of five people (A, B, C, D, E) in a line based on constraints:\n\n- A not at first position.\n- B before C.\n- D adjacent to E (i.e., D next to E).\n- A after D.\n\nWe need to find the possible ordering(s). Let's solve systematically. The puzzle: 5 positions numbered 1 to 5 from front of queue (presumably first is most left). Constraints:\n\n1) A not in position 1.\n2) B < C (i.e., B appears before C).\n3) D adjacent to E, meaning either D-E or E-D with no other persons between them. So they occupy consecutive positions: {position i, i+1} for some i = 1..4.\n4) A after D => position(A) > position(D).\n\nGoal: find the order.\n\nWe can brute logically. Let's denote positions pA, pB, pC, pD, pE ∈ {1,...,5}, distinct.\n\nConstraints:\n\n- pA ≠ 1\n- pB < pC\n- |pD - pE| = 1\n- pA > pD\n\nWe need to find all possible assignments. Let's attempt systematically.\n\nSince D and E occupy consecutive positions, we can consider each possible adjacency pair: (1,2), (2,3), (3,4), (4,5). For each adjacency case, assign which of the two is D vs E? Actually constraint says D adjacent to E but not specify order. So either D-E or E-D.\n\nAlso pA > pD, so A must be after D's position.\n\nLet’s enumerate possibilities:\n\nCase 1: D and E occupy positions (1,2). Then possible orders: D at 1, E at 2 OR D at 2, E at 1. But pA > pD, and pA ≠ 1, so if D is at 1, then A must be after position 1 => can be 3-5 (positions 3,4,5). If D is at 2, then A must be after 2 => positions 3-5 as well.",
+      "success": true
+    },
+    {
+      "test_name": "instruction",
+      "name": "指令跟随",
+      "prompt": "请完成以下任务：\n1. 列出3种常见的排序算法\n2. 为每种算法写出时间复杂度\n3. 用一句话总结它们的适用场景",
+      "max_tokens": 400,
+      "prompt_tokens": 72,
+      "completion_tokens": 400,
+      "total_time": 9.301885843276978,
+      "tps": 43.0020327855457,
+      "content": "The user asks for a Chinese answer: \"请完成以下任务：1. 列出3种常见的排序算法 2. 为每种算法写出时间复杂度 3. 用一句话总结它们的适用场景\". So we need to list three common sorting algorithms, give time complexity (likely worst-case and maybe best case) and then one sentence summarizing applicable scenarios.\n\nWe must respond in Chinese. The request is not disallowed content. It's about algorithmic knowledge. Provide answer accordingly.\n\nWill output a concise yet thorough response: list of three algorithms: 冒泡排序、插入排序、快速排序, or maybe归并排序、堆排序。 Choose three typical ones: 快速排序 (quick sort), 归并排序 (merge sort), 堆排序 (heap sort) — they are common and have distinct complexities.\n\nWe need to give time complexity for each algorithm. Provide best-case, average-case, worst-case. Then a short sentence summarizing where it's suitable.\n\nThus answer:\n\n1. 冒泡排序 - O(n^2) worst/avg; O(n) best (already sorted). Use when data is small or nearly sorted, educational.\nBut maybe better to pick three: 快速排序、归并排序、堆排序. Provide complexities.\n\nFor quick sort: average O(n log n), worst-case O(n^2). For merge sort: always O(n log n). For heap sort: O(n log n) in all cases.\n\nThen summary sentences:\n\n- Quick Sort: suitable for general-purpose sorting of large datasets where average performance is critical and extra memory usage should be minimal (in-place).\n- Merge Sort: stable, good for linked lists or when stability needed; also good for external sorting.\n- Heap Sort: suitable for scenarios with limited auxiliary space and guarantee O(n log n) worst-case time.\n\nAlternatively provide one sentence each. The user asks \"用一句话总结它们的适用场景\". So we can give a single sentence summarizing all three? Actually ambiguous: It says",
+      "success": true
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-02-05T15:48:15.556853",
+  "api_base": "http://localhost:1234/v1",
+  "model": "minimax-m2.1",
+  "summary": {
+    "avg_tps": 23.554123378390507,
+    "max_tps": 32.99245044926209,
+    "min_tps": 3.9845226649733023,
+    "total_tokens": 3096,
+    "total_time": 120.30813670158386
+  },
+  "results": [
+    {
+      "test_name": "short",
+      "name": "短文本生成",
+      "prompt": "请用一句话解释量子计算",
+      "max_tokens": 100,
+      "prompt_tokens": 44,
+      "completion_tokens": 99,
+      "total_time": 24.84613800048828,
+      "tps": 3.9845226649733023,
+      "content": "嗯，用户让我用一句话解释量子计算。这个问题看似简单，但要精准又不失准确性，需要抓住量子和经典计算的核心差异。\n\n首先想到量子计算的基石是叠加态。普通比特只能0或1，但量子比特可以同时处于两种状态。这应该是最本质的区别。\n\n再考虑纠缠特性。虽然叠加已经够颠覆，但真正让量子计算强大的是多个量子比特间的纠缠关系。不过一句话可能放不下这么多信息。\n\n用户要“简单解释”，所以得避免术语堆砌。考虑",
+      "success": true
+    },
+    {
+      "test_name": "medium",
+      "name": "代码生成",
+      "prompt": "写一个Python快速排序算法，包含完整注释",
+      "max_tokens": 500,
+      "prompt_tokens": 47,
+      "completion_tokens": 499,
+      "total_time": 17.545390844345093,
+      "tps": 28.44051776485951,
+      "content": "首先，用户要求我写一个Python快速排序算法，并包含完整注释。快速排序是一种分治算法，它通过选择一个基准元素，将数组分成两部分：一部分所有元素小于基准，另一部分所有元素大于基准，然后递归地对这两部分进行排序。\n\n关键步骤：\n1. **选择基准**：通常选择第一个元素、最后一个元素或随机一个元素作为基准。\n2. **分区（Partition）**：将数组重新排列，使得所有小于基准的元素在左边，大于的在右边。分区后，基准元素的位置就是最终排序后的位置。\n3. **递归**：对左子数组和右子数组递归应用快速排序。\n\n我需要确保算法正确、高效，并包含注释来解释每个步骤。注释应该清晰、易于理解，适合初学者。\n\nPython代码结构：\n- 定义一个函数，比如 `quick_sort(arr, low, high)`，其中 `low` 和 `high` 是数组的索引边界。\n- 如果 `low < high`，则继续递归；否则，返回。\n- 在函数内部，进行分区操作，得到基准索引，然后递归调用左右子数组。\n\n分区函数：我可以单独写一个 `partition` 函数，或者直接在快速排序中实现。为了清晰，我选择单独写。\n\n步骤：\n1. 编写 `partition` 函数：选择一个基准（通常取最后一个元素），然后遍历数组，将小于基准的元素移到左边，最后将基准放到正确位置。\n2. 编写 `quick_sort` 函数：调用分区，然后递归。\n\n注释应该覆盖：\n- 函数的目的。\n- 参数说明。\n- 关键步骤的解释，如分区过程。\n- 递归调用的逻辑。\n\n代码示例：\n\n```python\ndef partition(arr, low, high):\n    # 选择最后一个元素作为基准\n    pivot = arr[high]\n    i = low - 1  # 小于基准的元素的索引\n\n    for j in range(low, high):\n        if arr[j] <= pivot:\n            i += 1\n            # 交换元素，将小于基准的移到左边\n            arr[i], arr[j] = arr[j], arr[i]\n\n    # 将基准元素放到正确位置\n    arr[i + 1], arr[high] = arr[high], arr[i + 1]\n    return i + 1\n\ndef quick_sort(arr, low, high):\n    if low < high:\n        # 分区操作，返回基准索引\n        pi = partition(arr, low, high)\n\n        # 递归排序左子数组\n        quick_sort(arr, low,",
+      "success": true
+    },
+    {
+      "test_name": "long",
+      "name": "长文本生成",
+      "prompt": "详细解释深度学习的反向传播算法，包括数学推导过程",
+      "max_tokens": 2000,
+      "prompt_tokens": 49,
+      "completion_tokens": 1999,
+      "total_time": 60.58961892127991,
+      "tps": 32.99245044926209,
+      "content": "用户要求我详细解释深度学习中的反向传播算法，包括数学推导过程。这是一个技术教育类内容，需要：\n\n1. **写作类型**: 技术教程/教育文章\n2. **风格**: 学术性但易于理解，半正式到正式，需要清晰的逻辑和数学推导\n3. **受众**: 可能是机器学习初学者或需要复习反向传播概念的人\n4. **结构**: \n   - 介绍反向传播的概念和重要性\n   - 前向传播的简要回顾\n   - 数学基础（链式法则）\n   - 详细的数学推导过程\n   - 算法步骤\n   - 代码示例（可选，但有助于理解）\n   - 常见问题和注意事项\n\n让我详细展开这个主题：\n\n1. 反向传播概述\n2. 前向传播回顾\n3. 链式法则（数学基础）\n4. 单层网络的反向传播推导\n5. 多层网络的反向传播推导（核心部分）\n6. 向量化表示\n7. 算法伪代码\n8. 实际实现注意事项\n\n我需要包含完整的数学推导，使用LaTeX语法表示公式，并确保解释清晰详细。\n</think>\n\n# 深度学习反向传播算法详解\n\n## 引言\n\n反向传播（Backpropagation）是深度学习中训练神经网络的核心算法，它使得我们能够通过计算梯度来优化网络参数，从而让模型能够从数据中学习。反向传播的本质是应用链式法则来高效计算复合函数关于每个参数的导数。在本文中，我们将从数学基础出发，逐步深入理解反向传播的每一个细节。\n\n## 神经网络结构回顾\n\n在深入反向传播之前，我们首先需要理解神经网络的整体架构。一个典型的全连接神经网络由多层神经元组成，每一层都包含若干个节点（或称为\"神经元\"）。假设我们有一个$L$层的神经网络，其结构可以表示如下：\n\n第0层为输入层，接收外部数据；中间的第1层至第$L-1$层称为隐藏层，负责数据的特征提取和变换；最后一层（第$L$层）为输出层，产生最终的预测结果。对于第$\\ell$层（其中$1 \\leq \\ell \\leq L$），该层包含$n_{\\ell}$个神经元。\n\n相邻两层之间的连接通过权重矩阵$W^{(\\ell)}$和偏置向量$b^{(\\ell)}$来实现。设$a^{(\\ell)}$为第$\\ell$层的激活值向量，则层与层之间的变换关系可以表示为：\n\n$$z^{(\\ell)} = W^{(\\ell)} a^{(\\ell-1)} + b^{(\\ell)}$$\n\n$$a^{(\\ell)} = f(z^{(\\ell)})$$\n\n其中$f(\\cdot)$代表激活函数，$z^{(\\ell)}$是第$\\ell$层的加权输入（logits）。这个前向传播过程从输入层开始，逐层计算直到输出层，形成一个完整的预测流程。\n\n## 前向传播详解\n\n为了更好地理解反向传播，我们首先详细推导前向传播的计算过程。考虑一个具有$L$层的网络，我们从输入层开始，逐层计算每一层的激活值。\n\n对于第1层（第一个隐藏层），其加权输入$z^{(1)}$和激活值$a^{(1)}$分别为：\n\n$$z^{(1)} = W^{(1)} x + b^{(1)}$$\n\n$$a^{(1)} = f(z^{(1)})$$\n\n这里$x$是输入向量（实际上$a^{(0)} = x$）。类似地，对于第2层：\n\n$$z^{(2)} = W^{(2)} a^{(1)} + b^{(2)}$$\n\n$$a^{(2)} = f(z^{(2)})$$\n\n这种模式持续到输出层。对于一个分类问题，输出层通常使用Softmax函数（多分类）或Sigmoid/线性函数（二分类或回归），使得$a^{(L)}$表示网络的最终预测结果。\n\n让我们通过一个具体的三层网络（输入层、一个隐藏层、输出层）来展示完整的前向传播过程。设输入维度为$n^{(0)}$，隐藏层维度为$n^{(1)}$，输出层维度为$n^{(2)}$：\n\n$$z^{(1)} = W^{(1)} a^{(0)} + b^{(1)}, \\quad a^{(0)} = x$$\n\n$$a^{(1)} = f(z^{(1)})$$\n\n$$z^{(2)} = W^{(2)} a^{(1)} + b^{(2)}$$\n\n$$\\hat{y} = a^{(2)} = f(z^{(2)}) \\quad \\text{或} \\quad \\hat{y} = \\text{Softmax}(z^{(2)})$$\n\n## 链式法则：反向传播的数学基础\n\n反向传播的核心是链式法则（Chain Rule），这是微积分中计算复合函数导数的基本定理。理解链式法则是掌握反向传播的关键。\n\n### 一维情况下的链式法则\n\n对于单变量函数，假设$y = f(u)$而$u = g(x)$，则复合函数$y = f(g(x))$关于$x$的导数为：\n\n$$\\frac{dy}{dx} = \\frac{dy}{du} \\cdot \\frac{du}{dx}$$\n\n### 向量情况下的链式法则\n\n在深度学习中，我们处理的是向量函数。设$y = f(u)$是一个从$\\mathbb{R}^n$到$\\mathbb{R}^m$的向量函数，$u = g(x)$是一个从$\\mathbb{R}^p$到$\\mathbb{R}^n$的向量函数。则$y$关于$x$的雅可比矩阵为：\n\n$$\\frac{\\partial y}{\\partial x} = \\frac{\\partial y}{\\partial u} \\cdot \\frac{\\partial u}{∂x}$$\n\n这里$\\frac{\\partial y}{\\partial u}$是一个$m \\times n$的雅可比矩阵，$\\frac{\\partial u}{\\partial x}$是一个$n \\times p$的雅可比矩阵，它们的乘积构成$m \\times p$的雅可比矩阵$\\frac{\\partial y}{\\partial x}$。\n\n### 逐元素链式法则\n\n对于神经网络中的逐元素操作，我们可以使用更简单的形式。假设$z = Wx + b$，然后$y = f(z)$，其中$f$是逐元素应用的函数。则关于权重$W_{ij}$的偏导数为：\n\n$$\\frac{\\partial y_k}{\\partial W_{ij}} = \\frac{\\partial y_k}{\\partial z_k} \\cdot \\frac{\\partial z_k}{\\partial W_{ij}} = f'(z_k) \\cdot x_j$$\n\n这个简单的形式将在后续的反向传播推导中反复出现。\n\n## 损失函数\n\n在训练神经网络时，我们需要一个量化模型预测与真实标签之间差异的指标，这就是损失函数（Loss Function）。不同的任务需要选择不同的损失函数。\n\n### 均方误差（MSE）\n\n对于回归问题，均方误差是最常用的损失函数：\n\n$$\\mathcal{L} = \\frac{1}{2N} \\sum_{i=1}^{N} \\|y^{(i)} - \\hat{y}^{(i)}\\|^2$$\n\n这里引入$\\frac{1}{2}$是为了在后续求导时消去平方项，简化计算。$N$是样本数量。\n\n### 交叉熵损失（Cross-Entropy）\n\n对于分类问题，交叉熵损失是标准选择。对于二分类问题：\n\n$$\\mathcal{L} = -\\frac{1}{N} \\sum_{i=1}^{N} [y^{(i)} \\log(\\hat{y}^{(i)}) + (1-y^{(i)})\\log(1-\\hat{y}^{(i)})]$$\n\n对于多分类问题（使用Softmax）：\n\n$$\\mathcal{L} = -\\frac{1}{N} \\sum_{i=1}^{N} \\sum_{k=1}^{K} y_k^{(i)} \\log(\\hat{y}_k^{(i)})$$\n\n其中$K$是类别数量，$\\hat{y}$是Softmax输出，表示每个类别的预测概率。\n\n## 单层网络的反向传播推导\n\n为了建立直觉，我们首先考虑一个最简单的单层网络结构：输入层直接连接到输出层，没有隐藏层。\n\n### 网络结构\n\n设输入为$x \\in \\mathbb{R}^n$，输出为$\\hat{y} \\in \\mathbb{R}^m$。网络参数包括权重矩阵$W \\in \\mathbb{R}^{m \\times n}$和偏置向量$b \\in \\mathbb{R}^m$：\n\n$$z = Wx + b$$\n\n$$\\hat{y} = f(z)$$\n\n其中$f$是输出层的激活函数。\n\n### 损失函数梯度计算\n\n我们以均方误差为例，$\\mathcal{L} = \\frac{1}{2}\\|y - \\hat{y}\\|^2$。我们的目标是计算$\\nabla_W \\mathcal{L}$和$\\nabla_b \\mathcal{L}$。\n\n首先，计算损失函数关于加权输入$z$的梯度：\n\n$$\\frac{\\partial \\mathcal{L}}{\\partial z} = \\frac{\\partial \\mathcal{L}}{\\partial \\hat{y}} \\cdot \\frac{\\partial \\hat{y}}{\\partial z}$$\n\n计算第一项：\n\n$$\\frac{\\partial \\mathcal{L}}{\\partial \\hat{y}} = -(y - \\hat{y})$$\n\n计算第二项（假设$f$是逐元素函数）：\n\n$$\\frac{\\partial \\hat{y}}{\\partial z} = \\text{diag}(f'(z))$$\n\n因此：\n\n$$\\frac{\\partial \\mathcal{L}}{\\partial z} = -(y - \\hat{y}) \\odot f'(z)$$\n\n其中$\\odot$表示逐元素乘法（Hadamard积）。\n\n接下来，计算关于权重和偏置的梯度：\n\n$$\\frac{\\partial \\mathcal{L}}{\\partial W} = \\frac{\\partial \\mathcal{L}}{\\partial z} \\cdot \\frac{\\partial z}{\\partial W}$$\n\n$$\\frac{\\partial \\mathcal{L}}{\\partial b} = \\frac{\\partial \\mathcal{L}}{\\partial z} \\",
+      "success": true
+    },
+    {
+      "test_name": "reasoning",
+      "name": "推理能力",
+      "prompt": "有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。",
+      "max_tokens": 500,
+      "prompt_tokens": 67,
+      "completion_tokens": 499,
+      "total_time": 17.32698893547058,
+      "tps": 28.799002634467126,
+      "content": "The user asks: \"有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。\" So we need to find the ordering of five people: A, B, C, D, E. Given constraints:\n\n1) A is not in first position.\n2) B is before C (i.e., B appears earlier than C).\n3) D and E are adjacent (D紧挨着E). It can be either \"DE\" or \"ED\"? The phrase \"D紧挨着E\" means D is next to E, but doesn't specify order; could be DE or ED. Usually ambiguous: maybe D next to E means they are adjacent, order unspecified. But we also have \"A在D后面\" meaning A is after D (i.e., A appears somewhere to the right of D). So we need to satisfy both adjacency and ordering constraints.\n\nWe need to find all possible orderings that satisfy the constraints, or unique solution. Let's analyze:\n\nGiven 5 positions: 1,2,3,4,5.\n\nConstraints:\n- Position(A) != 1.\n- Pos(B) < Pos(C).\n- |Pos(D)-Pos(E)| = 1 (adjacent). So two possibilities: D left of E, or E left of D.\n- Pos(A) > Pos(D). So A appears after D (strictly later).\n\nThus D must be before A, and D adjacent to E. So possibilities for (D,E) adjacency with D left of E: DE as a block; or if the order is ED, then D after E. But we need A > D.\n\nCase 1: DE as block (D then E). Then positions of the block can be (1,2), (2,3), (3,4). But D cannot be at position 5 because then E would be beyond position 5. So possible block positions:\n\n- Block at (1,2): D=1, E=2.\n- Block at (2,3): D=2, E=3.\n- Block at (3,4): D=3, E=4.\n\nBut A must be after D. So if block at (1,2), then D=1 => A > 1 => A can be any of positions 3,4,5. Also A not at position 1 (already satisfied). B",
+      "success": true
+    },
+    {
+      "test_name": "instruction",
+      "name": "指令跟随",
+      "error": "400 Client Error: Bad Request for url: http://localhost:1234/v1/chat/completions",
+      "success": false
+    }
+  ]
+}

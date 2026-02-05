@@ -1,0 +1,68 @@
+{
+  "timestamp": "2026-02-05T15:39:03.050969",
+  "api_base": "http://localhost:1234/v1",
+  "model": "minimax-m2.1",
+  "summary": {
+    "avg_tps": 26.14415531249187,
+    "max_tps": 32.90586210005549,
+    "min_tps": 14.573085920316716,
+    "total_tokens": 3096,
+    "total_time": 102.50221729278564
+  },
+  "results": [
+    {
+      "test_name": "short",
+      "name": "短文本生成",
+      "prompt": "请用一句话解释量子计算",
+      "max_tokens": 100,
+      "prompt_tokens": 44,
+      "completion_tokens": 99,
+      "total_time": 6.793344974517822,
+      "tps": 14.573085920316716,
+      "content": "The user asks in Chinese: \"Please explain quantum computing in one sentence.\" So they want a single-sentence explanation of quantum computing. The answer should be concise, in Chinese, one sentence. Possibly something like: \"量子计算利用量子位的叠加和纠缠特性，能够同时处理多种状态，从而在特定问题上比传统计算机实现指数级的加速。\" That's one sentence. They asked \"请用一句话解释量子计算\". So we can respond with a single sentence in Chinese. The answer should be",
+      "success": true
+    },
+    {
+      "test_name": "medium",
+      "name": "代码生成",
+      "prompt": "写一个Python快速排序算法，包含完整注释",
+      "max_tokens": 500,
+      "prompt_tokens": 47,
+      "completion_tokens": 499,
+      "total_time": 17.34198784828186,
+      "tps": 28.77409466351563,
+      "content": "我们需要编写一个快速排序算法的Python实现，并包含完整的注释。\n 快速排序的基本思想是：通过一趟排序将待排记录分隔成独立的两部分，其中一部分的所有记录均比另一部分的小，然后递归地对这两部分继续进行排序，以达到整个序列有序。\n 步骤：\n 1. 选择一个基准元素（pivot）。\n 2. 分区操作：遍历数组，将比基准小的元素移到基准左边，比基准大的元素移到右边。\n 3. 递归地对左右两个子数组进行快速排序。\n\n 注意：分区操作是核心，通常有多种实现方式。我们将采用双指针法（或称为挖坑填数法）来实现。\n\n 下面我们按照以下步骤编写代码：\n - 定义quick_sort函数，接收一个列表和可选的左右边界（用于递归调用）。\n - 如果数组只有一个元素或为空，则直接返回。\n - 否则，选取一个基准（这里我们选择最左边的元素作为基准）。\n - 进行分区操作，将数组分成两部分，返回基准的最终位置。\n - 递归地对左半部分和右半部分进行排序。\n\n 分区操作（partition）的具体实现：\n 1. 设置两个指针，left指向起始位置，right指向末尾。\n 2. 将基准元素保存起来（相当于挖了一个坑）。\n 3. 从右向左找比基准小的元素，找到后将其填到左边的坑里，然后right指针位置的坑需要填补。\n 4. 从左向右找比基准大的元素，找到后将其填到右边的坑里，然后left指针位置的坑需要填补。\n 5. 直到左右指针相遇，最后将基准填入最后一个坑中。\n\n 注意：为了避免最坏情况（如数组已有序），我们可以随机选择基准，但这里我们先使用简单的方法。\n\n 下面开始编写代码，并添加详细注释。\n</think>\n\n以下是Python快速排序算法的完整实现，包含详细的逐行注释：\n\n```python\ndef quick_sort(arr, left=None, right=None):\n    \"\"\"\n    快速排序算法实现\n    \n    参数:\n        arr: 待排序的列表\n        left: 左边界索引（默认为None，表示从0开始）\n        right: 右边界索引（默认为None，表示到末尾结束）\n    \"\"\"\n    \n    # 如果未指定左右边界，使用列表的完整范围\n    if left is None:\n        left = 0\n    if right is None:\n        right = len(arr) - 1\n    \n    # 基本情况：子数组只有一个元素或为空时无需排序\n   ",
+      "success": true
+    },
+    {
+      "test_name": "long",
+      "name": "长文本生成",
+      "prompt": "详细解释深度学习的反向传播算法，包括数学推导过程",
+      "max_tokens": 2000,
+      "prompt_tokens": 49,
+      "completion_tokens": 1999,
+      "total_time": 60.749054193496704,
+      "tps": 32.90586210005549,
+      "content": "用户要求我详细解释深度学习的反向传播算法，包括数学推导过程。这是一个技术教育类的内容，需要：\n\n1. **写作类型**: 技术教程/教育文章\n2. **风格**: 学术性但易于理解，正式但不枯燥，需要详细的数学推导\n3. **受众**: 学习深度学习的学生或研究人员，需要理解底层原理\n4. **结构**: \n   - 反向传播算法概述\n   - 链式法则的数学基础\n   - 前向传播过程回顾\n   - 反向传播的详细推导（核心部分）\n   - 具体示例计算\n   - 实际实现注意事项\n\n我需要包含：\n- 完整的数学公式推导\n- 清晰的变量定义\n- 逐步的解释\n- 具体示例帮助理解\n\n让我开始撰写这篇详细的技术文章。\n</think>\n\n# 深度学习反向传播算法详解：数学原理与推导过程\n\n## 引言\n\n反向传播（Backpropagation）算法是深度学习能够高效训练神经网络的核心机制，它使得包含数百万甚至数十亿参数的复杂网络能够通过梯度下降法快速收敛。从本质上讲，反向传播是一种应用链式法则来计算梯度的算法，它将输出层的损失信息沿着网络结构反向传播至输入层，从而获得每个参数对最终损失的贡献程度。理解反向传播的数学原理对于深入掌握深度学习、优化模型性能以及 debugging 训练过程中的问题都具有重要意义。本文将系统性地介绍反向传播算法的理论基础，从链式法则出发，逐步推导前向传播与反向传播的计算过程，并通过具体示例帮助读者建立直观理解。\n\n## 一、链式法则：反向传播的数学基础\n\n### 1.1 单变量函数的链式法则\n\n在深入神经网络之前，我们首先回顾微积分中的链式法则，因为它是反向传播算法的核心数学工具。假设我们有一个复合函数 $y = f(g(x))$，其中 $x$ 是输入，$g(x)$ 是中间变量，$y$ 是输出。单变量链式法则告诉我们，计算 $y$ 对 $x$ 的导数需要将 $y$ 对中间变量的导数与中间变量对 $x$ 的导数相乘：\n\n$$\\frac{dy}{dx} = \\frac{dy}{dg} \\cdot \\frac{dg}{dx}$$\n\n这个看似简单的公式蕴含着反向传播的核心思想：当我们要计算一个变量对另一个变量的影响时，可以通过它们之间的中间变量\"传递\"这种影响。\n\n### 1.2 多变量函数的链式法则\n\n神经网络的实际情况更加复杂，涉及多个中间变量的情形。考虑函数 $z = f(x, y)$，而 $x$ 和 $y$ 本身又是其他变量的函数，即 $x = g(u, v)$ 和 $y = h(u, v)$。此时，计算 $\\frac{\\partial z}{\\partial u}$ 需要将 $z$ 的变化分解到所有通过 $x$ 和 $y$ 影响 $u$ 的路径上：\n\n$$\\frac{\\partial z}{\\partial u} = \\frac{\\partial z}{\\partial x} \\cdot \\frac{\\partial x}{\\partial u} + \\frac{\\partial z}{\\partial y} \\cdot \\frac{\\partial y}{\\partial u}$$\n\n这个推广到多变量的链式法则至关重要，因为神经网络中的每个神经元都接收来自前一层多个神经元的输入，然后产生一个输出传递给下一层的多个神经元。这种多对多的连接结构使得上述公式成为计算梯度的关键工具。\n\n### 1.3 向量形式的链式法则\n\n在深度学习中，我们通常处理的是向量和矩阵运算，因此需要将链式法则推广到向量形式。假设 $\\mathbf{x} \\in \\mathbb{R}^m$，$\\mathbf{y} \\in \\mathbb{R}^n$，它们之间存在函数关系 $\\mathbf{y} = f(\\mathbf{x})$，而我们最终关心的标量损失为 $L = g(\\mathbf{y})$。根据向量链式法则，损失相对于输入的梯度为：\n\n$$\\nabla_{\\mathbf{x}} L = \\left(\\frac{\\partial \\mathbf{y}}{\\partial \\mathbf{x}}\\right)^T \\nabla_{\\mathbf{y}} L$$\n\n其中 $\\frac{\\partial \\mathbf{y}}{\\partial \\mathbf{x}}$ 是雅可比矩阵（Jacobian Matrix），其元素为 $\\left(\\frac{\\partial \\mathbf{y}}{\\partial \\mathbf{x}}\\right)_{ij} = \\frac{\\partial y_i}{\\partial x_j}$。这个公式告诉我们：要计算损失对输入向量的梯度，我们可以先将损失对输出向量的梯度（$\\nabla_{\\mathbf{y}} L$）乘以雅可比矩阵的转置。这种向量形式的链式法则为我们在神经网络中高效计算梯度提供了理论基础。\n\n## 二、神经网络的前向传播过程\n\n### 2.1 网络结构与符号定义\n\n在详细推导反向传播之前，我们首先明确定义神经网络的结构和相关符号。考虑一个具有 $L$ 层的全连接前馈神经网络，第 $l$ 层（$1 \\leq l \\leq L$）包含 $n_l$ 个神经元。我们使用以下符号约定：\n\n层与层之间的连接权重用矩阵 $\\mathbf{W}^{(l)} \\in \\mathbb{R}^{n_l \\times n_{l-1}}$ 表示，其中元素 $W^{(l)}_{ij}$ 表示从第 $l-1$ 层的第 $j$ 个神经元连接到第 $l$ 层第 $i$ 个神经元的权重。偏置向量用 $\\mathbf{b}^{(l)} \\in \\mathbb{R}^{n_l}$ 表示，其中 $b^{(l)}_i$ 是第 $l$ 层第 $i$ 个神经元的偏置。第 $l$ 层的线性变换输出（加权求和结果）用 $\\mathbf{z}^{(l)} \\in \\mathbb{R}^{n_l}$ 表示，激活后的输出用 $\\mathbf{a}^{(l)} \\in \\mathbb{R}^{n_l}$ 表示。特别地，输入层定义为 $\\mathbf{a}^{(0)} = \\mathbf{x}$，其中 $\\mathbf{x} \\in \\mathbb{R}^{n_0}$ 是网络输入。\n\n### 2.2 前向传播的计算公式\n\n前向传播的过程从输入层开始，逐层计算直到输出层。对于第 $l$ 层（$1 \\leq l \\leq L$），计算过程分为两个步骤。首先进行线性变换：\n\n$$\\mathbf{z}^{(l)} = \\mathbf{W}^{(l)} \\mathbf{a}^{(l-1)} + \\mathbf{b}^{(l)}$$\n\n这个公式表示第 $l$ 层每个神经元的输入是前一层所有输出的加权和加上偏置项。然后应用激活函数得到该层的输出：\n\n$$\\mathbf{a}^{(l)} = \\sigma\\left(\\mathbf{z}^{(l)}\\right)$$\n\n其中 $\\sigma(\\cdot)$ 是逐元素应用的激活函数，如 sigmoid、ReLU 或 tanh 等。整个前向传播过程可以表示为：\n\n$$\\mathbf{x} = \\mathbf{a}^{(0)} \\to \\mathbf{z}^{(1)} \\to \\mathbf{a}^{(1)} \\to \\mathbf{z}^{(2)} \\to \\mathbf{a}^{(2)} \\to \\cdots \\to \\mathbf{z}^{(L)} \\to \\mathbf{a}^{(L)} = \\hat{\\mathbf{y}}$$\n\n其中 $\\hat{\\mathbf{y}}$ 是网络的预测输出。\n\n### 2.3 损失函数的定义\n\n为了训练网络，我们需要一个标量损失函数来衡量预测输出 $\\hat{\\mathbf{y}}$ 与真实标签 $\\mathbf{y}$ 之间的差异。常用的损失函数包括均方误差（MSE）和交叉熵损失（Cross-Entropy Loss）。\n\n对于回归任务，均方误差定义为：\n\n$$L = \\frac{1}{2} \\|\\mathbf{y} - \\hat{\\mathbf{y}}\\|_2^2 = \\frac{1}{2} \\sum_{i=1}^{n_L}(y_i - a^{(L)}_i)^2$$\n\n引入系数 $\\frac{1}{2}$ 是为了在后续求导时简化计算。对于分类任务，交叉熵损失更常使用：\n\n$$L = -\\sum_{i=1}^{n_L} y_i \\log(\\hat{y}_i)$$\n\n其中我们假设 $\\mathbf{y}$ 是 one-hot 编码形式，或者在多分类问题中表示概率分布。\n\n## 三、反向传播算法的详细推导\n\n### 3.1 反向传播的核心思想\n\n反向传播的目标是计算损失函数 $L$ 对神经网络中每个参数（权重 $\\mathbf{W}^{(l)}$ 和偏置 $\\mathbf{b}^{(l)}$）的梯度，即 $\\frac{\\partial L}{\\partial \\mathbf{W}^{(l)}}$ 和 $\\frac{\\partial L}{\\partial \\mathbf{b}^{(l)}}$。这些梯度将用于梯度下降更新：$\\theta_{new} = \\theta_{old} - \\eta \\cdot \\frac{\\partial L}{\\partial \\theta}$，其中 $\\eta$ 是学习率。\n\n反向传播的核心洞见在于：利用链式法则，从输出层开始，逐层向输入层\"反向\"计算梯度。每个中间层的梯度信息被重复利用，避免了冗余计算。这种从后向前的计算顺序也是\"反向传播\"名称的由来。\n\n### 3.2 定义关键中间变量：误差项\n\n为了高效计算梯度，我们定义一个关键的中间变量——第 $l$ 层的误差项（Error Term）：\n\n$$\\boldsymbol{\\delta}^{(l)} = \\frac{\\partial L}{\\partial \\mathbf{z}^{(l)}} \\in \\mathbb{R}^{n_l}$$\n\n这个变量衡量了损失函数对第 $l$ 层线性变换输出的敏感程度。选择 $\\mathbf{z}^{(l)}$ 而不是 $\\mathbf{a}^{(l)}$ 作为关注点的原因是：$\\mathbf{W}^{(l)}$ 和 $\\mathbf{b}^{(l)}$ 直接作用于 $\\mathbf{z}^{(l)}$，而 $\\mathbf{a}^{(l)}$ 是由 $\\mathbf{z}^{(l)}$ 通过激活函数得到的。\n\n### 3.3",
+      "success": true
+    },
+    {
+      "test_name": "reasoning",
+      "name": "推理能力",
+      "prompt": "有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。",
+      "max_tokens": 500,
+      "prompt_tokens": 67,
+      "completion_tokens": 499,
+      "total_time": 17.617830276489258,
+      "tps": 28.323578566079636,
+      "content": "The user is speaking Chinese: \"有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。\" Means: There are 5 people in a line. Given: A is not first, B is before C (i.e., B precedes C), D is adjacent to E, A is after D. Need to deduce the order.\n\nWe need to produce answer in Chinese presumably. The user asks \"请推理出他们的排列顺序\" - please infer their order.\n\nWe have 5 individuals: A, B, C, D, E. Constraints:\n\n1) A is not in position 1.\n2) B is before C (i.e., B precedes C).\n3) D and E are adjacent.\n4) A is after D (i.e., D precedes A).\n\nWe need to deduce the order. Let's solve systematically.\n\nLet positions be 1,2,3,4,5 from front (first position) to back.\n\nConstraints:\n\n- D precedes A.\n- B precedes C.\n- D adjacent to E (they are immediate neighbors).\n- A not at position 1.\n\nWe have five persons, each exactly once. Let's denote unknown ordering.\n\nGiven D adjacent to E (DE or ED). Since A is after D, we have D ... A. Also B before C.\n\nWe need to find all orders that satisfy constraints; maybe unique.\n\nLet's enumerate possibilities.\n\nGeneral approach: treat adjacency of D and E as a block. The block can be DE or ED.\n\nCase 1: Block is DE (D then E), D before E. Since A after D, we have block must be somewhere such that there is at least one position between D (or after E?) Actually A after D, not necessarily immediate. So A can be placed anywhere later than D position.\n\nCase 2: Block is ED (E then D). Then A after D, so after the block. So block must be before A.\n\nThus we can try both cases.\n\nWe also have B before C. No constraints with other persons except adjacency.\n\nLet's list positions 1-5.\n\nCase 1: DE block (D then E). Let's treat the block as a unit of size2 occupying positions i and i+1. The order within block: D then E.\n\nWe need to place A after D (so after the first element of block). So if block is at positions 1",
+      "success": true
+    },
+    {
+      "test_name": "instruction",
+      "name": "指令跟随",
+      "error": "400 Client Error: Bad Request for url: http://localhost:1234/v1/chat/completions",
+      "success": false
+    }
+  ]
+}

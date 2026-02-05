@@ -1,0 +1,74 @@
+{
+  "timestamp": "2026-02-05T15:19:10.024523",
+  "api_base": "http://localhost:1234/v1",
+  "model": "minimax-m2.1",
+  "summary": {
+    "avg_tps": 36.90482348835913,
+    "max_tps": 46.635901655592384,
+    "min_tps": 8.029791161111902,
+    "total_tokens": 3500,
+    "total_time": 87.65372705459595
+  },
+  "results": [
+    {
+      "test_name": "short",
+      "name": "短文本生成",
+      "prompt": "请用一句话解释量子计算",
+      "max_tokens": 100,
+      "prompt_tokens": 45,
+      "completion_tokens": 100,
+      "total_time": 12.45362401008606,
+      "tps": 8.029791161111902,
+      "content": "The user asks: \"请用一句话解释量子计算\". This is Chinese, meaning \"Please explain quantum computing in one sentence.\"\n\nWe need to respond with a single sentence explaining quantum computing.\n\nWe must comply; no disallowed content. Provide explanation concisely.\n\nThus answer: \"Quantum computing uses qubits that can exist in superposition and entanglement to perform certain calculations exponentially faster than classical computers.\" That’s about it.\n</think>\n\n量子计算利用可同时处于叠加态并相互纠缠的量子比特（qu",
+      "success": true
+    },
+    {
+      "test_name": "medium",
+      "name": "代码生成",
+      "prompt": "写一个Python快速排序算法，包含完整注释",
+      "max_tokens": 500,
+      "prompt_tokens": 48,
+      "completion_tokens": 500,
+      "total_time": 11.584741115570068,
+      "tps": 43.160222141519625,
+      "content": "首先，用户要求我写一个Python快速排序算法的代码，并包含完整的注释。快速排序是一种分治算法，它通过选择一个“基准”元素，将数组分成两部分，一部分的所有元素都小于基准，另一部分的所有元素都大于基准，然后递归地对这两部分进行排序。\n\n关键点：\n- 算法：快速排序。\n- 语言：Python。\n- 要求：完整注释。\n\n我需要确保代码是正确、高效的，并包含详细的解释。注释应该覆盖算法的每个步骤，以便读者理解。\n\n结构安排：\n1. **函数定义**：我将编写一个名为`quick_sort`的函数，它接受一个列表作为参数。\n2. **基准选择**：在快速排序中，基准的选择很重要。我将使用最常见的方法：选择第一个元素作为基准，但也可以提到其他方法如随机选择或三数取中等。考虑到简单性，我先用第一个元素作为基准。\n3. **分区操作**：编写一个辅助函数`partition`，它负责将数组分成两部分并返回基准的最终位置。\n4. **递归排序**：在主函数中，递归调用快速排序对左右子数组进行排序。\n\n注释应该包括：\n- 函数的目的和参数说明。\n- 分区过程的详细步骤。\n- 递归调用的解释。\n- 可能的时间复杂度或空间复杂度的简要提及。\n\n代码结构：\n\n```python\ndef quick_sort(arr):\n    \"\"\"\n    快速排序算法的主函数。\n    \n    参数:\n    arr: 要排序的列表\n    \n    返回:\n    None: 函数直接修改原数组，或者可以返回新数组，但这里我们使用原地排序。\n    \"\"\"\n    # 内部递归函数，用于对子数组进行排序\n    def _quick_sort(low, high):\n        if low < high:\n            # 分区操作，返回基准元素的索引\n            pivot_index = partition(arr, low, high)\n            \n            # 递归地对左半部分排序（小于基准的元素）\n            _quick_sort(low, pivot_index - 1)\n            \n            # 递归地对右半部分排序（大于基准的元素）\n            _quick_sort(pivot_index + 1, high)\n\n    def partition(arr, low, high):\n        \"\"\"\n        分区函数：将数组arr[low..high]分成两部分，使得左边的元素都小于等于基准，右边的元素都大于基准。\n        \n        参数:\n        arr: 要分区的列表\n        low: 子数组的起始索引\n        high: 子数组的结束索引\n        \n        返回:\n        pivot_index: 基准元素的",
+      "success": true
+    },
+    {
+      "test_name": "long",
+      "name": "长文本生成",
+      "prompt": "详细解释深度学习的反向传播算法，包括数学推导过程",
+      "max_tokens": 2000,
+      "prompt_tokens": 50,
+      "completion_tokens": 2000,
+      "total_time": 42.88541507720947,
+      "tps": 46.635901655592384,
+      "content": "用户要求我详细解释深度学习中的反向传播算法，包括数学推导过程。这是一个技术教育类的内容，需要：\n\n1. **写作类型**：技术教程/教育文档\n2. **风格**：学术性但易于理解，公式与文字结合\n3. **受众**：可能是机器学习初学者或需要复习该概念的学生/从业者\n4. **结构**：\n   - 引言（什么是反向传播，为什么重要）\n   - 基本概念和背景\n   - 数学基础（链式法则）\n   - 详细推导过程（前向传播到反向传播）\n   - 具体例子（可以是简单网络）\n   - 算法步骤总结\n   - 实现注意事项\n\n我需要用中文撰写，并包含完整的数学公式推导。要保持内容的深度和专业性，同时确保可读性。\n\n让我开始规划内容结构：\n\n1. 引言\n2. 反向传播算法概述\n3. 数学基础：链式法则\n4. 神经网络的前向传播\n5. 反向传播的详细推导\n   - 输出层权重的梯度计算\n   - 隐藏层权重的梯度计算（递归形式）\n6. 向量化表示\n7. 算法流程\n8. 示例演示\n9. 实现中的注意事项\n\n现在我需要写详细内容。\n</think>\n\n# 深度学习反向传播算法详解：数学原理与推导过程\n\n## 一、引言\n\n反向传播算法是深度学习中最核心的优化机制，它使得训练深层神经网络成为可能。1986年，Rumelhart、Hinton和Williams在《Nature》上发表的开创性论文中首次系统阐述了这一算法，彻底改变了机器学习领域的发展轨迹。反向传播的本质是一种高效计算梯度的方法，通过利用计算图的结构和链式法则，将输出层的损失信息逐层反向传递回网络的每一层，从而实现对所有参数的优化。\n\n理解反向传播不仅对于实际编程实现神经网络至关重要，更能够帮助我们深入理解神经网络的学习机制。许多从业者虽然能够熟练使用TensorFlow或PyTorch等框架，却对底层原理知之甚少，这种认知上的缺失往往限制了他们在模型调试和性能优化方面的能力。因此，本文将系统性地从数学基础出发，逐步推导反向传播的每一个步骤，帮助读者建立完整的理论框架。\n\n## 二、背景知识与符号约定\n\n### 2.1 神经网络的基本结构\n\n在深入反向传播之前，我们需要明确神经网络的结构定义。一个典型的全连接神经网络由多层神经元组成，每一层的每个神经元都与前一层的所有神经元相连。设我们有一个$L$层的神经网络，第$l$层（从1开始计数）的神经元数量为$n_l$，则网络结构可以表示为$(n_0, n_1, n_2, ..., n_L)$，其中$n_0$是输入层的维度（即特征数量），$n_L$是输出层的维度。\n\n为了便于数学表达，我们引入以下符号约定：$\\mathbf{W}^{(l)} \\in \\mathbb{R}^{n_l \\times n_{l-1}}$表示第$l$层的权重矩阵，其元素$W^{(l)}_{ij}$代表从第$l-1$层第$j$个神经元到第$l$层第$i$个神经元的连接权重。偏置向量$\\mathbf{b}^{(l)} \\in \\mathbb{R}^{n_l}$的第$i$个元素$b^{(l)}_i$表示第$l$层第$i$个神经元的偏置。隐藏层的激活值（也称为神经元输出）记为$\\mathbf{a}^{(l)} \\in \\mathbb{R}^{n_l}$，其中$\\mathbf{a}^{(0)}$就是输入数据$\\mathbf{x}$。\n\n### 2.2 损失函数\n\n反向传播的目标是最小化一个损失函数$\\mathcal{L}$，该函数衡量网络预测输出与真实标签之间的差距。对于不同的任务，我们使用不同类型的损失函数。回归任务常用均方误差损失：$\\mathcal{L} = \\frac{1}{2}\\|\\mathbf{y} - \\hat{\\mathbf{y}}\\|^2$，其中$\\hat{\\mathbf{y}}$是网络的预测输出，$\\mathbf{y}$是真实标签。分类任务则常使用交叉熵损失：$\\mathcal{L} = -\\sum_{k=1}^{n_L} y_k \\log(\\hat{y}_k)$，对于多分类问题，通常假设$\\hat{y}_k$是由Softmax函数产生的概率值。\n\n## 三、数学基础：链式法则\n\n反向传播的核心数学工具是链式法则。设有一个复合函数$y = f(g(x))$，其中$x$是输入，$g$是第一层映射，$f$是第二层映射。根据链式法则，$y$关于$x$的导数为$\\frac{dy}{dx} = \\frac{df}{dg} \\cdot \\frac{dg}{dx}$。这个看似简单的规则在多层嵌套函数中展现出强大的表达能力。\n\n对于更复杂的情况，假设$y = f(u)$且$u = g(v)$而$v = h(x)$，则链式法则扩展为$\\frac{\\partial y}{\\partial x} = \\frac{\\partial y}{\\partial u} \\cdot \\frac{\\partial u}{\\partial v} \\cdot \\frac{\\partial v}{x}$。在反向传播中，我们正是利用这种层层传递的机制，从输出端开始，逐层计算每个参数对最终损失的贡献程度。\n\n值得注意的是，链式法则在多元函数情况下需要处理偏导数和梯度。设$z = f(x_1, x_2, ..., x_n)$，则梯度$\\nabla z = (\\frac{\\partial z}{\\partial x_1}, \\frac{\\partial z}{\\partial x_2}, ..., \\frac{\\partial z}{\\partial x_n})$。如果$x_i$本身又是其他变量的函数，这种嵌套关系可以通过链式法则展开，形成一个有序的依赖图，反向传播正是沿着这个依赖图的逆向路径进行梯度计算。\n\n## 四、前向传播：信号在网络中的流动\n\n### 4.1 单层的前向计算\n\n理解前向传播是理解反向传播的前提。前向传播是指输入数据从输入层经过层层变换传递到输出层的过程。对于第$l$层的第$i$个神经元，其净输入（也称为带权输入）为：\n\n$$z^{(l)}_i = \\sum_{j=1}^{n_{l-1}} W^{(l)}_{ij} a^{(l-1)}_j + b^{(l)}_i$$\n\n用向量形式表示为$\\mathbf{z}^{(l)} = \\mathbf{W}^{(l)}\\mathbf{a}^{(l-1)} + \\mathbf{b}^{(l)}$，其中矩阵乘法实现了对所有神经元并行计算。\n\n净输入经过激活函数$f$后产生该层的输出：\n\n$$a^{(l)}_i = f(z^{(l)}_i)$$\n\n常用的激活函数包括Sigmoid函数$\\sigma(z) = \\frac{1}{1+e^{-z}}$、ReLU函数$f(z) = \\max(0, z)$，以及Tanh函数$f(z) = \\tanh(z)$。对于输出层，根据任务类型选择不同的激活函数：回归任务可能使用恒等函数或ReLU，二分类任务使用Sigmoid，多分类任务使用Softmax。\n\n### 4.2 完整的前向传播过程\n\n假设我们有一个3层网络$(n_0, n_1, n_2)$，输入为$\\mathbf{x} \\in \\mathbb{R}^{n_0}$。前向传播的完整过程如下：\n\n第一层的计算：$\\mathbf{z}^{(1)} = \\mathbf{W}^{(1)}\\mathbf{x} + \\mathbf{b}^{(1)}$，然后$\\mathbf{a}^{(1)} = f(\\mathbf{z}^{(1)})$\n\n第二层的计算：$\\mathbf{z}^{(2)} = \\mathbf{W}^{(2)}\\mathbf{a}^{(1)} + \\mathbf{b}^{(2)}$，然后$\\mathbf{a}^{(2)} = f(\\mathbf{z}^{(2)})$\n\n最终输出为$\\hat{\\mathbf{y}} = \\mathbf{a}^{(2)}$。前向传播的时间复杂度为$O(\\sum_{l=1}^{L} n_l \\cdot n_{l-1})$，空间复杂度主要用于存储各层的激活值和中间计算结果。\n\n## 五、反向传播的详细数学推导\n\n### 5.1 核心思想：误差的反向流动\n\n反向传播的核心洞察是：网络在输出层产生的错误，应该被\"分配\"到网络中的每一个权重上。这种分配遵循链式法则，从损失函数开始，逐层向后计算每个参数对损失的贡献。\n\n为了量化这种\"责任\"，我们定义第$l$层第$i$个神经元的误差项（也称为敏感度）为：\n\n$$\\delta^{(l)}_i = \\frac{\\partial \\mathcal{L}}{\\partial z^{(l)}_i}$$\n\n这个误差项表示当第$l$层第$i$个神经元的净输入发生微小变化时，损失函数的变化率。将所有神经元的误差项组合成向量$\\boldsymbol{\\delta}^{(l)} \\in \\mathbb{R}^{n_l}$，这是反向传播中最重要的中间变量。\n\n### 5.2 输出层的梯度计算\n\n首先考虑最简单的情况：计算输出层（第$L$层）权重和偏置的梯度。损失函数对第$L$层权重的梯度为：\n\n$$\\frac{\\partial \\mathcal{L}}{\\partial W^{(L)}_{ij}} = \\frac{\\partial \\mathcal{L}}{\\partial a^{(L)}_i} \\cdot \\frac{\\partial a^{(L)}_i}{\\partial z^{(L)}_i} \\cdot \\frac{\\partial z^{(L)}_i}{\\partial W^{(L)}_{ij}}$$\n\n第三项$\\frac{\\partial z^{(L)}_i}{\\partial W^{(L)}_{ij}} = a^{(L-1)}_j$非常直观，因为权重只通过与前一层输出的乘积",
+      "success": true
+    },
+    {
+      "test_name": "reasoning",
+      "name": "推理能力",
+      "prompt": "有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。",
+      "max_tokens": 500,
+      "prompt_tokens": 68,
+      "completion_tokens": 500,
+      "total_time": 11.351761817932129,
+      "tps": 44.04602633664855,
+      "content": "首先，问题是：有5个人排队，条件是：\n\n1. A不在第一位。\n\n2. B在C前面。\n\n3. D紧挨着E（意思是D和E相邻）。\n\n4. A在D后面。\n\n我需要找出他们的排列顺序。\n\n由于有5个位置，我可以用数字1到5来表示位置，其中1是最前，5是最后。\n\n条件1：A不在第一位，所以A不能在位置1。\n\n条件2：B在C前面，所以B的位置号小于C的位置号（B必须在C左边）。\n\n条件3：D紧挨着E。既然他们相邻，D和E必须是连续的，比如位置i和i+1。所以D和E可以表示为(DE)或(ED)，但顺序未知。\n\n条件4：A在D后面，所以A的位置号大于D的位置号（A在D右边）。\n\n现在，列出所有可能的位置组合。\n\n首先，A不在位置1，所以A可能在2,3,4,5。但B必须在C前面，所以我们需要考虑B和C的相对顺序。\n\n另外，D和E是相邻的，所以他们的位置对是(1,2), (2,3), (3,4), 或(4,5)。但由于有5个位置，位置对可以是(1,2)、(2,3)、(3,4)或(4,5)。\n\n现在，A在D后面，所以A的位置 > D的位置。\n\n让我尝试列出所有可能的情况。\n\n首先，考虑D和E的可能位置。\n\n情况1：D和E在位置(1,2)\n\n如果D和E在(1,2)，那么顺序可能是DE或ED。\n\n但A必须在D后面，所以如果D在1，E在2，那么A不能在位置1，但位置1是D，所以A可以在3,4,5。但A在D后面，D在1，所以A>1，是可能的。\n\n类似地，如果ED，E在1，D在2，A必须在D后面，所以A>2，即3,4,5。\n\n但B和C：B在C前面。\n\n现在，剩余位置：如果D和E占(1,2)，那么剩余位置是3,4,5给A,B,C。\n\n由于A在D后面，而D在位置1或2，所以A必须在3,4,5之一。\n\n类似地，B和C在剩余两个位置，但B必须小于C的位置。\n\n子情况1.1：DE in (1,2)\n\n所以位置1: D, 位置2: E\n\n然后剩余位置：3",
+      "success": true
+    },
+    {
+      "test_name": "instruction",
+      "name": "指令跟随",
+      "prompt": "请完成以下任务：\n1. 列出3种常见的排序算法\n2. 为每种算法写出时间复杂度\n3. 用一句话总结它们的适用场景",
+      "max_tokens": 400,
+      "prompt_tokens": 72,
+      "completion_tokens": 400,
+      "total_time": 9.378185033798218,
+      "tps": 42.652176146923146,
+      "content": "The user wants a response in Chinese, presumably. The request: \"请完成以下任务：1. 列出3种常见的排序算法 2. 为每种算法写出时间复杂度 3. 用一句话总结它们的适用场景\". So they want three common sorting algorithms, their time complexities (presumably best case, average case, worst case), and a one-sentence summary of each's applicable scenario.\n\nWe should respond in Chinese with bullet points or table format for clarity. Provide e.g., 冒泡排序、插入排序、快速排序、归并排序、堆排序. Choose three: Quick Sort, Merge Sort, Heap Sort, maybe also Bubble Sort? The user wants \"3种常见的排序算法\". Could be \"快速排序（Quick Sort）\", \"归并排序（Merge Sort）\", and \"堆排序（Heap Sort）\". Or could choose \"冒泡排序（Bubble Sort）\" as well. But Quick Sort, Merge Sort, Heap Sort are common.\n\nTime complexity: Quick sort average O(n log n), worst O(n^2). Merge sort O(n log n) for all cases; extra space O(n). Heap sort O(n log n) for best/average/worst; in-place, no extra memory (O(1)). Or we could also talk about stable or not.\n\nThe summary: Quick Sort good for general purpose average-case fast with low constant factor and works well on arrays; Merge Sort suitable when stability required and large data sets, can be used for external sorting; Heap Sort suitable for real-time systems requiring guaranteed O(n log n) worst-case and limited extra memory.\n\nAlternatively could add a note about space constraints. Provide simple Chinese text.\n\nWe need to ensure we respond in Chinese as requested (the user wrote Chinese). The answer should include three algorithms with time complexities, and one sentence each summarizing their applicable scenarios.\n\nThus final answer: bullet list or table:\n\n- 快速排序：Best O(n log n), Avg",
+      "success": true
+    }
+  ]
+}

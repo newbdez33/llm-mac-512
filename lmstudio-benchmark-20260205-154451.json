@@ -1,0 +1,74 @@
+{
+  "timestamp": "2026-02-05T15:44:51.279699",
+  "api_base": "http://localhost:1234/v1",
+  "model": "minimax-m2.1",
+  "summary": {
+    "avg_tps": 37.94712248901838,
+    "max_tps": 48.435221535699576,
+    "min_tps": 8.251019770028838,
+    "total_tokens": 3500,
+    "total_time": 84.93275380134583
+  },
+  "results": [
+    {
+      "test_name": "short",
+      "name": "短文本生成",
+      "prompt": "请用一句话解释量子计算",
+      "max_tokens": 100,
+      "prompt_tokens": 45,
+      "completion_tokens": 100,
+      "total_time": 12.11971402168274,
+      "tps": 8.251019770028838,
+      "content": "The user asks: \"请用一句话解释量子计算\" which means \"Please explain quantum computing in one sentence.\"\n\nWe need to respond with a succinct, clear single-sentence explanation of quantum computing in Chinese.\n\nThus something like:\n\n\"量子计算是利用量子叠加和纠缠等特性，以量子比特为基本单元进行并行处理，从而在特定问题上实现指数级加速的计算方式。\"\n\nThat's a single sentence. Ensure no extra punctuation beyond the final period? The user wants one sentence; we can",
+      "success": true
+    },
+    {
+      "test_name": "medium",
+      "name": "代码生成",
+      "prompt": "写一个Python快速排序算法，包含完整注释",
+      "max_tokens": 500,
+      "prompt_tokens": 48,
+      "completion_tokens": 500,
+      "total_time": 10.98121190071106,
+      "tps": 45.53231505965419,
+      "content": "我们将编写一个标准的快速排序算法，并添加详细的注释。\n 快速排序的基本思想是：\n 1. 从数组中选择一个元素作为基准（pivot）。\n 2. 将所有比基准小的元素移到基准左边，比基准大的元素移到右边。这个过程称为分区（partition）操作。\n 3. 对基准左侧和右侧的子数组递归地重复步骤1和步骤2，直到子数组只有一个或零个元素。\n\n 注意：有很多种选择基准的方法，这里我们使用最常见的做法——选择最后一个元素作为基准（或者第一个，但这里选最后一个）。\n 我们将实现一个分区函数，它负责将数组分成三部分：小于pivot、等于pivot、大于pivot。\n 然后递归地对左右两部分进行排序。\n\n 由于是原地排序，我们不需要额外的空间来存储子数组，但是需要使用索引来控制范围。\n\n 下面我们来实现这个算法：\n</think>\n\n# Python快速排序算法实现与解析\n\n## 算法概述\n快速排序是一种分治策略的高效排序算法，通过选择一个基准元素将数组分成两个子数组，递归地对子数组进行排序，最终得到有序序列。平均时间复杂度为O(n log n)，最坏情况为O(n²)。\n\n```python\ndef quick_sort(arr, low=0, high=None):\n    \"\"\"\n    快速排序算法实现\n    \n    参数:\n        arr: 需要排序的列表\n        low: 起始索引，默认为0\n        high: 结束索引，默认为None（表示列表最后一个元素的索引）\n    \n    返回值:\n        对输入列表进行原地排序，直接修改原列表\n    \n    算法步骤:\n        1. 选择一个基准元素(pivot)\n        2. 将数组划分为两个子数组：小于基准的元素和大于基准的元素\n        3. 递归地对这两个子数组进行快速排序\n        4. 合并结果（由于是原地操作，无需显式合并）\n    \"\"\"\n    \n    # 处理默认参数情况\n    if high is None:\n        high = len(arr) - 1\n    \n    # 基本情况：子数组只有一个或零个元素时已经有序\n    if low >= high:\n        return\n    \n    # 选择最后一个元素作为基准(pivot)\n    pivot = arr[high]\n    \n    # i指针指向小于等于pivot的元素的最后位置\n    i = low - 1\n    \n    # j指针遍历从low到high-1的所有元素\n    for j in range(low, high):\n        #",
+      "success": true
+    },
+    {
+      "test_name": "long",
+      "name": "长文本生成",
+      "prompt": "详细解释深度学习的反向传播算法，包括数学推导过程",
+      "max_tokens": 2000,
+      "prompt_tokens": 50,
+      "completion_tokens": 2000,
+      "total_time": 41.29226493835449,
+      "tps": 48.435221535699576,
+      "content": "用户想要我详细解释深度学习中的反向传播算法，包括数学推导过程。这是一个技术教育类内容，需要：\n\n1. 写作类型：技术教程/教育文档\n2. 风格：学术性但易于理解，循序渐进\n3. 受众：可能是机器学习初学者或需要复习反向传播的人\n4. 结构：从基础概念开始，逐步深入到数学推导\n\n我需要涵盖：\n- 反向传播的基本概念和作用\n- 与前向传播的关系\n- 数学推导（链式法则、梯度计算）\n- 具体的计算过程\n- 代码示例或图示说明\n\n让我详细展开这个主题。\n</think>\n\n# 深度学习反向传播算法详解\n\n## 引言\n\n反向传播（Backpropagation）是深度学习中训练神经网络的核心算法，它使得神经网络能够通过大量数据学习到有效的参数配置。没有反向传播，神经网络将无法知道如何调整其权重以减少预测误差，也就无法从数据中学习。本文将从基本概念出发，逐步深入到完整的数学推导，帮助读者建立对反向传播算法的系统性理解。\n\n## 神经网络基础回顾\n\n### 神经元与前向传播\n\n在深入反向传播之前，我们首先需要理解神经网络的基本结构和工作原理。神经网络由多层神经元组成，每一层包含若干个神经元，每个神经元接收前一层的输出作为输入，经过加权求和和非线性变换后产生输出。\n\n考虑一个简单的三层神经网络结构：输入层、隐藏层和输出层。假设输入向量为 $\\mathbf{x} = [x_1, x_2, ..., x_n]^T$，隐藏层有 $m$ 个神经元，输出层有 $k$ 个神经元。对于第 $l$ 层的第 $j$ 个神经元，其净输入（加权求和）为：\n\n$$z_j^{(l)} = \\sum_{i=1}^{n^{(l-1)}} w_{ji}^{(l)} a_i^{(l-1)} + b_j^{(l)}$$\n\n其中 $w_{ji}^{(l)}$ 是连接第 $l-1$ 层第 $i$ 个神经元到第 $l$ 层第 $j$ 个神经元的权重，$b_j^{(l)}$ 是偏置项，$a_i^{(l-1)}$ 是上一层第 $i$ 个神经元的输出。激活函数 $\\sigma(\\cdot)$ 作用于净输入，产生该神经元的输出：\n\n$$a_j^{(l)} = \\sigma(z_j^{(l)}) = \\sigma\\left(\\sum_{i=1}^{n^{(l-1)}} w_{ji}^{(l)} a_i^{(l-1)} + b_j^{(l)}\\right)$\n\n这个从输入到输出的计算过程称为前向传播（Forward Propagation）。在前向传播过程中，信息从输入层流经隐藏层，最终到达输出层，产生网络的预测结果。\n\n### 损失函数\n\n为了衡量网络预测的准确性，我们需要定义一个损失函数（Loss Function）或代价函数（Cost Function）。常用的损失函数包括均方误差（用于回归任务）和交叉熵损失（用于分类任务）。\n\n对于回归问题，均方误差定义为：\n\n$$L = \\frac{1}{2}\\sum_{j=1}^{k}(y_j - a_j^{(L)})^2$$\n\n其中 $y_j$ 是真实标签，$a_j^{(L)}$ 是输出层第 $j$ 个神经元的输出（即网络预测值），系数 $\\frac{1}{2}$ 是为了后续求导时简化计算。\n\n对于分类任务，常用交叉熵损失：\n\n$$L = -\\sum_{j=1}^{k} y_j \\log(a_j^{(L)})$$\n\n其中 $y_j$ 是 one-hot 编码的真实标签，$a_j^{(L)}$ 是 softmax 层输出的概率值。\n\n## 反向传播的核心思想\n\n反向传播的核心目标是计算损失函数关于每个网络参数（权重和偏置）的梯度，即 $\\frac{\\partial L}{\\partial w_{ji}^{(l)}}$ 和 $\\frac{\\partial L}{\\partial b_j^{(l)}}$。一旦获得这些梯度，我们就可以使用梯度下降法更新参数：\n\n$$w_{ji}^{(l)} \\leftarrow w_{ji}^{(l)} - \\eta \\frac{\\parameter L}{\\partial w_{ji}^{(l)}}$$\n$$b_j^{(l)} \\leftarrow b_j^{(l)} - \\eta \\frac{\\partial L}{\\partial b_j^{(l)}}$$\n\n其中 $\\eta$ 是学习率，控制参数更新的步长。\n\n反向传播的本质是高效计算这些梯度的过程。它利用链式法则（Chain Rule）将损失函数的变化追溯回每个参数，从而一次性计算出所有参数的梯度，而不需要对每个参数单独进行数值微分（这在计算上是不现实的，因为现代神经网络可能包含数十亿个参数）。\n\n## 链式法则与计算图\n\n### 链式法则回顾\n\n反向传播的理论基础是微积分中的链式法则。设有复合函数 $y = f(g(x))$，则：\n\n$$\\frac{dy}{dx} = \\frac{df}{dg} \\cdot \\frac{dg}{dx}$$\n\n推广到多元情况，若 $y = f(u, v)$ 而 $u = g(x)$, $v = h(x)$，则：\n\n$$\\frac{\\partial y}{\\parameter x} = \\frac{\\partial y}{\\partial u} \\frac{\\partial u}{\\partial x} + \\frac{\\partial y}{\\partial v} \\frac{\\partial v}{\\partial x}$$\n\n### 计算图表示\n\n神经网络的计算过程可以用计算图（Computation Graph）来表示。计算图是一个有向无环图，其中节点表示数学操作（如加法、乘法、激活函数），边表示数据（张量）的流动。\n\n例如，考虑一个简单的两层网络：输入 $x$ 经过权重 $w_1$ 和偏置 $b_1$ 计算得到 $z_1 = w_1 x + b_1$，经过 sigmoid 激活得到 $a_1 = \\sigma(z_1)$，再经过输出层权重 $w_2$ 和偏置 $b_2$ 得到 $z_2 = w_2 a_1 + b_2$，最后通过 sigmoid 函数产生输出 $\\hat{y} = \\sigma(z_2)$。损失函数为 $L = (y - \\hat{y})^2$。\n\n反向传播的过程就是沿着计算图从后向前计算每个中间变量和参数的梯度。每个节点的局部梯度是该节点输出对输入的导数，而该节点对最终损失的贡献需要乘以后续传递过来的梯度（上游梯度）。\n\n## 单个神经元的反向传播推导\n\n为了建立直观理解，我们首先分析单个神经元层面的反向传播。考虑第 $l$ 层的第 $j$ 个神经元，其输入为上一层的输出 $\\mathbf{a}^{(l-1)}$，权重向量为 $\\mathbf{w}_j^{(l)} = [w_{j1}^{(l)}, w_{j2}^{(l)}, ..., w_{jn}^{(l-1)}]^T$，偏置为 $b_j^{(l)}$。\n\n### 前向传播\n\n净输入：$z_j^{(l)} = \\sum_{i=1}^{n^{(l-1)}} w_{ji}^{(l)} a_i^{(l-1)} + b_j^{(l)}$\n\n激活输出：$a_j^{(l)} = \\sigma(z_j^{(l)})$\n\n### 反向传播推导\n\n我们需要计算两个关键梯度：$\\frac{\\partial L}{\\partial w_{ji}^{(l)}}$ 和 $\\frac{\\partial L}{\\partial b_j^{(l)}}$。根据链式法则：\n\n$$\\frac{\\partial L}{\\partial w_{ji}^{(l)}} = \\frac{\\partial L}{\\partial a_j^{(l)}} \\cdot \\frac{\\partial a_j^{(l)}}{\\partial z_j^{(l)}} \\cdot \\frac{\\partial z_j^{(l)}}{\\partial w_{ji}^{(l)}}$$\n\n定义误差项 $\\delta_j^{(l)}$（也称为局部梯度）为：\n\n$$\\delta_j^{(l)} = \\frac{\\partial L}{\\partial a_j^{(l)}} \\cdot \\frac{\\partial a_j^{(l)}}{\\partial z_j^{(l)}} = \\frac{\\partial L}{\\partial z_j^{(l)}}$$\n\n这个误差项衡量了净输入 $z_j^{(l)}$ 变化对损失的影响。\n\n现在分别计算各个导数：\n\n第一，激活函数关于净输入的导数为 $\\sigma'(z)$。如果使用 sigmoid 函数 $\\sigma(z) = \\frac{1}{1+e^{-z}}$，则其导数为 $\\sigma'(z) = \\sigma(z)(1 - \\sigma(z)) = a(1-a)$。\n\n第二，净输入关于权重的偏导为 $\\frac{\\partial z_j^{(l)}}{\\partial w_{ji}^{(l)}} = a_i^{(l-1)}$，因为 $w_{ji}^{(l)}$ 只在求和项中出现一次。\n\n第三，净输入关于偏置的偏导为 $\\frac{\\partial z_j^{(l)}}{\\partial b_j^{(l)}} = 1$。\n\n因此，权重梯度和偏置梯度可以表示为：\n\n$$\\frac{\\parameter L}{\\partial w_{ji}^{(l)}} = \\delta_j^{(l)} \\cdot a_i^{(l-1)}$$\n\n$$\\frac{\\partial L}{\\partial b_j^{(l)}} = \\delta_j^{(l)} \\cdot 1 = \\delta_j^{(l)}$$\n\n这两个公式是反向传播的核心更新规则。可以看到，一旦我们计算出当前层的误差项 $\\delta_j^{(l)}$，就可以立即得到该层所有参数的梯度。\n\n## 输出层的误差项计算\n\n输出层的误差项计算取决于具体的损失函数和激活函数。我们分别讨论两种常见情况：回归任务（使用恒等激活和均方误差）和分类任务（使用 softmax 和交叉熵损失）。\n\n### 回归问题：恒等激活与均",
+      "success": true
+    },
+    {
+      "test_name": "reasoning",
+      "name": "推理能力",
+      "prompt": "有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。",
+      "max_tokens": 500,
+      "prompt_tokens": 68,
+      "completion_tokens": 500,
+      "total_time": 11.269308090209961,
+      "tps": 44.36829626074092,
+      "content": "We have a puzzle: \"There are 5 people in line, known: A is not first; B is before C (i.e., B ahead of C); D is adjacent to E; A is after D. Find their order.\"\n\nGoal: determine the ordering.\n\nWe need to parse Chinese text:\n\n\"有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。\"\n\nInterpretation: There are 5 persons (A, B, C, D, E) in a line. Conditions:\n- A is not first.\n- B is before C.\n- D is adjacent to E (i.e., D next to E).\n- A is after D.\n\nWe need the exact ordering of all five positions.\n\nLet’s solve:\n\nPositions: 1st, 2nd, 3rd, 4th, 5th. Not necessarily distinct? Obviously each person occupies a unique position.\n\nConstraints:\n1) A ≠ 1.\n2) B before C (i.e., index(B) < index(C)).\n3) D adjacent to E => |pos(D)-pos(E)| = 1.\n4) A after D => pos(A) > pos(D).\n\nWe must find all possible orders consistent with constraints and then find a unique ordering.\n\nLet's solve logically. There are only 5! =120 permutations, but we can restrict.\n\nFirst, note that D adjacent to E: possibilities: DE or ED as consecutive pair. Then A after D, so if order is ...D...A..., i.e., D must be before A with at least one position between them? Actually \"A在D后面\" means A behind D (i.e., later). So pos(A) > pos(D). Also B before C.\n\nWe need to find ordering that satisfies all constraints, presumably unique. Let's systematically enumerate possibilities using reasoning.\n\nLet’s denote positions 1-5.\n\nFirst, consider adjacency of D and E: possible pairs:\n\nCase 1: D at position i, E at i+1 (i from 1..4). So we have \"DE\" as a consecutive pair.\nCase 2: E at position j, D at j+1 => \"ED\".\n\nNow incorporate A after D. In case DE: D before E; then A must be after D but can be either after or between D and E? Actually if order is ...D...E...,",
+      "success": true
+    },
+    {
+      "test_name": "instruction",
+      "name": "指令跟随",
+      "prompt": "请完成以下任务：\n1. 列出3种常见的排序算法\n2. 为每种算法写出时间复杂度\n3. 用一句话总结它们的适用场景",
+      "max_tokens": 400,
+      "prompt_tokens": 72,
+      "completion_tokens": 400,
+      "total_time": 9.270254850387573,
+      "tps": 43.14875981896837,
+      "content": "The user asks for a Chinese response: \"请完成以下任务：1. 列出3种常见的排序算法 2. 为每种算法写出时间复杂度 3. 用一句话总结它们的适用场景\". So we need to list three common sorting algorithms, give time complexity (presumably worst-case, average, best) and one-sentence summary of applicable scenarios.\n\nWe should produce Chinese output with clear enumeration. Possibly also mention space complexity if needed? The user only asks for time complexity; we can provide both O notations for best/average/worst as typical.\n\nPotential algorithms: 冒泡排序 (Bubble Sort), 选择排序 (Selection Sort), 插入排序 (Insertion Sort). Or quick sort, merge sort, heap sort. Common ones often used in teaching include quicksort, mergesort, heapsort. But \"常见\" could be more general: bubble sort, insertion sort, selection sort are simple; but also quicksort is common for large datasets. Usually three typical algorithms taught: 快速排序 (Quick Sort), 归并排序 (Merge Sort), 堆排序 (Heap Sort). Or we can choose a mix.\n\nGiven the user wants \"3种常见的排序算法\", I'd list: 冒泡排序、插入排序、快速排序, but maybe also mergesort. Let's pick three that represent different categories and typical usage: \n- 快速排序（Quick Sort）— average O(n log n), worst O(n²) with pivot selection.\n- 归并排序（Merge Sort）— always O(n log n).\n- 堆排序（Heap Sort）— O(n log n).\n\nAlternatively, we could list bubble sort for educational but not used in practice. However the question may expect simple ones: bubble sort, insertion sort, selection sort.\n\nBut typical \"常见\" sorting algorithms might be quick sort, merge sort, and heap sort; these are widely known. Also they have different trade-offs: quick sort is fast average case,",
+      "success": true
+    }
+  ]
+}
