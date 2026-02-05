@@ -1,0 +1,74 @@
+{
+  "timestamp": "2026-02-06T00:03:34.662274",
+  "api_base": "http://localhost:1234/v1",
+  "model": "minimax-m2.1",
+  "summary": {
+    "avg_tps": 22.529237264017716,
+    "max_tps": 31.927283837297434,
+    "min_tps": 2.1864661265985585,
+    "total_tokens": 3495,
+    "total_time": 161.14647316932678
+  },
+  "results": [
+    {
+      "test_name": "short",
+      "name": "短文本生成",
+      "prompt": "请用一句话解释量子计算",
+      "max_tokens": 100,
+      "prompt_tokens": 44,
+      "completion_tokens": 99,
+      "total_time": 45.2785427570343,
+      "tps": 2.1864661265985585,
+      "content": "The user is asking: \"Please explain quantum computing in one sentence.\" So we need to respond in Chinese, presumably. The conversation is in Chinese: \"请用一句话解释量子计算\". So we need to give a single sentence explanation of quantum computing in Chinese.\n\nWe must ensure the response is concise, one-sentence. Something like: \"量子计算利用量子叠加和纠缠等特性，通过并行处理信息，实现对特定问题的指数级加速。\" That's one sentence. Should we include Chinese characters",
+      "success": true
+    },
+    {
+      "test_name": "medium",
+      "name": "代码生成",
+      "prompt": "写一个Python快速排序算法，包含完整注释",
+      "max_tokens": 500,
+      "prompt_tokens": 47,
+      "completion_tokens": 499,
+      "total_time": 18.53587818145752,
+      "tps": 26.920763889092544,
+      "content": "首先，用户要求我编写一个Python快速排序算法，并包含完整注释。快速排序是一种分治算法，它通过选择一个基准元素，将数组分成两个子数组，一个包含小于基准的元素，另一个包含大于基准的元素，然后递归地对这两个子数组进行排序。\n\n我的角色是MiniMax-M2.1，一个由MiniMax构建的AI助手。我需要以专业和准确的方式回应。\n\n关键元素：\n- **算法**：快速排序。\n- **语言**：Python。\n- **要求**：包含完整注释。\n\n结构我的响应：\n1. **介绍**：简要说明我将提供快速排序算法的Python实现。\n2. **代码块**：提供完整的Python代码，包括注释。\n3. **解释**：如果需要，可以简要解释算法步骤，但用户只要求了代码和注释，所以可能不需要额外解释，除非注释不足。\n\n确保注释是完整的：每个关键步骤都要有注释，以便用户理解代码的每一部分。\n\n快速排序算法步骤：\n- **基准选择**：选择一个元素作为基准（通常选第一个、最后一个或中间的元素）。\n- **分区过程**：重新排列数组，使所有小于基准的元素在左边，大于的在右边。返回基准的最终位置。\n- **递归**：递归地对左右子数组进行排序。\n\nPython代码示例：\n\n```python\ndef quick_sort(arr):\n    \"\"\"\n    快速排序算法函数。\n    \n    参数:\n        arr (list): 需要排序的列表。\n        \n    返回:\n        list: 排序后的列表。\n    \"\"\"\n    # 如果数组长度小于等于1，直接返回（递归终止条件）\n    if len(arr) <= 1:\n        return arr\n    else:\n        # 选择基准元素，这里选择中间的元素以避免最坏情况\n        pivot = arr[len(arr) // 2]\n        \n        # 分区：将小于基准的元素放在左边，大于的放在右边\n        left = [x for x in arr if x < pivot]\n        middle = [x for x in arr if x == pivot]  # 等于基准的元素\n        right = [x for x in arr if x > pivot]\n        \n        # 递归排序左右子数组，并合并\n        return quick_sort(left) + middle + quick_sort(right)\n```\n\n注释检查：\n- 函数定义有Docstring。\n- 递归终止条件有注释。\n- 基准选择和分区过程都有注释。\n\n这个实现使用列表推导式来创建子数组，简单易懂。但标准快速排序通常原地排序（in-place），以避免额外空间。这里用了非",
+      "success": true
+    },
+    {
+      "test_name": "long",
+      "name": "长文本生成",
+      "prompt": "详细解释深度学习的反向传播算法，包括数学推导过程",
+      "max_tokens": 2000,
+      "prompt_tokens": 49,
+      "completion_tokens": 1999,
+      "total_time": 62.61102604866028,
+      "tps": 31.927283837297434,
+      "content": "The user is asking for a detailed explanation of backpropagation in deep learning, including the mathematical derivation process. This is a technical educational content request that requires:\n\n1. **Writing Type**: Technical/Educational Article - comprehensive explanation with mathematical proofs\n2. **Style**: Academic but accessible, formal yet engaging, with proper mathematical notation\n3. **Audience**: People learning deep learning, likely with some background in calculus and linear algebra\n4. **Structure**: Should flow from basics to advanced, with clear mathematical derivations\n\nI need to cover:\n- Introduction to backpropagation\n- The chain rule (foundation)\n- Forward pass explanation\n- Backward pass derivation\n- Mathematical formulation with gradients\n- Practical considerations\n- Maybe some pseudocode\n\nThe content should be in Chinese as the user asked in Chinese. I need to provide comprehensive depth with proper mathematical notation using LaTeX-style formatting.\n\nLet me structure this:\n\n1. 引言 - 为什么需要反向传播\n2. 数学基础：链式法则\n3. 网络结构和前向传播\n4. 反向传播算法详解\n   - 单层网络的推导\n   - 多层网络的推广\n5. 完整的数学形式化\n6. 算法实现细节\n7. 常见问题和优化\n\nI'll use proper mathematical notation and detailed derivations while keeping explanations clear.\n</think>\n\n# 深度学习反向传播算法详解：数学原理与推导过程\n\n## 一、引言：为什么需要反向传播\n\n反向传播（Backpropagation）是深度学习中最核心的算法之一，它使得训练深层神经网络成为可能。在理解反向传播之前，我们首先需要认识到神经网络的本质：一个复杂的非线性函数逼近器。假设我们有一个$L$层的神经网络，对于输入$\\mathbf{x}$，网络会经过一系列非线性变换产生输出$\\hat{\\mathbf{y}}$。我们的目标是调整网络的参数$\\boldsymbol{\\theta}$，使得对于给定的训练样本$(\\mathbf{x}, \\mathbf{y})$，网络的输出$\\hat{\\mathbf{y}}$能够尽可能接近真实标签$\\mathbf{y}$。\n\n这个参数调整的过程需要解决一个优化问题：最小化定义在训练集上的损失函数$\\mathcal{L}(\\boldsymbol{\\theta})$。梯度下降法是解决这类优化问题的经典方法，它通过迭代更新参数来逐步降低损失值。梯度下降的核心公式为：\n\n$$\\boldsymbol{\\theta} \\leftarrow \\boldsymbol{\\theta} - \\eta \\nabla_{\\boldsymbol{\\theta}}\\mathcal{L}(\\boldsymbol{\\theta})$$\n\n其中$\\eta$是学习率，$\\nabla_{\\boldsymbol{\\theta}}\\mathcal{L}(\\boldsymbol{\\theta})$是损失函数关于参数$\\boldsymbol{\\theta}$的梯度。这个公式告诉我们，在每一步迭代中，我们需要计算损失函数关于每个参数的偏导数，然后沿着梯度的反方向更新参数。\n\n然而，对于具有百万甚至数十亿参数的深度神经网络，逐个计算每个参数的偏导数是不现实的。反向传播算法的天才之处在于，它利用了神经网络逐层计算的结构特性，通过一次前向传播和一次反向传播，就能高效地计算出所有参数的梯度。这种效率的提升来自于链式法则的巧妙应用，它允许我们从输出层开始，逐层向后计算梯度，避免了冗余计算。\n\n## 二、数学基础：链式法则\n\n### 2.1 单变量函数的链式法则\n\n链式法则是反向传播算法的数学基石。考虑一个简单的复合函数$y = f(g(x))$，其中$x$是输入，$g$是第一层变换，$f$是第二层变换。根据链式法则，函数$y$关于$x$的导数为：\n\n$$\\frac{dy}{dx} = \\frac{df}{dg} \\cdot \\frac{dg}{dx}$$\n\n这个公式的直观含义是：$x$的变化首先通过$\\frac{dg}{dx}$影响$g(x)$，然后这种变化又通过$\\frac{df}{dg}$影响最终的$y$。链式法则将复杂函数的导数分解为各层局部导数的乘积。\n\n### 2.2 多变量函数的链式法则\n\n在神经网络中，我们处理的是多元函数。设$z = f(u, v)$，而$u = g(x, y)$，$v = h(x, y)$，那么$z$关于$x$的偏导数为：\n\n$$\\frac{\\partial z}{\\partial x} = \\frac{\\partial f}{\\partial u}\\frac{\\partial u}{\\partial x} + \\frac{\\partial f}{\\partial v}\\frac{\\partial v}{\\partial x}$$\n\n这个推广后的链式法则更加重要，因为它反映了神经网络中一个节点可能接收多个输入的情况。值得注意的是，在反向传播中，我们计算的正是这类偏导数：损失函数关于神经网络内部变量的梯度。\n\n### 2.3 向量形式的链式法则\n\n神经网络的计算通常以向量和矩阵的形式进行，因此我们还需要掌握向量微积分中的链式法则。设$\\mathbf{y} = f(\\mathbf{x})$是一个向量值函数，其中$f: \\mathbb{R}^n \\rightarrow \\mathbb{R}^m$，则雅可比矩阵定义为：\n\n$$J_f = \\frac{\\partial \\mathbf{y}}{\\partial \\mathbf{x}} = \\begin{pmatrix} \\frac{\\partial y_1}{\\partial x_1} & \\cdots & \\frac{\\partial y_1}{\\partial x_n} \\\\ \\vdots & \\ddots & \\vdots \\\\ \\frac{\\partial y_m}{\\partial x_1} & \\cdots & \\frac{\\partial y_m}{\\partial x_n} \\end{pmatrix}$$\n\n对于复合函数$\\mathbf{z} = f(g(\\mathbf{x}))$，链式法则在雅可比矩阵层面表示为：\n\n$$\\frac{\\partial \\mathbf{z}}{\\partial \\mathbf{x}} = \\frac{\\partial \\mathbf{z}}{\\partial \\mathbf{y}} \\cdot \\frac{\\partial \\mathbf{y}}{\\partial \\mathbf{x}}$$\n\n其中\"$\\cdot$\"表示矩阵乘法。这个公式是反向传播算法的核心数学工具，它告诉我们如何通过雅可比矩阵的乘积来高效计算复杂的梯度。\n\n## 三、神经网络的前向传播\n\n### 3.1 网络结构与符号定义\n\n在深入反向传播之前，我们首先需要明确定义神经网络的结构和前向传播的计算过程。考虑一个$L$层的全连接神经网络，我们使用以下符号约定：\n\n设第$l$层（$1 \\leq l \\leq L$）的神经元数量为$n_l$，其中第1层是输入层，第$L$层是输出层。第$l$层的权重矩阵为$\\mathbf{W}^{(l)} \\in \\mathbb{R}^{n_l \\times n_{l-1}}$，偏置向量为$\\mathbf{b}^{(l)} \\in \\mathbb{R}^{n_l}$。第$l$层的线性变换输出（也称为净输入）为$\\mathbf{z}^{(l)}$，激活输出为$\\mathbf{a}^{(l)}$。特别地，输入层定义为$\\mathbf{a}^{(0)} = \\mathbf{x}$。\n\n### 3.2 前向传播的计算过程\n\n前向传播从输入层开始，逐层计算直到输出层。对于第$l$层（$1 \\leq l \\leq L$），计算过程如下：\n\n首先进行线性变换：\n$$\\mathbf{z}^{(l)} = \\mathbf{W}^{(l)}\\mathbf{a}^{(l-1)} + \\mathbf{b}^{(l)}$$\n\n然后应用激活函数：\n$$\\mathbf{a}^{(l)} = f_l(\\mathbf{z}^{(l)})$$\n\n其中$f_l$是第$l$层的激活函数。常见的激活函数包括Sigmoid、ReLU、Tanh等。以ReLU为例，$f(z) = \\max(0, z)$；以Sigmoid为例，$f(z) = \\frac{1}{1+e^{-z}}$。\n\n这个过程可以直观地理解为：每一层的神经元接收来自上一层所有神经元的加权输入，添加偏置后通过非线性激活函数产生输出，传递给下一层。整个前向传播过程可以表示为：\n$$\\mathbf{x} = \\mathbf{a}^{(0)} \\rightarrow \\mathbf{z}^{(1)} \\rightarrow \\mathbf{a}^{(1)} \\rightarrow \\cdots \\rightarrow \\mathbf{z}^{(L)} \\rightarrow \\mathbf{a}^{(L)} = \\hat{\\mathbf{y}}$$\n\n### 3.3 损失函数的定义\n\n前向传播的最终输出$\\hat{\\mathbf{y}}$需要与真实标签$\\mathbf{y}$进行比较，这通过损失函数来实现。损失函数$\\mathcal{L}(\\boldsymbol{\\theta})$量化了预测值与真实值之间的差异，不同的任务选择不同的损失函数。\n\n对于回归任务，常用均方误差损失：\n$$\\mathcal{L} = \\frac{1}{2}\\|\\hat{\\mathbf{y}} - \\mathbf{y}\\|_2^2$$\n\n对于二分类任务，常用二元交叉熵损失：\n$$\\mathcal{L} = -\\frac{1}{N}\\sum_{i=1}^{N}[y_i\\log(\\hat{y}_i) + (1-y_i)\\log(1-\\hat{y}_i)]$$\n\n对于多分类任务，常用多元交叉熵损失：\n$$\\mathcal{L} = -\\frac{1}{N}\\sum_{i=1}^{N}\\sum_{c=1}^{C}y_{ic}\\log(\\hat{y}_{ic})$$\n\n其中$N$是样本数，$C$是类别数。为了简化推导，我们在后续内容中主要使用均方误差损失，并假设处理单个样本（$N=1$）。\n\n## 四、反向传播算法的数学推导\n\n### 4.1 核心思想：从输出层开始逆向计算\n\n反向传播的核心洞见在于：虽然前向传播是从输入到输出的方向进行的，但梯度的计算可以从输出层开始，逆向进行。这是因为链式法则允许我们将损失函数对某个参数的梯度分解为\"损失对该参数输出的梯度\"与\"该参数输出对其输入的梯度\"的乘积。\n\n具体来说",
+      "success": true
+    },
+    {
+      "test_name": "reasoning",
+      "name": "推理能力",
+      "prompt": "有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。",
+      "max_tokens": 500,
+      "prompt_tokens": 67,
+      "completion_tokens": 499,
+      "total_time": 18.846496105194092,
+      "tps": 26.477070178709543,
+      "content": "The user asks: \"有5个人排队，已知：A不在第一位，B在C前面，D紧挨着E，A在D后面。请推理出他们的排列顺序。\" This is Chinese. Translation: \"There are five people queuing, known that: A is not in the first position, B is before C (i.e., B is earlier than C), D is next to E (adjacent), A is after D. Please infer their arrangement order.\"\n\nWe need to determine the ordering of five people (A, B, C, D, E) in a queue such that:\n\n1. A is not first.\n2. B comes before C (i.e., B's position < C's position).\n3. D is adjacent to E.\n4. A comes after D (i.e., D's position < A's position).\n\nWe need to find the unique ordering(s) that satisfy all constraints.\n\nLet’s denote positions 1 through 5, left to right (first position is the front of queue). So we need to assign each person a distinct integer 1-5.\n\nConstraints:\n\nC1: A != 1.\nC2: B < C (position less than).\nC3: |D - E| = 1 (adjacent positions).\nC4: D < A.\n\nWe need to find all possible permutations satisfying these constraints. Let's search manually or by reasoning.\n\nWe have 5! =120 possibilities but many eliminated.\n\nFirst, D < A and D adjacent to E. So D must be somewhere before A in the queue; also D is next to E, meaning either D left of E (D < E and |D -E| =1) or E left of D (E < D). So two possibilities: either D immediate before E, i.e., positions (k, k+1) for some k=1..4 with D at position k and E at k+1; or E immediate before D, i.e., positions (k, k+1) with E at position k and D at k+1.\n\nThus adjacency constraint is symmetric except direction matters for the order relative to A. Since D < A, D must be before A (position lower). So if E is left of D (E position = k, D = k+1), then A must be after D: so A > k+1. If D left of E (D = k, E = k+1",
+      "success": true
+    },
+    {
+      "test_name": "instruction",
+      "name": "指令跟随",
+      "prompt": "请完成以下任务：\n1. 列出3种常见的排序算法\n2. 为每种算法写出时间复杂度\n3. 用一句话总结它们的适用场景",
+      "max_tokens": 400,
+      "prompt_tokens": 71,
+      "completion_tokens": 399,
+      "total_time": 15.87453007698059,
+      "tps": 25.13460228839049,
+      "content": "嗯，用户让我完成三个任务：列出三种常见排序算法、写时间复杂度、总结适用场景。首先需要确定合适的算法。常见的应该包括冒泡排序、快速排序和归并排序吧？这三种比较经典，覆盖不同场景。\n\n接下来是时间复杂度。冒泡排序最差O(n²)，最好O(n)，平均也是O(n²)。快速排序平均O(n log n)，最差O(n²)当数组基本有序时。归并排序稳定在O(n log n)，但需要额外空间。\n\n然后是适用场景的总结。冒泡排序适合教学或者小规模数据，因为简单但效率低。快速排序平均性能好，适合大多数情况，尤其是随机数据，但需要注意最差情况的优化。归并排序适用于需要稳定排序或者大数据量，比如外部排序。\n\n需要检查术语是否准确。比如冒泡排序的稳定性，稳定但效率低。快速排序原地排序，空间复杂度O(log n)。归并排序稳定，但空间开销大。总结部分要简洁，明确每种算法的优势。最后确保语言自然流畅，符合中文表达习惯。\n</think>\n\n好的，这是为您整理的答案：\n\n1.  **3种常见的排序算法：**\n    *   **冒泡排序 (Bubble Sort)**\n    *   **快速排序 (Quick Sort)**\n    *   **归并排序 (Merge Sort)**\n\n2.  **时间复杂度：**\n    *   **冒泡排序：** 最坏情况 `O(n²)`, 平均情况 `O(n²)`, 最好情况 `O(n)` (当数组本身有序时)\n    *   **快速排序：** 最坏情况 `O(n²)` (当每次划分极度不平衡，例如数组基本有序时), 平均情况 `O(n log n)`, 最好情况 `O(n log n)` (每次划分都大致均匀时)\n    *   **归并排序：** 最坏情况 `O(n log n)`, 平均情况 `O(n log n)`, 最好情况 `O",
+      "success": true
+    }
+  ]
+}

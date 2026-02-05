@@ -11,7 +11,7 @@ from datetime import datetime
 
 # 配置
 API_BASE = "http://localhost:1234/v1"
-MODEL_NAME = "minimax-m2.1"
+MODEL_NAME = "qwen3-coder-next"
 
 # 测试用例
 TESTS = {
