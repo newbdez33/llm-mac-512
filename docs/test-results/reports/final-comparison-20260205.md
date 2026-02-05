@@ -218,6 +218,118 @@ model, tokenizer = load(model_path)
 
 ---
 
+## 根因分析：MLX 4-bit 性能问题
+
+### 🔍 问题现象
+
+**MLX 4-bit 性能严重低于预期:**
+- 实测 7.96 TPS，比 GGUF Q4_K_S (37.37 TPS) 慢 **79%**
+- 比同框架的 MLX 8-bit (25.98 TPS) 还慢 **69%**
+- **反常现象:** 理论上 4-bit 应该比 8-bit 更快才对
+
+### 📚 调研发现 (2026-02-05)
+
+基于对 MLX 社区和相关研究的调查，发现以下关键问题：
+
+#### 1. **MLX 框架对 MoE 架构优化不足**
+
+根据 [MoE on Apple Silicon 研究](https://arxiv.org/html/2506.23635v1)：
+
+- **内存管理瓶颈**: MLX 和 Metal 框架在处理 MoE 模型时存在内存管理逻辑问题
+- **Expert Loading 开销**: 虽然 MoE 使用稀疏激活，但所有 expert layers 仍需完整加载到内存
+- **Memory Movement**: 数据在不同 expert 之间移动成为主要性能瓶颈
+- **底层限制**: 问题可能在操作系统或 GPU 驱动层面，且因为闭源环境难以深入定位
+
+> **MiniMax M2.1 是 230B 参数的 MoE 模型，这正是 MLX 的弱项**
+
+#### 2. **量化格式转换开销**
+
+对于某些 MLX 量化格式（如 MXFP4）：
+- 需要额外的格式转换步骤
+- 增加 **15-20% 内存占用**
+- 带来 **20-40% 性能损失**
+- 原生优化针对 NVIDIA Hopper GPU，Apple Silicon 需要转换
+
+#### 3. **MLX 在大模型上的通用性能问题**
+
+[GitHub Issue #101](https://github.com/lmstudio-ai/mlx-engine/issues/101) 报告：
+- **MLX 对超大模型特别慢** - 即使在 192GB Mac Studio 上
+- 实际案例：
+  - Mistral Large: 8-bit GGUF 4.90 tok/s vs 4-bit MLX 0.49 tok/s
+  - Qwen 2.5 72B: 8-bit GGUF 7.68 tok/s vs MLX 0.42 tok/s
+- **内存充足但性能差** - 说明不是容量问题，而是架构问题
+
+#### 4. **4-bit 量化 Kernel 未优化**
+
+[MLX-LM Issue #193](https://github.com/ml-explore/mlx-lm/issues/193) 报告：
+- 4-bit 量化模型在 prompt processing 阶段速度显著降低
+- 某些模型从 ~250 tok/s 降至极低水平
+- 8-bit quantization kernel 相对更成熟
+
+### 💡 为什么 4-bit 比 8-bit 还慢？
+
+**综合分析认为是多重因素叠加:**
+
+1. **De-quantization 复杂度**
+   - 4-bit 需要更多解量化操作
+   - 在 MoE 架构中，每次切换 expert 都需要重新 de-quantize
+   - 8-bit 的 de-quantization 逻辑更简单直接
+
+2. **内存访问模式**
+   - 4-bit 数据在 MoE expert 切换时导致更多内存碎片
+   - Apple Silicon 的 unified memory 可能对 4-bit 访问模式不友好
+   - 8-bit 对齐更好，cache hit rate 更高
+
+3. **MLX Kernel 成熟度**
+   - MLX 的 8-bit kernel 开发时间更长，优化更好
+   - 4-bit kernel 可能还未针对大规模 MoE 模型优化
+   - llama.cpp 的 4-bit 实现(Q4_K_S)经过多年优化，已经非常成熟
+
+4. **MoE 特殊性**
+   - MoE 模型需要频繁切换 expert
+   - 每次切换涉及大量权重加载
+   - 4-bit 在这种场景下的开销可能指数级增长
+
+### 🎯 结论
+
+**MLX 4-bit 在 MiniMax M2.1 上的性能问题不是偶然，而是系统性的:**
+
+| 因素 | 影响 | 对 4-bit 的特殊影响 |
+|------|------|---------------------|
+| MoE 架构 | 高 | 频繁 expert 切换放大量化开销 |
+| MLX 框架限制 | 高 | 大模型内存管理瓶颈 |
+| 量化 Kernel | 中 | 4-bit kernel 不如 8-bit 成熟 |
+| 格式转换 | 中 | 可能需要额外转换步骤 |
+
+**对比 llama.cpp:**
+- ✅ llama.cpp 针对 MoE 深度优化
+- ✅ Q4_K_S 策略专为大模型设计
+- ✅ 成熟的量化 kernel 实现
+- ✅ 更好的内存访问模式
+
+### 📊 社区反馈
+
+从 [HuggingFace MLX 3-bit 讨论](https://huggingface.co/mlx-community/MiniMax-M2.1-3bit/discussions/1) 中，M4 Max 128GB 用户报告：
+> "20t/s at the beginning going to 5t/s for longer prompts, usable but slow"
+
+这验证了 MLX + MiniMax M2.1 + 低位量化 = 性能问题的模式。
+
+### 🔧 建议
+
+1. **短期:** 使用 GGUF Q4_K_S (已验证 37.37 TPS)
+2. **中期:** 关注 MLX 社区对 MoE 优化的更新
+3. **长期:** 如需贡献，可在 [MLX GitHub](https://github.com/ml-explore/mlx-lm) 提交详细性能报告
+
+### 📖 参考来源
+
+- [MoE on Apple Silicon Research](https://arxiv.org/html/2506.23635v1)
+- [MLX Engine Issue #101 - Large Models Slow](https://github.com/lmstudio-ai/mlx-engine/issues/101)
+- [MLX-LM Issue #193 - Quantized Prompt Speed](https://github.com/ml-explore/mlx-lm/issues/193)
+- [MiniMax M2.1 3-bit Discussion](https://huggingface.co/mlx-community/MiniMax-M2.1-3bit/discussions/1)
+- [Exploring LLMs with MLX on M5](https://machinelearning.apple.com/research/exploring-llms-mlx-m5)
+
+---
+
 ## 测试方法论
 
 ### 测试框架

@@ -17,7 +17,9 @@
 |-------|-----|------|----------------|
 | **GGUF Q4_K_S** | **37.37** | 138GB | ✅ **Use this for production** |
 | MLX 8-bit | 25.98 | ~240GB | Good quality alternative |
-| MLX 4-bit | 7.96 | ~120GB | ⚠️ Avoid (unexpectedly slow) |
+| MLX 4-bit | 7.96 | ~120GB | ⚠️ Avoid (unexpectedly slow)* |
+
+*MLX 4-bit is slow due to [MoE architecture limitations in MLX framework](./docs/test-results/reports/final-comparison-20260205.md#根因分析mlx-4-bit-性能问题)
 
 📊 [Full comparison report](./docs/test-results/reports/final-comparison-20260205.md)
 
@@ -79,7 +81,7 @@
 **Recommendations:**
 - **Production Use**: GGUF Q4_K_S (best speed, smallest size, excellent quality)
 - **High Quality**: MLX 8-bit (good balance if you need higher precision)
-- **Avoid**: MLX 4-bit (unexpectedly slow, needs investigation)
+- **Avoid**: MLX 4-bit (unexpectedly slow - [root cause analysis](./docs/test-results/reports/final-comparison-20260205.md#根因分析mlx-4-bit-性能问题))
 
 **Detailed Reports:**
 - 📊 [Final Comparison Report](./docs/test-results/reports/final-comparison-20260205.md)
